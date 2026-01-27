@@ -1,0 +1,3343 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+
+<meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <title>עריכת ספרי אוצריא</title>
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD8AAAA/CAYAAABXXxDfAAAEW0lEQVR4Ae2bWyh8WxzHf9hya+ZwGOXSPMnDCQ8oE6W8uBwniZIXnZzSKbe8ooMHhcKDFylFEcpxa6aQS27p5GHkPsRfyTnHpRDKmGM4s1bNvz+zt9kz89uz59/en1pNs/Zv/eb3tddea+21fhhgIS0tTREZGfnrwcHBz8fHx3FGozHUUu3FZvs9w3z7JSoqyluj0VRqtdpGk8n0o1hBuYuv4hMTE/0tH6NjY2O/iBiPW6HiyR23fPyp1+tzRY7HrVDxKSkpNePj45ISTmDS09N/0Ol0f4gdiBgwERERv1kGt2CxAxEDZnd3N0/sIMSCMRgMP2E79fPzg7CwMPDycn1pcH9/T4sQMGazWcF2YWJiwqauo6MD1tbWuJ0xDLS0tEBxcTH4+vqiBPj29gZzc3NQU1MDNzc3du3Z4iYxbWxs2MbL5SQ/P9+mbmRk5NMfrq6uhpKSErsBOgLpPZmZmdDb2wsFBQV27dni7u/vZ7XlFO8MfIJzltTUVFCr1XB2dobmE1W8UqnEdGcDGUc8VvxHGhoaYGFhwam2CoUCZmZmkCN6j6DiLy8v4eTkxKm2RLzQCCre05HFSxVZvFSRxUsVQcX39PTQ4qmgin96esJ0J7h/VPE6nQ4qKiowXX7l8PAQDAYDqk9U8W1tbaBSqaCwsBB8fHzQ/K6vr9M/Knm3xwRVvMlkou/0dXV1EB4ejrKT8/DwAFdXVwjR2SLIgPf4+EiLpyNPdVIFXTzZxAwKCkL1aTQa4fn5GdUnAV18bm4uTE5OovpsbW2F2tpaVJ8EudtLFVm8VEEXT5ai2dnZqD5PT09R/VlBF399fQ2zs7PYbgVB7vZSBV28t7c32vG0lZeXFzCbzag+CejiyRE115Gws8grPAGQxUsVWTwmJBmBLS/GFY6OjlD9WUEXf35+Tsv3AKd4sk38cfcVcztaCMgukkP2XBdIzltoaOi7uri4OOeichPx8fGs9WT7mw1O8dvb25CRkfGurqysDLq6uuDi4sKFEIWDJEB95PX1FXZ2dljtOcVrtVob8SQVbHl5GcrLy2FxcRH9BMVZYmJioLm5mXWgJfGSN002OMX39fVBfX29TdePjY2F+fl5uqNKCh+6u7vpKQ5fOjs7obS0lJctGYe4MrfIzWlqauJsyyn+7u6O5rsODAywXvf396eFDwEBAbzsvrUPDnY9C56ky66srHBe/3R4HBwcJP+FAZWVlS4H4m729vbo4/kZdueGqqoqOvKTR8DTpzorS0tLUFRURHvvJ/zHa2JsbGyEqakp+vzk5OQ4PJ+6i/39fWhvb6ev1PYG45CQkC+8Vej1esjLyyONQKPRQHR0NO8jaK6phouhoSHY3NzkbX97ewtbW1sOLYOTkpKWHL6F5Iemp6cdbeYQq6urtAiJSqXq98z+KzAJCQna4eHhvyQnPjAw8B+1Wv07WcFKSrxSqfw7Kysrc3R09F/yXSri35KTkycsz3m5RfiltfJ/GrNokBHwRF4AAAAASUVORK5CYII=">
+
+  <style>
+    :root{
+      --bg:#f6f1ea;
+      --bg2:#fbf7f1;
+      --card:#ffffff;
+      --ink:#1f1c17;
+      --muted:#6f6254;
+      --line:#e6dccf;
+      --line2:#d9cbbb;
+
+      --brown:#6b5a4a;
+      --brown2:#5b4c3f;
+
+      --shadow: 0 10px 26px rgba(45, 35, 25, .10);
+      --radius:16px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans Hebrew", "Assistant", sans-serif;
+
+      --btnH: 34px;
+      --btnR: 10px;
+
+      --previewFontSize: 18px;
+      --previewLineHeight: 1.65;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--ink);
+      background:
+        radial-gradient(900px 460px at 65% 0%, rgba(107,90,74,.10), transparent 60%),
+        radial-gradient(700px 520px at 10% 18%, rgba(107,90,74,.06), transparent 58%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+    }
+
+    header{
+      position:sticky; top:0; z-index:90;
+      background: rgba(251,247,241,.92);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+      padding:12px 14px;
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+    }
+
+    .title{display:flex; flex-direction:column; gap:2px; min-width: 240px}
+    .title h1{margin:0; font-size:16px; font-weight:900; letter-spacing:.2px}
+    .title .sub{font-size:12px; color:var(--muted)}
+
+    .headerRight{
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-start;
+    }
+    .topBtns{ display:flex; gap:8px; margin-inline-start:auto; }
+
+    .chip{
+      display:flex; gap:8px; align-items:center;
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.85);
+      border:1px solid var(--line);
+      box-shadow: 0 1px 0 rgba(0,0,0,.02);
+      font-size:12px; color:var(--muted);
+      white-space:nowrap;
+      height: var(--btnH);
+    }
+
+    select, input[type="text"], input[type="number"], input[type="color"]{
+      border:1px solid var(--line);
+      background: #fff;
+      color:var(--ink);
+      padding:8px 10px;
+      border-radius:12px;
+      font-size:13px;
+      outline:none;
+      height: var(--btnH);
+    }
+
+    .btn{
+      border:1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding:8px 10px;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:13px;
+      transition: .12s transform ease, .12s border-color ease, .12s background ease;
+      user-select:none;
+      white-space:nowrap;
+      height: var(--btnH);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: var(--line2); }
+    .btn:active{ transform: translateY(0px); }
+
+    .btn.primary{
+      background: linear-gradient(180deg, rgba(107,90,74,.96), rgba(91,76,63,.96));
+      border-color: rgba(91,76,63,.55);
+      color: #fff;
+      font-weight:900;
+    }
+
+    .btn.primary:hover{
+      background: linear-gradient(180deg, rgba(107,90,74,.88), rgba(91,76,63,.88));
+      border-color: rgba(91,76,63,.70);
+      box-shadow: 0 8px 18px rgba(45, 35, 25, .18);
+    }
+
+    /* ======= FILE MENU ======= */
+    .menuWrap{ position:relative; }
+    .menuBtn{ padding: 8px 12px; }
+    .menu{
+      position:absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 260px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 20px 55px rgba(45,35,25,.18);
+      overflow:hidden;
+      display:none;
+      z-index: 200;
+    }
+    .menu.open{ display:block; }
+    .menuItem{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-size:13px;
+      border-bottom:1px solid rgba(230,220,207,.6);
+    }
+    .menuItem:last-child{ border-bottom:0; }
+    .menuItem:hover{ background: rgba(107,90,74,.07); }
+    .kbd{ font-size:12px; color:var(--muted); }
+
+    /* ===== Global Toolbars (2 rows) ===== */
+    .toolbars{
+      direction: ltr;
+      position: sticky;
+      top: 64px;
+      z-index: 80;
+      border-bottom: 1px solid var(--line);
+      background: rgba(251,247,241,.92);
+      backdrop-filter: blur(10px);
+      padding: 8px 10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .toolbarRow{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      overflow-x:auto;
+      scrollbar-width: thin;
+      padding-bottom: 2px;
+    
+      justify-content: flex-end;}
+    .toolbarRow::-webkit-scrollbar{ height:8px }
+    .toolbarRow::-webkit-scrollbar-thumb{ background: rgba(107,90,74,.22); border-radius: 999px }
+
+    .tgroup{
+      display:flex; align-items:center; gap:6px;
+      padding: 6px 8px;
+      border-radius: 14px;
+      border:1px solid rgba(230,220,207,.7);
+      background: rgba(243,236,227,.55);
+      flex: 0 0 auto;
+    
+      direction: rtl;}
+    .gtitle{
+      font-size:12px;
+      color: var(--muted);
+      margin-left: 6px;
+      user-select:none;
+      white-space:nowrap;
+      font-weight:700;
+    }
+
+    .toolbtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      height: var(--btnH);
+      min-width: var(--btnH);
+      padding: 0 10px;
+      border-radius: var(--btnR);
+      border:1px solid rgba(217,203,187,.95);
+      background: #fff;
+      color: var(--ink);
+      cursor:pointer;
+      user-select:none;
+      transition:.12s background ease, .12s border-color ease, .12s transform ease;
+      font-size: 13px;
+      line-height: 1;
+      flex: 0 0 auto;
+      touch-action: manipulation;
+      white-space:nowrap;
+    }
+    .toolbtn:hover{
+      background: rgba(255,255,255,.95);
+      border-color: rgba(217,203,187,1);
+      transform: translateY(-1px);
+    }
+    .toolbtn:active{ transform: translateY(0px); }
+
+    .toolbtn.primary{
+      border-color: rgba(91,76,63,.55);
+      background: linear-gradient(180deg, rgba(107,90,74,.96), rgba(91,76,63,.96));
+      color:#fff;
+      font-weight:900;
+    }
+    .toolbtn.toggled{
+      background: rgba(107,90,74,.12);
+      border-color: rgba(107,90,74,.35);
+      font-weight:800;
+    }
+
+    .toolsel, .toolinp{
+      height: var(--btnH);
+      border-radius: var(--btnR);
+      border:1px solid rgba(217,203,187,.95);
+      background:#fff;
+      padding: 0 10px;
+      font-size: 13px;
+      color: var(--ink);
+      outline:none;
+      flex: 0 0 auto;
+    }
+    .toolsel{ min-width: 160px; }
+    .toolinp{ width: 82px; text-align:center; }
+
+    /* Layout */
+    main{
+      padding:12px 12px 16px;
+      display:grid;
+      grid-template-columns: clamp(170px, var(--outW, 220px), 320px) 5px clamp(420px, var(--rawW, 560px), 1400px) 5px clamp(480px, var(--prevW, 720px), 1600px);
+gap:12px;
+      max-width: 1750px;
+      margin:0 auto;
+    }
+
+    .panel{
+      background: rgba(255,255,255,.92);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      min-height: 70vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .bar{
+      padding:12px 12px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background: linear-gradient(180deg, #fff, rgba(255,255,255,.88));
+    }
+    .bar .label{
+      font-weight:900;
+      font-size:13px;
+      color: var(--brown2);
+    }
+    .bar .mini{
+      font-size:12px; color:var(--muted);
+    }
+
+    /* Editor with line numbers */
+    .editorWrap{
+      position:relative;
+      flex:1;
+      display:flex;
+      background:#fff;
+    /* ===== Outline (navigation by headings) ===== */
+    .editorWrap{ gap: 0; }
+    .editorInner{
+      flex: 1;
+      display:flex;
+      min-width: 0;
+      background:#fff;
+    }
+    .outline{
+      width: 260px;
+      flex: 0 0 260px;
+      border-left: 1px solid rgba(230,220,207,.9);
+      background: linear-gradient(180deg, rgba(243,236,227,.45), rgba(243,236,227,.20));
+      display:flex;
+      flex-direction:column;
+      direction: rtl;
+    }
+    .outlineHead{
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(230,220,207,.8);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background: rgba(255,255,255,.72);
+    }
+    .outlineTitle{
+      font-weight:900;
+      font-size:12px;
+      color: var(--brown2);
+      white-space: nowrap;
+    }
+    #outlineFilter{
+      flex:1;
+      min-width: 0;
+      height: 30px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      border:1px solid rgba(217,203,187,.9);
+      outline:none;
+      background:#fff;
+    }
+    #outlineFilter:focus{
+      border-color: rgba(70,140,210,.75);
+      box-shadow: 0 0 0 3px rgba(70,140,210,.15);
+    }
+    .outlineBody{
+      padding: 8px 6px 10px;
+      overflow:auto;
+      flex:1;
+    }
+    .outlineEmpty{
+      padding: 10px 10px;
+      color: var(--muted);
+      font-size: 12px;
+      display:none;
+    }
+    .outlineList{
+      list-style:none;
+      margin:0;
+      padding:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .outlineList li{
+      cursor:pointer;
+      user-select:none;
+      padding: 7px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-size: 12px;
+      color: var(--ink);
+      background: rgba(255,255,255,.50);
+      transition: background .12s ease, border-color .12s ease, transform .05s ease;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .outlineList li:hover{
+      background: rgba(255,255,255,.86);
+      border-color: rgba(217,203,187,.85);
+      transform: translateY(-1px);
+    }
+    .outlineList li:active{ transform: translateY(0px); }
+    .outlineList li.active{
+      background: rgba(190,225,255,.55);
+      border-color: rgba(70,140,210,.55);
+      box-shadow: 0 2px 10px rgba(70,140,210,.15);
+      font-weight: 800;
+    }
+    @media (max-width: 1100px){
+      .outline{ display:none; }
+    }
+
+    }
+    .gutter{
+      width: 62px;
+      border-left: 1px solid rgba(230,220,207,.9);
+      background: linear-gradient(180deg, rgba(243,236,227,.45), rgba(243,236,227,.25));
+      color: rgba(111,98,84,.9);
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.6;
+      padding: 12px 8px;
+      white-space: pre;
+      overflow:hidden;
+      user-select:none;
+      text-align:left;
+      direction:ltr;
+    }
+    textarea{
+      flex:1;
+      width:100%;
+      resize:none;
+      border:0;
+      outline:none;
+      padding:12px 12px 14px;
+      background: #fff;
+      color: #1f1c17;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      direction: ltr;
+      unicode-bidi: plaintext;
+    }
+
+    .statusBar{
+      padding:10px 12px;
+      border-top:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      font-size:12px;
+      color:var(--muted);
+      background: rgba(243,236,227,.40);
+      flex-wrap:wrap;
+    }
+
+    /* Preview */
+    .previewWrap{
+      flex:1;
+      overflow:auto;
+      background: linear-gradient(180deg, rgba(246,241,234,.8), rgba(246,241,234,.65));
+      padding: 16px;
+    }
+    .page{
+      background: #ffffff;
+      color: #14110d;
+      border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(45, 35, 25, .12);
+      padding: 28px 30px;
+      max-width: 920px;
+      margin: 0 auto;
+      min-height: 100%;
+      direction: rtl;
+      font-family: "Times New Roman", "David", "FrankRuehl", serif;
+      font-size: var(--previewFontSize);
+      line-height: var(--previewLineHeight);
+      border: 1px solid rgba(230,220,207,.9);
+      white-space: normal;
+    }
+    
+    .otLine{ margin:0 0 10px 0; }
+    .otLine:last-child{ margin-bottom:0; }
+    .page h1,.page h2,.page h3,.page h4,.page h5,.page h6{ margin:0 0 10px 0; }
+    .page p{ margin:0 0 10px 0; }
+
+    .page pre{
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: var(--mono);
+      font-size: 13px;
+      margin:0;
+    }
+
+    /* Hide preview */
+    .previewHidden #previewPanel{ display:none; }
+    .previewHidden main{ grid-template-columns: clamp(170px, var(--outW, 220px), 320px) 5px 1fr; }
+    body.outline-collapsed.previewHidden main{ grid-template-columns: clamp(170px, var(--outW, 220px), 320px) 5px 1fr; }
+
+    /* Find/Replace drawer */
+    .drawer{
+      position: fixed;
+      top: calc(var(--pinnedTop, 140px) + 14px);
+      left: 14px;
+      width: 380px;
+      max-width: calc(100vw - 28px);
+      background: #fff;
+      border:1px solid var(--line);
+      box-shadow: 0 20px 55px rgba(45,35,25,.18);
+      border-radius: 16px;
+      overflow:hidden;
+      display:none;
+      z-index: 300;
+    }
+    .drawer.open{ display:block; }
+    .drawerHeader{
+      padding:12px 12px;
+      border-bottom:1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background: linear-gradient(180deg, #fff, rgba(243,236,227,.55));
+    }
+    .drawerHeader .ttl{ font-weight:900; color: var(--brown2); font-size:13px; }
+    .drawerBody{ padding:12px; display:flex; flex-direction:column; gap:10px; }
+    .row{ display:flex; gap:8px; align-items:center; }
+    .row label{ font-size:12px; color:var(--muted); width:66px; }
+    .row input[type="text"]{ width:100%; }
+    .opts{ display:flex; flex-wrap:wrap; gap:10px; padding:4px 2px; }
+    .opt{
+      display:flex; gap:7px; align-items:center;
+      font-size:12px; color: var(--muted);
+      user-select:none;
+    }
+    .drawerFooter{
+      padding:12px;
+      border-top:1px solid var(--line);
+      display:flex; gap:8px; flex-wrap:wrap;
+      background: rgba(243,236,227,.40);
+    }
+    .kHint{ font-size:12px; color:var(--muted); padding:0 2px 2px; }
+
+    @media (max-width: 1100px){
+      main{ grid-template-columns: 1fr; }
+      textarea{ min-height: 38vh; }
+      .drawer{ left: 10px; right:10px; width:auto; }
+      .toolbars{ top: 110px; }
+    }
+    @media (max-width: 640px){
+      :root{ --btnH: 36px; }
+      header{
+        flex-direction: column;
+        align-items: stretch;
+        gap:10px;
+      }
+      .headerRight{ justify-content:space-between; }
+      .toolsel{ min-width: 140px; }
+      .toolinp{ width: 78px; }
+      .page{ padding: 20px 18px; }
+      .gutter{ width: 56px; }
+    }
+  
+    .appIcon{
+      width:22px; height:22px;
+      border-radius:6px;
+      box-shadow: 0 6px 16px rgba(45,35,25,.18);
+      border:1px solid rgba(230,220,207,.9);
+      background:#fff;
+      flex: 0 0 auto;
+    }
+    .titleRow{ display:flex; align-items:center; gap:10px; }
+
+  
+    .splitter{
+      border-radius: 12px;
+      background: rgba(217,203,187,.55);
+      border: 1px solid rgba(217,203,187,.85);
+      cursor: col-resize;
+      align-self: stretch;
+      height: auto;
+      min-height: 120px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      user-select:none;
+      touch-action:none;
+    }
+    .splitter::before{
+      content:"";
+      width: 3px;
+      height: 40px;
+      border-radius: 3px;
+      background: rgba(107,90,74,.55);
+      box-shadow: 6px 0 0 rgba(107,90,74,.35), -6px 0 0 rgba(107,90,74,.35);
+    }
+    .previewHidden #splitter{ display:none; }
+
+
+#historyGroup{ order:-20; }
+#searchGroup{ order:-19; }
+#advancedGroup{ order:50; }
+
+    .menuWrap{ position:relative; display:inline-block; }
+    .menu{
+      position:absolute;
+      right:0;
+      bottom: calc(100% + 10px);
+      top:auto;
+      z-index: 9999;
+      max-height: 52vh;
+      overflow:auto;
+      transform-origin: bottom right;
+    }
+    
+    body.textHidden #rawPanel{ display:none !important; }
+    body.textHidden #splitter{ display:none !important; }
+    body.textHidden main{ grid-template-columns: clamp(170px, var(--outW, 220px), 320px) 5px 1fr !important; }
+    body.outline-collapsed.textHidden main{ grid-template-columns: 1fr !important; }
+    
+body.toolbarHidden .toolbars{ display:none !important; }
+
+#fileMenu{
+  top: calc(100% + 10px) !important;
+  bottom: auto !important;
+  right: 0;
+}
+
+.menu.up{
+  bottom: calc(100% + 10px);
+  top: auto;
+}
+.menu:not(.up){
+  top: calc(100% + 10px);
+  bottom: auto;
+}
+
+#historyGroup{ order:-30; }
+#searchGroup{ order:-29; }
+#advancedGroup{ order:50; }
+
+.chip, .toolbtn, .menuBtn, .btn{ pointer-events:auto; }
+
+/* ===== Unified button look ===== */
+.chip, .toolbtn, .menuBtn, .btn{
+  border: 1px solid rgba(120,90,60,.30);
+  background: rgba(255,255,255,.75);
+  border-radius: 999px;
+  padding: 8px 12px;
+  line-height: 1;
+  font-weight: 600;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03);
+  transition: transform .05s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.chip:hover, .toolbtn:hover, .menuBtn:hover, .btn:hover{
+  background: rgba(255,255,255,.92);
+  border-color: rgba(120,90,60,.45);
+}
+.chip:active, .toolbtn:active, .menuBtn:active, .btn:active{
+  transform: translateY(1px);
+}
+.chip.isActive, .toolbtn.isActive, .menuBtn.isActive, .btn.isActive{
+  background: rgba(190,225,255,.55);
+  border-color: rgba(70,140,210,.55);
+  box-shadow: 0 2px 10px rgba(70,140,210,.15);
+}
+/* prevent menus being clipped */
+.toolbars{ overflow: visible; }
+
+.outline-frame{ max-width: none; }
+}
+
+
+/* ---- 3-column layout: Outline | Raw | Preview ---- */
+#outlineCol{
+  min-width: 220px;
+  max-width: 360px;
+}
+#outlineCol .outlineColBody{
+  padding: 12px;
+  overflow:auto;
+  height: calc(100% - 54px);
+}
+#outlineCol .barActions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* Reuse framed look inside the column */
+#outlineCol #outlineFrame{
+  display:block;
+  padding:0;
+  border:none;
+  box-shadow:none;
+  background:transparent;
+  max-width:none;
+  min-width:auto;
+}
+
+/* Hide/show outline column */
+body.outline-collapsed #outlineCol,
+body.outline-collapsed #outlineSplitter{
+  display:none;
+}
+
+/* Splitter for outline column */
+.splitter--outline{ width:10px; }
+
+
+.miniBtn{padding:8px 12px;border-radius:999px;}
+
+/* Outline collapsed: revert to 2-column (raw | preview) layout */
+body.outline-collapsed main{
+  grid-template-columns: clamp(420px, var(--rawW, 560px), 1400px) 5px clamp(480px, var(--prevW, 720px), 1600px);
+}
+body.outline-collapsed #outlineCol,
+body.outline-collapsed #outlineSplitter{
+  display:none !important;
+}
+
+
+/* Outline in its own column */
+.outline--col{
+  width:100% !important;
+  flex: 1 1 auto !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  background: transparent !important;
+}
+#outlineCol .outlineColBody{
+  padding: 8px 10px 12px;
+}
+#outlineCol .outlineHead{
+  background: rgba(255,255,255,.72);
+  border:1px solid rgba(230,220,207,.75);
+  border-radius: 14px;
+  margin-bottom: 8px;
+}
+#outlineCol .outlineBody{
+  border:1px solid rgba(230,220,207,.75);
+  border-radius: 14px;
+  background: rgba(255,255,255,.65);
+}
+
+
+/* ---- Outline column: ensure visible even on narrow screens ---- */
+@media (max-width: 1100px){
+  /* original CSS hides .outline; but in our outline column we want it visible */
+  .outline--col{ display:flex !important; }
+  /* stack panels vertically for small screens */
+  main{
+    grid-template-columns: 1fr !important;
+  }
+  #outlineSplitter, #splitter{
+    display:none !important;
+  }
+  #outlineCol, #rawPanel, #previewPanel{
+    min-height: auto;
+  }
+}
+
+
+/* Keep columns stable */
+main{ align-items: stretch; }
+#outlineCol, #rawPanel, #previewPanel{ min-width: 0; }
+#outlineCol{ overflow:hidden; }
+
+
+/* ---- Outline column compact + nicer ---- */
+#outlineCol{
+  min-width: 190px;
+  max-width: 320px;
+}
+#outlineCol .outlineColBody{
+  padding: 10px;
+}
+#outlinePanel.outline--col{
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(230,220,207,.85);
+  border-radius: 16px;
+  overflow:hidden;
+}
+#outlineCol .outlineHead{
+  margin:0;
+  padding:10px 10px;
+  border:0;
+  border-bottom: 1px solid rgba(230,220,207,.75);
+  border-radius: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.55));
+}
+#outlineCol #outlineFilter{
+  height: 28px;
+  font-size: 12px;
+  padding: 6px 10px;
+}
+#outlineCol .outlineBody{
+  border:0;
+  border-radius: 0;
+  padding: 8px 6px 10px;
+  background: transparent;
+}
+#outlineCol .outlineList li{
+  padding: 7px 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.40);
+}
+#outlineCol .outlineList li:hover{
+  background: rgba(255,255,255,.78);
+}
+#outlineCol .outlineList li.active{
+  background: rgba(190,225,255,.48);
+}
+#outlineCol .barActions .miniBtn{
+  padding:7px 11px;
+  font-size:12px;
+}
+
+
+/* ---- Outline list: tighter bullets + page-matching palette ---- */
+#outlineCol .outlineList{
+  padding: 0;
+  margin: 0;
+}
+#outlineCol .outlineList li{
+  list-style-position: inside;
+  padding-right: 10px; /* reduces space after bullet in RTL */
+}
+#outlineCol .outlineList li::marker{
+  color: rgba(111,98,84,.70);
+}
+#outlineCol #outlinePanel.outline--col{
+  background: rgba(246,241,234,.65);
+  border-color: rgba(230,220,207,.95);
+}
+#outlineCol .outlineList li{
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(230,220,207,.35);
+}
+#outlineCol .outlineList li:hover{
+  border-color: rgba(217,203,187,.85);
+}
+#outlineCol .outlineList li.active{
+  border-color: rgba(70,140,210,.40);
+}
+
+
+/* ---- Outline: remove bullets completely ---- */
+#outlineCol .outlineList{
+  list-style: none !important;
+}
+#outlineCol .outlineList li{
+  list-style: none !important;
+}
+#outlineCol .outlineList li::marker{
+  content: "";
+}
+
+/* ---- Layout: tighter columns ---- */
+main{
+  column-gap: 6px !important;
+}
+.splitter, #outlineSplitter{
+  width: 6px !important;
+  min-width: 6px !important;
+}
+
+/* ---- Prevent horizontal overflow / bottom scrollbar ---- */
+html, body{
+  overflow-x: hidden;
+}
+main{
+  max-width: 1550px;   /* was larger – keeps everything inside viewport */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* ---- Even tighter columns + narrower gutter ---- */
+main{
+  column-gap: 4px !important;
+}
+.splitter, #outlineSplitter, #splitter{
+  width: 5px !important;
+  min-width: 5px !important;
+}
+
+/* Narrow line-number gutter in raw editor */
+#gutter{
+  width: 30px !important;
+  padding: 6px 4px !important;
+  font-size: 11px !important;
+}
+.editorWrap{
+  gap: 6px !important;
+}
+textarea#raw{
+  padding-right: 10px !important;
+}
+
+/* Preview: remove outer frame/border to gain width */
+#previewPanel{
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+#previewPanel .bar{
+  border: 1px solid var(--line) !important;
+  background: rgba(255,255,255,.55) !important;
+}
+#previewPanel .previewWrap{
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+#previewPanel #page{
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+/* ---- Layout fix: grid gap + splitter columns ---- */
+main{
+  gap: 4px !important; /* grid gap */
+}
+
+
+/* ---- Preview fix: restore panel card, remove only inner page frame ---- */
+#previewPanel{
+  border: 1px solid var(--line) !important;
+  box-shadow: var(--shadow) !important;
+  background: rgba(255,255,255,.55) !important;
+}
+#previewPanel .previewWrap{
+  background: transparent !important;
+  padding: 0 !important;
+}
+#previewPanel #page{
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+/* ---- Gutter fix: prevent overlap ---- */
+#gutter{
+  width: 34px !important;
+  padding: 6px 4px !important;
+  text-align: right !important;
+}
+
+
+/* ---- Column sizing fix (pixel-accurate via clamp/minmax) ---- */
+main{
+  max-width: none !important; /* don't artificially constrain */
+}
+#outlineCol{ min-width: 190px; }
+#rawPanel{ min-width: 520px; }
+#previewPanel{ min-width: 620px; }
+
+
+/* Ensure panels don't cover splitters */
+.panel{ position: relative; z-index: 1; }
+.splitter{ z-index: 5; }
+
+
+/* ---- Splitters: narrow (layout) but easy to grab (hit area) ---- */
+.splitter{
+  width: 5px !important;               /* real layout width */
+  min-width: 5px !important;
+  cursor: col-resize !important;
+  position: relative;
+  z-index: 20;
+  user-select: none;
+  touch-action: none;
+  /* enlarge hit area without taking space */
+  margin-left: -5px;
+  margin-right: -5px;
+}
+.splitter::before{
+  content:"";
+  position:absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 50%;
+  width: 3px;                          /* visible bar */
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgba(217,203,187,.85);
+}
+.splitter:hover::before{ background: rgba(70,140,210,.55); }
+body.dragging .splitter::before{ background: rgba(70,140,210,.85); }
+
+
+/* ---- Splitter fix: ensure it receives pointer events ---- */
+.splitter, #outlineSplitter, #splitter{
+  align-self: stretch !important;
+  height: auto !important;
+  min-height: 100% !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 9999 !important;
+}
+main{ align-items: stretch !important; }
+
+/* keep splitter visually thin but with larger hit area */
+.splitter{
+  width: 4px !important;
+  min-width: 4px !important;
+  cursor: col-resize !important;
+  position: relative;
+  z-index: 9999;
+  user-select: none;
+  touch-action: none;
+}
+.splitter::after{
+  content:"";
+  position:absolute;
+  top:0; bottom:0;
+  left:-8px; right:-8px;   /* hit area */
+}
+
+
+/* === FIX34: Splitters truly draggable + no overlay on sticky toolbars === */
+header{ z-index: 1200 !important; }
+.toolbars{ z-index: 1100 !important; }
+
+/* keep splitters inside main layer (below toolbars) and clickable */
+main{ position: relative; z-index: 1; }
+.panel{ position: relative; z-index: 2; }
+
+.splitter{
+  display:block !important;
+  align-self: stretch !important;
+  min-height: 70vh !important;
+  height: auto !important;
+  pointer-events: auto !important;
+  cursor: col-resize !important;
+  position: relative !important;
+  z-index: 10 !important; /* below toolbars */
+  background: rgba(217,203,187,.35) !important;
+}
+
+/* enlarge hit-area without visual bulk */
+.splitter::after{
+  content:"";
+  position:absolute;
+  top:0; bottom:0;
+  left:-10px; right:-10px;
+}
+
+/* outline stays visible while scrolling */
+#outlineCol{
+  position: sticky !important;
+  top: 126px !important; /* header (top:0) + toolbars (top:64) */
+  align-self: start !important;
+  max-height: calc(100vh - 140px) !important;
+}
+#outlineCol .outlineColBody{
+  overflow:auto !important;
+  max-height: calc(100vh - 200px) !important;
+}
+
+
+/* === FIX37: keep header/toolbars/outline pinned; scroll only inside panels === */
+:root{
+  --headerH: 64px;
+  --toolH: 84px;
+  --topInset: calc(var(--headerH) + var(--toolH));
+}
+
+/* page itself must not scroll */
+html, body{
+  height: 100%;
+  overflow: hidden !important;
+}
+
+/* pin header + toolbars */
+header{
+  position: fixed !important;
+  top: 0; left: 0; right: 0;
+  z-index: 1100 !important;
+}
+.toolbars{
+  position: fixed !important;
+  left: 0; right: 0;
+  top: var(--headerH) !important;
+  z-index: 1050 !important;
+}
+
+/* main area becomes the viewport work area */
+main{
+  margin-top: calc(var(--topInset) + 10px) !important;
+  height: calc(100vh - var(--topInset) - 16px) !important;
+  overflow: hidden !important;
+  align-items: stretch !important;
+}
+
+/* panels should fill main, and internal areas scroll */
+.panel{
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+#outlineCol{
+  height: 100% !important;
+}
+#outlineCol .outlineColBody{
+  height: auto !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+#rawPanel .editorWrap{
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important; /* textarea handles scroll */
+}
+#rawPanel textarea#raw{
+  height: 100% !important;
+  overflow: auto !important;
+}
+
+#previewPanel .previewWrap{
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+/* make splitters match the work area height */
+#outlineSplitter, #splitter{
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+</style>
+
+<style id="navToggleStyle">
+  /* Nav toggle hidden state */
+  #btnOutlineToggle2.navHidden{
+    background: rgba(70, 140, 210, .18) !important;
+    border-color: rgba(70, 140, 210, .55) !important;
+    box-shadow: 0 6px 16px rgba(70, 140, 210, .18) !important;
+    font-weight: 800;
+  }
+</style>
+
+</head>
+
+<body id="appRoot">
+<header>
+  <div class="title">
+    <div class="titleRow"><img class="appIcon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD8AAAA/CAYAAABXXxDfAAAEW0lEQVR4Ae2bWyh8WxzHf9hya+ZwGOXSPMnDCQ8oE6W8uBwniZIXnZzSKbe8ooMHhcKDFylFEcpxa6aQS27p5GHkPsRfyTnHpRDKmGM4s1bNvz+zt9kz89uz59/en1pNs/Zv/eb3tddea+21fhhgIS0tTREZGfnrwcHBz8fHx3FGozHUUu3FZvs9w3z7JSoqyluj0VRqtdpGk8n0o1hBuYuv4hMTE/0tH6NjY2O/iBiPW6HiyR23fPyp1+tzRY7HrVDxKSkpNePj45ISTmDS09N/0Ol0f4gdiBgwERERv1kGt2CxAxEDZnd3N0/sIMSCMRgMP2E79fPzg7CwMPDycn1pcH9/T4sQMGazWcF2YWJiwqauo6MD1tbWuJ0xDLS0tEBxcTH4+vqiBPj29gZzc3NQU1MDNzc3du3Z4iYxbWxs2MbL5SQ/P9+mbmRk5NMfrq6uhpKSErsBOgLpPZmZmdDb2wsFBQV27dni7u/vZ7XlFO8MfIJzltTUVFCr1XB2dobmE1W8UqnEdGcDGUc8VvxHGhoaYGFhwam2CoUCZmZmkCN6j6DiLy8v4eTkxKm2RLzQCCre05HFSxVZvFSRxUsVQcX39PTQ4qmgin96esJ0J7h/VPE6nQ4qKiowXX7l8PAQDAYDqk9U8W1tbaBSqaCwsBB8fHzQ/K6vr9M/Knm3xwRVvMlkou/0dXV1EB4ejrKT8/DwAFdXVwjR2SLIgPf4+EiLpyNPdVIFXTzZxAwKCkL1aTQa4fn5GdUnAV18bm4uTE5OovpsbW2F2tpaVJ8EudtLFVm8VEEXT5ai2dnZqD5PT09R/VlBF399fQ2zs7PYbgVB7vZSBV28t7c32vG0lZeXFzCbzag+CejiyRE115Gws8grPAGQxUsVWTwmJBmBLS/GFY6OjlD9WUEXf35+Tsv3AKd4sk38cfcVcztaCMgukkP2XBdIzltoaOi7uri4OOeichPx8fGs9WT7mw1O8dvb25CRkfGurqysDLq6uuDi4sKFEIWDJEB95PX1FXZ2dljtOcVrtVob8SQVbHl5GcrLy2FxcRH9BMVZYmJioLm5mXWgJfGSN002OMX39fVBfX29TdePjY2F+fl5uqNKCh+6u7vpKQ5fOjs7obS0lJctGYe4MrfIzWlqauJsyyn+7u6O5rsODAywXvf396eFDwEBAbzsvrUPDnY9C56ky66srHBe/3R4HBwcJP+FAZWVlS4H4m729vbo4/kZdueGqqoqOvKTR8DTpzorS0tLUFRURHvvJ/zHa2JsbGyEqakp+vzk5OQ4PJ+6i/39fWhvb6ev1PYG45CQkC+8Vej1esjLyyONQKPRQHR0NO8jaK6phouhoSHY3NzkbX97ewtbW1sOLYOTkpKWHL6F5Iemp6cdbeYQq6urtAiJSqXq98z+KzAJCQna4eHhvyQnPjAw8B+1Wv07WcFKSrxSqfw7Kysrc3R09F/yXSri35KTkycsz3m5RfiltfJ/GrNokBHwRF4AAAAASUVORK5CYII=" alt="אוצריא">
+    <h1>עריכת ספרי אוצריא</h1></div>
+    <div class="sub">Ctrl+F חיפוש • Ctrl+H החלפה • Ctrl+Z / Ctrl+Y היסטוריה</div>
+  </div>
+
+  <div class="headerRight">
+    <div class="menuWrap">
+      <button class="btn menuBtn" id="fileMenuBtn">קובץ ▾</button>
+      <div class="menu" id="fileMenu">
+        <div class="menuItem" id="miImportTxt"><span>טען קובץ טקסט</span><span class="kbd">—</span></div>
+        <div class="menuItem" id="miNew"><span>מסמך חדש</span><span class="kbd">Ctrl+N</span></div>
+        <div class="menuItem" id="miDownloadTxt"><span>הורד טקסט</span><span class="kbd">—</span></div>
+        <div class="menuItem" id="miDownloadHtml"><span>הורד HTML (כולל תצוגה)</span><span class="kbd">—</span></div>
+        
+        <div class="menuItem" id="miSaveLocal"><span>שמור ל־LocalStorage</span><span class="kbd">אוטומטי</span></div>
+        <div class="menuItem" id="miLoadLocal"><span>טען מה־LocalStorage</span><span class="kbd">—</span></div>
+        <div class="menuItem" id="miClearLocal"><span>נקה LocalStorage</span><span class="kbd">—</span></div>
+      </div>
+      <input type="file" id="importFile" accept=".txt,text/plain" style="display:none" />
+    
+        </div>
+
+</div>
+
+    <div class="chip" title="בחירה / שורה / מילה ראשונה בכל שורה / מסמך">
+      <span>החלה על:</span>
+      <select id="applyScope">
+        <option value="selection">בחירה</option>
+        <option value="line">שורה נוכחית</option>
+        <option value="firstword">מילה ראשונה בכל שורה</option>
+        <option value="block">מקטע זה</option>
+        <option value="blockpick">מקטע מסוים…</option>
+        <option value="document">כל המסמך</option>
+      
+      </select>
+      <select id="blockSel" style="display:none" title="בחר מקטע מתוך הקובץ"></select>
+
+    </div>
+
+    <div class="topBtns">
+      <button class="btn primary" id="btnReset" title="טען טקסט דוגמא">📄 טען טקסט דוגמא</button>
+<button class="btn" id="btnOutlineToggle2" title="הצג/הסתר תפריט ניווט">הסתר תפריט ניווט</button>
+<button class="btn" id="btnToggleToolbar" title="הסתר/הצג סרגל כלים">🧰 הסתר סרגל כלים</button>
+      <button class="btn" id="btnToggleText" title="הסתר/הצג טקסט גולמי">📝 הסתר טקסט גולמי</button>
+      <button class="btn" id="btnTogglePreview" title="הסתר/הצג תצוגה מקדימה">👁 הסתר תצוגה מקדימה</button>
+    </div>
+  </div>
+</header>
+
+<!-- 2-row toolbars -->
+<div class="toolbars">
+  <!-- Row 1: File/History/View -->
+  <div class="toolbarRow">
+
+    <div class="tgroup">
+      <span class="gtitle">היסטורית שינויים</span>
+      <button class="toolbtn" id="btnUndo" title="Undo (Ctrl+Z)">↶ בטל</button>
+      <button class="toolbtn" id="btnRedo" title="Redo (Ctrl+Y)">↷ שחזר</button>
+    </div>
+
+    
+    <div class="tgroup">
+      <span class="gtitle">חיפוש / החלפה</span>
+      <button class="toolbtn" id="btnFindMini" title="חיפוש או החלפה (Ctrl+F / Ctrl+H)">🔎 חיפוש/החלפה</button>
+    </div>
+<div class="tgroup">
+      <span class="gtitle">גופן</span>
+      <select class="toolsel" id="fontFamilySel" title="בחירת font-family לעטיפה">
+        <option value="">לא נבחר</option>
+        <option value="David">David</option>
+        <option value="FrankRuehl">FrankRuehl</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Arial">Arial</option>
+        <option value="Noto Sans Hebrew">Noto Sans Hebrew</option>
+        <option value="Monospace">Monospace</option>
+      </select>
+      <button class="toolbtn" id="btnFontApply" title="עטוף ב-span עם font-family">החל</button>
+    </div>
+
+    
+<div class="tgroup">
+      <span class="gtitle">מבנה</span>
+      <button class="toolbtn" id="btnLink" title="עטוף ב-a href">קישור</button>
+      <button class="toolbtn" id="btnDetails" title="הכנס details/summary">מוסתר</button>
+      <button class="toolbtn" id="btnHr" title="הכנס hr">קו</button>
+      <button class="toolbtn" id="btnOl" title="עטוף כרשימה ממוספרת">מספור</button>
+      <button class="toolbtn" id="btnUl" title="עטוף כרשימת תבליטים">תבליטים</button>
+    </div>
+
+  
+
+    <div class="tgroup">
+      <span class="gtitle">גודל/צבע</span>
+      <input class="toolinp" type="number" id="fontPct" min="40" max="300" value="150" title="אחוז גודל (CSS)" />
+      <button class="toolbtn" id="btnFontPct" title="עטוף ב-span עם font-size:%">%</button>
+
+      <input type="color" id="colorPick" value="#6b5a4a" title="צבע טקסט" />
+      <button class="toolbtn" id="btnColor" title="עטוף ב-span עם color">A</button>
+
+      <input type="color" id="bgPick" value="#fff1a8" title="רקע טקסט" />
+      <button class="toolbtn" id="btnBg" title="עטוף ב-span עם background-color">BG</button>
+    </div>
+</div>
+
+  <!-- Row 2: Formatting -->
+  <div class="toolbarRow">
+    <div class="tgroup">
+      <span class="gtitle">גודל תצוגה מקדימה</span>
+      <button class="toolbtn" id="btnZoomOut" title="הקטן תצוגה">−</button>
+      <button class="toolbtn" id="btnZoomReset" title="איפוס תצוגה">100%</button>
+      <button class="toolbtn" id="btnZoomIn" title="הגדל תצוגה">+</button>
+    </div>
+
+    
+    <div class="tgroup">
+      <span class="gtitle">אפשרויות מתקדמות</span>
+      <div class="menuWrap">
+        <button class="toolbtn menuBtn" id="moreMenuBtn" title="כלי עיבוד נוספים">⚙ בחר פעולה לביצוע ▾</button>
+        <div class="menu" id="moreMenu" class="menu up">
+          
+          <div class="menuItem" data-extra="" style="cursor:default; font-weight:800; background:rgba(243,236,227,.55)"><span>בחר פעולה</span><span class="kbd">—</span></div>
+<div class="menuItem" data-extra="fixCommon"><span>תיקון שגיאות נפוצות</span><span class="kbd">—</span></div>
+          <div class="menuItem" data-extra="trimLines"><span>ניקוי רווחים בתחילת/סוף שורה</span><span class="kbd">—</span></div>
+          <div class="menuItem" data-extra="removeEmpty"><span>הסרת שורות ריקות כפולות</span><span class="kbd">—</span></div>
+          <div class="menuItem" data-extra="brNormalize"><span>איחוד &lt;br&gt; כפולים</span><span class="kbd">—</span></div>
+          <div class="menuItem" data-extra="unwrapB"><span>המרת &lt;strong&gt; ל-&lt;b&gt;</span><span class="kbd">—</span></div>
+          <div class="menuItem" data-extra="unwrapI"><span>המרת &lt;em&gt; ל-&lt;i&gt;</span><span class="kbd">—</span></div>
+          <div class="menuItem" data-extra="compactTags"><span>ניקוי תגי style ריקים</span><span class="kbd">—</span></div>
+          <div class="menuItem" data-extra="normalizeQuotes"><span>נירמול גרשיים/מירכאות</span><span class="kbd">—</span></div>
+          <div class="menuItem" data-extra="makeBlocks"><span>סימון מקטעים לפי כותרות</span><span class="kbd">—</span></div>
+          <div class="menuItem" data-extra="exportBlocks"><span>ייצוא מקטע נבחר (העתקה ללוח)</span><span class="kbd">—</span></div>
+        </div>
+      </div>
+    </div>
+
+
+    
+
+    <div class="tgroup">
+      <span class="gtitle">כותרות</span>
+      <button class="toolbtn" data-wrap="h1" title="עטוף בתגית h1">H1</button>
+      <button class="toolbtn" data-wrap="h2" title="עטוף בתגית h2">H2</button>
+      <button class="toolbtn" data-wrap="h3" title="עטוף בתגית h3">H3</button>
+      <button class="toolbtn" data-wrap="h4" title="עטוף בתגית h4">H4</button>
+      <button class="toolbtn" data-wrap="h5" title="עטוף בתגית h5">H5</button>
+      <button class="toolbtn" data-wrap="h6" title="עטוף בתגית h6">H6</button>
+    </div>
+
+    <div class="tgroup">
+      <span class="gtitle">עיצוב</span>
+      <button class="toolbtn" data-wrap="b" title="טקסט מודגש">B</button>
+      <button class="toolbtn" data-wrap="i" title="טקסט נטוי">I</button>
+      <button class="toolbtn" data-wrap="u" title="קו תחתון">U</button>
+      <button class="toolbtn" data-wrap="s" title="קו חוצה">S</button>
+      <button class="toolbtn" data-wrap="sup" title="סימון עליון עבור הערה">x²</button>
+      <button class="toolbtn" data-wrap="sub" title="סימון תחתון עבור הערה">x₂</button>
+      <button class="toolbtn" id="btnMark" title="סימון mark">סימון</button>
+    </div>
+
+    
+
+    <div class="tgroup">
+      <span class="gtitle">יישור טקסט</span>
+      <button class="toolbtn" data-align="right" title="עטוף ב-p עם text-align:right">ימין</button>
+      <button class="toolbtn" data-align="center" title="עטוף ב-p עם text-align:center">מרכז</button>
+      <button class="toolbtn" data-align="left" title="עטוף ב-p עם text-align:left">שמאל</button>
+    </div>
+
+    </div>
+</div>
+
+<main>
+
+  <!-- OUTLINE -->
+  <section class="panel" id="outlineCol">
+    <div class="bar">
+      <div class="label">תפריט ניווט</div>
+      <div class="barActions">
+        <button type="button" id="btnOutlineToggle" class="btn miniBtn" title="הסתר/הצג ניווט">הסתר תפריט ניווט</button>
+      </div>
+    </div>
+    <div class="outlineColBody">
+<aside class="outline outline--col" id="outlinePanel" aria-label="ניווט לפי כותרות">
+        <div class="outlineHead">
+          <input type="text" id="outlineFilter" placeholder="סנן כותרות…" />
+        </div>
+        <div class="outlineBody">
+          <div class="outlineEmpty" id="outlineEmpty">אין כותרות (h1–h6)</div>
+          <ul class="outlineList" id="outlineList"></ul>
+        </aside>
+</div>
+  </section>
+
+  <div id="outlineSplitter" class="splitter splitter--outline" title="גרור לשינוי רוחב"></div>
+
+  <!-- RAW -->
+  <section class="panel" id="rawPanel">
+    <div class="bar">
+      <div class="label">טקסט גולמי</div>
+      <div class="mini" id="rawMiniInfo">—</div>
+</div>
+
+    <div class="editorWrap">
+      <div class="gutter" id="gutter"></div>
+      <textarea id="raw" spellcheck="false"></textarea>
+    </div>
+
+      
+
+    <div class="statusBar">
+      <div id="cursorInfo">—</div>
+      <div id="findInfo">Ctrl+F לחיפוש</div>
+      <div id="statsInfo">—</div>
+    </div>
+  </section>
+
+  <div id="splitter" class="splitter" title="גרור לשינוי רוחב"></div>
+
+  <!-- PREVIEW -->
+  <section class="panel" id="previewPanel">
+    <div class="bar">
+      <div class="label">תצוגה מקדימה</div>
+      <div class="mini" id="previewMiniInfo">—</div>
+    </div>
+
+    <div class="previewWrap">
+      <div id="page" class="page"></div>
+    </div>
+  </section>
+</main>
+
+<!-- FIND/REPLACE -->
+<div class="drawer" id="drawer">
+  <div class="drawerHeader">
+    <div class="ttl">חיפוש והחלפה</div>
+    <button class="btn" id="btnCloseDrawer">סגור</button>
+  </div>
+
+  <div class="drawerBody">
+    <div class="row">
+      <label>חפש</label>
+      <input type="text" id="findText" placeholder="טקסט לחיפוש…" />
+    </div>
+    <div class="row">
+      <label>החלף</label>
+      <input type="text" id="replaceText" placeholder="טקסט להחלפה…" />
+    </div>
+
+    <div class="opts">
+      <div class="opt"><input type="checkbox" id="optCase"> <span>רגיש לרישיות</span></div>
+      <div class="opt"><input type="checkbox" id="optRegex"> <span>רגקס</span></div>
+      <div class="opt"><input type="checkbox" id="optWhole"> <span>מילה שלמה</span></div>
+      <div class="opt"><input type="checkbox" id="optInSel"> <span>רק בתוך בחירה</span></div>
+    </div>
+
+    <div class="kHint">קיצורים: <b>Ctrl+F</b> חיפוש • <b>Ctrl+H</b> החלפה • <b>Enter</b> הבא • <b>Shift+Enter</b> קודם</div>
+  </div>
+
+  <div class="drawerFooter">
+    <button class="btn" id="btnPrev">קודם</button>
+    <button class="btn primary" id="btnNext">הבא</button>
+    <button class="btn" id="btnReplace">החלף</button>
+    <button class="btn" id="btnReplaceAll">החלף הכל</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const LS_KEY = "otzaria_editor_content_v1";
+
+  const appRoot = document.getElementById('appRoot');
+
+  
+  // === FIX37: dynamic top inset for fixed header/toolbars (header may wrap) ===
+  const headerEl = document.querySelector('header');
+  const toolbarsEl = document.querySelector('.toolbars');
+
+  function updateTopInset(){
+    try{
+      const hh = headerEl ? Math.ceil(headerEl.getBoundingClientRect().height) : 64;
+      const th = toolbarsEl ? Math.ceil(toolbarsEl.getBoundingClientRect().height) : 84;
+      document.documentElement.style.setProperty('--headerH', hh + 'px');
+      document.documentElement.style.setProperty('--toolH', th + 'px');
+      document.documentElement.style.setProperty('--topInset', `calc(${hh}px + ${th}px)`);
+    }catch{}
+  }
+
+  updateTopInset();
+  window.addEventListener('resize', ()=> requestAnimationFrame(updateTopInset));
+
+  // react to header/toolbars height changes (wrap, zoom, fonts)
+  if(window.ResizeObserver){
+    try{
+      const ro = new ResizeObserver(()=> updateTopInset());
+      if(headerEl) ro.observe(headerEl);
+      if(toolbarsEl) ro.observe(toolbarsEl);
+    }catch{}
+  }
+const raw = document.getElementById('raw');
+  const gutter = document.getElementById('gutter');
+  const page = document.getElementById('page');
+
+const scopeSel = document.getElementById('applyScope'); // "החלה על:"
+  const blockSel = document.getElementById('blockSel');
+
+  // Track selection made inside preview (stores plain-text offsets, not just text)
+  let lastPreviewSelection = { plainStart:null, plainEnd:null, text:'' };
+  let lastPreviewSelectionAt = 0;
+
+  function refreshPreviewSelection(){
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount===0) return;
+
+    const r = sel.getRangeAt(0);
+    if(!page) return;
+
+    const inPage = page.contains(r.startContainer) && page.contains(r.endContainer);
+    if(!inPage) return;
+
+    const picked = (sel.toString() || "");
+    if(!picked.trim()) return;
+
+    // Compute plain-text offsets within preview
+    const pre = document.createRange();
+    pre.selectNodeContents(page);
+    pre.setEnd(r.startContainer, r.startOffset);
+    const plainStart = pre.toString().length;
+    const plainEnd = plainStart + picked.length;
+
+    lastPreviewSelection = { plainStart, plainEnd, text: picked };
+    lastPreviewSelectionAt = Date.now();
+  }
+
+  // Keep selection even when clicking toolbar buttons (selection may be cleared)
+  if(page){
+    page.addEventListener('mouseup', ()=> setTimeout(refreshPreviewSelection, 0));
+    page.addEventListener('keyup', ()=> setTimeout(refreshPreviewSelection, 0));
+    page.addEventListener('pointerup', ()=> setTimeout(refreshPreviewSelection, 0));
+  }
+  document.addEventListener('selectionchange', ()=>{
+    Promise.resolve().then(refreshPreviewSelection);
+  });
+
+  // Build a boundary map from "plain text position" -> "raw string index"
+  // Treat <br> as '\n' and skip all other HTML tags.
+  function buildPlainBoundaryMap(htmlText){
+    const s = String(htmlText || "");
+    const boundary = [0]; // boundary[k] = raw index for plain position k
+    let i = 0;
+    while(i < s.length){
+      const ch = s[i];
+      if(ch === "<"){
+        // <br> => newline in plain
+        const m = s.slice(i).match(/^<br\s*\/?>/i);
+        if(m){
+          i += m[0].length;
+          boundary.push(i);
+          continue;
+        }
+        // skip generic tag
+        const j = s.indexOf(">", i+1);
+        if(j === -1){
+          // malformed tag; treat '<' as plain char
+          i += 1;
+          boundary.push(i);
+          continue;
+        }
+        i = j + 1;
+        continue;
+      }
+      // regular char (including '\n' already in raw)
+      i += 1;
+      boundary.push(i);
+    }
+    return boundary; // length = plainLen+1
+  }
+
+  function tryApplyPreviewSelectionToRaw(force=false){
+    // If user selected in preview, sync that selection into the raw textarea.
+    // When force=true, override any existing raw selection (fixes toolbar applying to old selection).
+    if(!force && raw.selectionStart !== raw.selectionEnd) return;
+
+    const ps = lastPreviewSelection.plainStart;
+    const pe = lastPreviewSelection.plainEnd;
+    if(ps == null || pe == null || pe <= ps) return;
+
+    const v = raw.value || "";
+    const boundary = buildPlainBoundaryMap(v);
+
+    // Clamp
+    const plainLen = boundary.length - 1;
+    const a = Math.max(0, Math.min(plainLen, ps));
+    const b = Math.max(0, Math.min(plainLen, pe));
+
+    const rs = boundary[a];
+    const re = boundary[b];
+
+    raw.focus({preventScroll:true});
+    raw.setSelectionRange(rs, re);
+    syncLastSelection();
+  }
+
+
+// Preview options
+  let previewHidden = false;
+  let plainPreview = false;
+  let zoom = 1.0;
+
+  // Selection persistence
+  let lastSelStart = 0;
+  let lastSelEnd = 0;
+
+  // Undo/Redo history
+  const history = [];
+  let histPos = -1;
+  let ignoreHistory = false;
+
+  function safeLocalSave(value){
+    try { localStorage.setItem(LS_KEY, value); } catch {}
+  }
+  function safeLocalLoad(){
+    try { return localStorage.getItem(LS_KEY); } catch { return null; }
+  }
+  function safeLocalClear(){
+    try { localStorage.removeItem(LS_KEY); } catch {}
+  }
+
+  function pushHistory(value){
+    if(ignoreHistory) return;
+    // avoid duplicates
+    if(histPos >= 0 && history[histPos] === value) return;
+    // cut future
+    history.splice(histPos + 1);
+    history.push(value);
+    histPos = history.length - 1;
+  }
+
+  function undo(){
+    if(histPos <= 0) return;
+    ignoreHistory = true;
+    histPos--;
+    raw.value = history[histPos];
+    ignoreHistory = false;
+    syncLastSelection();
+    enableEditablePreview();
+    renderAll();
+    findInfo.textContent = "Undo";
+  }
+
+  function redo(){
+    if(histPos >= history.length - 1) return;
+    ignoreHistory = true;
+    histPos++;
+    raw.value = history[histPos];
+    ignoreHistory = false;
+    syncLastSelection();
+    renderAll();
+    findInfo.textContent = "Redo";
+  }
+
+  function syncLastSelection(){
+    lastSelStart = raw.selectionStart ?? 0;
+    lastSelEnd = raw.selectionEnd ?? lastSelStart;
+  }
+
+  // ===== Helpers used by Advanced menu =====
+  function toast(msg){
+    try{
+      // reuse existing status area if present
+      const el = document.getElementById('findInfo') || document.getElementById('rawMiniInfo');
+      if(el) el.textContent = String(msg || "");
+    }catch{}
+  }
+
+  
+function setRawValue(nextValue, arg2 = {}, arg3){
+  const v = String(nextValue ?? "");
+
+  // Backward-compat: setRawValue(value, selStart, selEnd)
+  let opts = {};
+  let forcedSel = null;
+
+  if (typeof arg2 === "number") {
+    const selStart = arg2;
+    const selEnd = (typeof arg3 === "number") ? arg3 : arg2;
+    forcedSel = { s: selStart, e: selEnd };
+  } else {
+    opts = arg2 || {};
+  }
+
+  const keepSel = opts.keepSelection !== false;
+
+  ignoreHistory = true;
+  raw.value = v;
+  ignoreHistory = false;
+
+  if (forcedSel) {
+    const ns = Math.max(0, Math.min(v.length, forcedSel.s));
+    const ne = Math.max(0, Math.min(v.length, forcedSel.e));
+    raw.setSelectionRange(ns, ne);
+  } else if (keepSel) {
+    const s = raw.selectionStart ?? 0;
+    const e = raw.selectionEnd ?? s;
+    const ns = Math.max(0, Math.min(v.length, s));
+    const ne = Math.max(0, Math.min(v.length, e));
+    raw.setSelectionRange(ns, ne);
+  } else {
+    raw.setSelectionRange(0, 0);
+  }
+
+  syncLastSelection();
+  pushHistory(raw.value);
+  safeLocalSave(raw.value);
+  renderAll();
+}
+
+  function restoreSelection(){
+    raw.focus({preventScroll:true});
+    raw.setSelectionRange(lastSelStart, lastSelEnd);
+  }
+
+  function updateCursorInfo(){
+    const s = raw.selectionStart ?? 0;
+    const e = raw.selectionEnd ?? 0;
+    const len = raw.value.length;
+    cursorInfo.textContent = (s === e)
+      ? `מיקום: ${s} מתוך ${len}`
+      : `בחירה: ${s}–${e} (אורך ${e - s}) מתוך ${len}`;
+
+    rawMiniInfo.textContent = (scopeSel.value === "firstword")
+      ? "מצב: מילה ראשונה בכל שורה"
+      : (scopeSel.value === "line")
+        ? "מצב: שורה נוכחית"
+        : (scopeSel.value === "document")
+          ? "מצב: כל המסמך"
+          : "מצב: בחירה";
+  }
+
+  function updateStats(){
+    const text = raw.value || "";
+    const lines = text.length ? text.split(/\r?\n/).length : 1;
+    // words: Hebrew/English friendly
+    const words = (text.match(/[^\s]+/g) || []).length;
+    const chars = text.length;
+
+    // rough pages estimate: ~350 words/page (common readable) -> tweak later if you want
+    const pages = Math.max(1, Math.ceil(words / 350));
+
+    statsInfo.textContent = `מילים: ${words} • שורות: ${lines} • תווים: ${chars} • עמודים≈ ${pages}`;
+  }
+
+  function updateGutter(){
+    const text = raw.value || "";
+    const lines = text.length ? text.split(/\r?\n/).length : 1;
+
+    // build line numbers
+    let out = "";
+    for(let i=1;i<=lines;i++) out += i + "\n";
+    gutter.textContent = out;
+
+    // sync scroll
+    gutter.scrollTop = raw.scrollTop;
+  }
+
+  function applyZoom(){
+    const base = 18;
+    const lh = 1.65;
+    document.documentElement.style.setProperty('--previewFontSize', (base * zoom).toFixed(2) + 'px');
+    document.documentElement.style.setProperty('--previewLineHeight', (lh).toFixed(2));
+    document.getElementById('btnZoomReset').textContent = Math.round(zoom * 100) + "%";
+  }
+
+  function updatePreview(){
+    const v = raw.value || "";
+    const editingPreview = (document.activeElement === page);
+
+    const html = plainPreview
+      ? `<pre>${escapeHtml(v)}</pre>`
+      : v.replace(/\r\n/g, "\n").replace(/\n/g, "<br>\n");
+
+    if(editingPreview) return;
+    ignorePreviewInput = true;
+    page.innerHTML = html;
+    ignorePreviewInput = false;
+  }
+
+  
+  // ===== Editable Preview Sync =====
+  function normalizeEditablePreviewHtml(html){
+    let h = (html || "");
+    h = h.replace(/<div><br\s*\/?><\/div>/gi, "<br>\n");
+    h = h.replace(/<div>/gi, "");
+    h = h.replace(/<\/div>/gi, "<br>\n");
+    h = h.replace(/<p><br\s*\/?><\/p>/gi, "<br>\n");
+    h = h.replace(/<p>/gi, "");
+    h = h.replace(/<\/p>/gi, "<br>\n");
+    h = h.replace(/<br\s*\/?>(?!\n)/gi, "<br>\n");
+    h = h.replace(/&nbsp;/g, " ");
+    return h;
+  }
+
+  function previewHtmlToRaw(html){
+    const h = normalizeEditablePreviewHtml(html);
+    let v = h.replace(/<br>\n/gi, "\n").replace(/<br>/gi, "\n");
+    v = v.replace(/\n+$/g, (m)=> m.length>1 ? "\n" : "");
+    return v;
+  }
+
+  let ignorePreviewInput = false;
+
+  function enableEditablePreview(){
+    if(!page) return;
+    page.setAttribute('contenteditable', 'true');
+    page.setAttribute('spellcheck', 'false');
+    page.setAttribute('tabindex','0');
+
+    page.addEventListener('input', ()=>{
+      if(ignorePreviewInput) return;
+      const next = previewHtmlToRaw(page.innerHTML);
+      raw.value = next;
+      syncLastSelection();
+      pushHistory(raw.value);
+      safeLocalSave(raw.value);
+      renderAll();
+    });
+
+    page.addEventListener('mouseup', ()=> setTimeout(refreshPreviewSelection,0));
+    page.addEventListener('keyup', ()=> setTimeout(refreshPreviewSelection,0));
+  }
+
+function escapeHtml(s){
+    return s
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function renderAll(){
+    updatePreview();
+    decoratePreviewHeadings();
+    refreshBlockSelect();
+    updateOutlineNav();
+    updateGutter();
+    updateCursorInfo();
+    updateStats();
+  }
+
+  function getLineRange(pos){
+    const text = raw.value;
+    const start = text.lastIndexOf("\n", pos - 1) + 1;
+    const endIdx = text.indexOf("\n", pos);
+    const end = endIdx === -1 ? text.length : endIdx;
+    return { start, end };
+  }
+
+  
+  // ===== Blocks (between headings) =====
+  function escapeHtml(s){
+    return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function stripTags(s){
+    return (s||"").replace(/<[^>]+>/g,"").trim();
+  }
+  function getHeadingMatches(t){
+    const rx = /<h([1-6])[^>]*>.*?<\/h\1>/gis;
+    const out = [];
+    let m;
+    while((m = rx.exec(t))){
+      const lvl = parseInt(m[1], 10) || 2;
+      out.push({ start: m.index, end: m.index + m[0].length, level: lvl, html: m[0] });
+    }
+    return out;
+  }
+  function computeBlocks(t){
+    const heads = getHeadingMatches(t);
+    const blocks = [];
+    for(let i=0;i<heads.length;i++){
+      const h = heads[i];
+      const next = heads[i+1];
+      // block is the content AFTER the heading (to next heading)
+      let start = h.end;
+      // skip one newline if present
+      if(t[start] === "\n") start += 1;
+      const end = next ? next.start : t.length;
+      const title = stripTags(h.html) || `כותרת ${i+1}`;
+      const level = h.level || 2;
+      blocks.push({ i, title, level, start, end, headingStart: h.start, headingEnd: h.end });
+    }
+    return blocks;
+  }
+  let cachedBlocks = [];
+  function refreshBlockSelect(){
+    if(!blockSel) return;
+    cachedBlocks = computeBlocks(raw.value || "");
+    blockSel.innerHTML = "";
+    if(!cachedBlocks.length){
+      const opt = document.createElement("option");
+      opt.value = "";
+      opt.textContent = "אין מקטעים (אין כותרות)";
+      blockSel.appendChild(opt);
+      return;
+    }
+    cachedBlocks.forEach(b=>{
+      const opt = document.createElement("option");
+      opt.value = String(b.i);
+      opt.textContent = `${b.i+1}. ${b.title}`;
+      blockSel.appendChild(opt);
+    });
+  }
+
+  // ===== Outline (navigation by headings) =====
+  const outlinePanel = document.getElementById("outlinePanel");
+  const outlineList = document.getElementById("outlineList");
+  const outlineFilter = document.getElementById("outlineFilter");
+  const outlineEmpty = document.getElementById("outlineEmpty");
+
+  function decoratePreviewHeadings(){
+    if(!page) return;
+    const hs = page.querySelectorAll("h1,h2,h3,h4,h5,h6");
+    hs.forEach((h, idx)=>{
+      h.dataset.otzHindex = String(idx);
+      if(!h.id) h.id = "otz-h-" + idx;
+    });
+  }
+
+  function scrollRawToIndex(idx){
+    const v = raw.value || "";
+    const before = v.slice(0, Math.max(0, Math.min(v.length, idx)));
+    const line = (before.match(/\n/g) || []).length;
+    const total = (v.match(/\n/g) || []).length + 1;
+    const maxScroll = Math.max(0, raw.scrollHeight - raw.clientHeight);
+    const ratio = total <= 1 ? 0 : (line / (total - 1));
+    raw.scrollTop = maxScroll * ratio;
+  }
+
+  function setActiveOutline(i){
+    if(!outlineList) return;
+    outlineList.querySelectorAll("li").forEach(li=> li.classList.remove("active"));
+    const li = outlineList.querySelector(`li[data-idx="${i}"]`);
+    if(li) li.classList.add("active");
+  }
+
+  function gotoHeadingByIndex(i){
+    const blocks = cachedBlocks.length ? cachedBlocks : computeBlocks(raw.value || "");
+    const b = blocks[i];
+    if(!b) return;
+
+    // Raw
+    raw.focus({preventScroll:true});
+    raw.setSelectionRange(b.headingStart, b.headingEnd);
+    scrollRawToIndex(b.headingStart);
+    syncLastSelection();
+
+    // Preview
+    decoratePreviewHeadings();
+    const el = page?.querySelector(`[data-otz-hindex="${i}"]`);
+    if(el){
+      el.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    setActiveOutline(i);
+  }
+
+  function updateOutlineNav(){
+    if(!outlineList || !outlineEmpty) return;
+
+    const blocks = cachedBlocks.length ? cachedBlocks : computeBlocks(raw.value || "");
+    const q = (outlineFilter?.value || "").trim().toLowerCase();
+    outlineList.innerHTML = "";
+
+    let shown = 0;
+    blocks.forEach((b)=>{
+      const title = (b.title || "").trim() || `כותרת ${b.i+1}`;
+      if(q && !title.toLowerCase().includes(q)) return;
+
+      const li = document.createElement("li");
+      li.textContent = title;
+      li.dataset.idx = String(b.i);
+
+      const lvl = Math.max(1, Math.min(6, parseInt(b.level,10) || 2));
+      li.style.paddingRight = (10 + (lvl - 1) * 14) + "px";
+      li.title = "H" + lvl;
+
+      li.addEventListener("click", ()=> gotoHeadingByIndex(b.i));
+      outlineList.appendChild(li);
+      shown++;
+    });
+
+    outlineEmpty.style.display = shown ? "none" : "block";
+  }
+
+  if(outlineFilter){
+    outlineFilter.addEventListener("input", ()=> updateOutlineNav());
+  }
+
+  function updateScopeUI(){
+    if(!scopeSel) return;
+    if(!scopeSel || !blockSel) return;
+    const v = scopeSel.value;
+    const show = (v === "blockpick");
+    blockSel.style.display = show ? "inline-block" : "none";
+    if(show){
+      refreshBlockSelect();
+    }
+  }
+  function getCurrentBlockRange(text, caretPos){
+    const blocks = computeBlocks(text);
+    if(!blocks.length) return null;
+    // find block containing caret (by content range, or heading itself)
+    for(const b of blocks){
+      if(caretPos >= b.headingStart && caretPos < b.end){
+        return { start: b.start, end: b.end, mode: "range" };
+      }
+    }
+    return { start: blocks[0].start, end: blocks[0].end, mode: "range" };
+  }
+  function getPickedBlockRange(text){
+    if(!blockSel) return null;
+    const idx = parseInt(blockSel.value || "", 10);
+    if(Number.isNaN(idx)) return null;
+    const blocks = cachedBlocks.length ? cachedBlocks : computeBlocks(text);
+    const b = blocks[idx];
+    if(!b) return null;
+    return { start: b.start, end: b.end, mode: "range" };
+  }
+
+function computeRangeByScope(text, selStart, selEnd){
+    const scope = (scopeSel ? scopeSel.value : 'selection');
+
+    if(scope === "document"){
+      return { start: 0, end: text.length, mode: "range" };
+    }
+
+    if(scope === "line"){
+      const r = getLineRange(selStart);
+      return { start: r.start, end: r.end, mode: "range" };
+    }
+
+    if(scope === "selection"){
+      if(selStart !== selEnd){
+        return { start: selStart, end: selEnd, mode: "range" };
+      }
+      const r = getLineRange(selStart);
+      return { start: r.start, end: r.end, mode: "range" };
+    }
+
+    if(scope === "firstword"){
+      let r;
+      if(selStart !== selEnd){
+        r = { start: selStart, end: selEnd };
+      } else {
+        r = { start: 0, end: text.length };
+      }
+      return { start: r.start, end: r.end, mode: "firstword" };
+    }
+
+    return { start: selStart, end: selEnd, mode: "range" };
+  }
+
+  function wrapFragment(tag, attrs, inner){
+    const open = attrs ? `<${tag} ${attrs}>` : `<${tag}>`;
+    const close = `</${tag}>`;
+    return open + inner + close;
+  }
+
+  function applyToScope(fnRange, fnFirstWord){
+    // If the user selected text inside the preview, map that selection back to the raw editor first
+    if(lastPreviewSelectionAt && (Date.now() - lastPreviewSelectionAt) < 2000){
+      tryApplyPreviewSelectionToRaw(true);
+    }else{
+      tryApplyPreviewSelectionToRaw();
+    }
+    restoreSelection();
+
+    const text = raw.value;
+    const selStart = lastSelStart;
+    const selEnd = lastSelEnd;
+
+    const scope = computeRangeByScope(text, selStart, selEnd);
+
+    // Force operations to apply to exact selection when there is one
+    if(selStart !== selEnd){
+      scope.mode = 'range';
+      scope.start = selStart;
+      scope.end = selEnd;
+    }
+
+    if(scope.mode === "firstword"){
+      const { start, end } = scope;
+
+      const before = text.slice(0, start);
+      const mid = text.slice(start, end);
+      const after = text.slice(end);
+
+      const lines = mid.split(/\r?\n/);
+
+      let out = [];
+      let changedCount = 0;
+
+      for(const line of lines){
+        if(line.trim().length === 0){
+          out.push(line);
+          continue;
+        }
+
+        const m = line.match(/^(\s*)(\S+)([\s\S]*)$/);
+        if(!m){
+          out.push(line);
+          continue;
+        }
+
+        const lead = m[1];
+        const first = m[2];
+        const rest = m[3];
+
+        const wrapped = fnFirstWord(first);
+        out.push(lead + wrapped + rest);
+        changedCount++;
+      }
+
+      const newMid = out.join("\n");
+      raw.value = before + newMid + after;
+
+      raw.focus({preventScroll:true});
+      raw.setSelectionRange(start, start + newMid.length);
+      syncLastSelection();
+
+      pushHistory(raw.value);
+      safeLocalSave(raw.value);
+
+      renderAll();
+      findInfo.textContent = `בוצע על ${changedCount} שורות`;
+      return;
+    }
+
+    const { start, end } = scope;
+    const before = text.slice(0, start);
+    const mid = text.slice(start, end);
+    const after = text.slice(end);
+
+    const res = fnRange(mid, start, end);
+    const bc = (res.beforeCut || 0);
+    const ac = (res.afterCut || 0);
+    const before2 = bc ? before.slice(0, Math.max(0, before.length - bc)) : before;
+    const after2 = ac ? after.slice(Math.min(ac, after.length)) : after;
+    const baseStart = start - bc;
+    raw.value = before2 + res.newMid + after2;
+
+    const cs = (res.cursorStart != null) ? res.cursorStart : baseStart;
+    const ce = (res.cursorEnd != null) ? res.cursorEnd : (baseStart + res.newMid.length);
+
+    raw.focus({preventScroll:true});
+    raw.setSelectionRange(cs, ce);
+
+    syncLastSelection();
+
+    pushHistory(raw.value);
+    safeLocalSave(raw.value);
+
+    renderAll();
+  }
+
+  function wrap(tag, attrs=""){
+    applyToScope(
+      (mid, absStart, absEnd)=>{
+        // Toggle: if selection is already wrapped by the same tag, unwrap.
+        const openRe = new RegExp(`<${tag}(\s+[^>]*)?>$`, 'i');
+        const closeRe = new RegExp(`^</${tag}>`, 'i');
+
+        const v = raw.value || "";
+        const before = v.slice(0, absStart);
+        const after = v.slice(absEnd);
+
+        const canUnwrap = openRe.test(before) && closeRe.test(after);
+        if(canUnwrap){
+          const openMatch = before.match(openRe);
+          const openLen = openMatch ? openMatch[0].length : (`<${tag}>`).length;
+          const closeLen = (`</${tag}>`).length;
+
+          return {
+            newMid: mid,
+            beforeCut: openLen,
+            afterCut: closeLen,
+            cursorStart: absStart - openLen,
+            cursorEnd: (absStart - openLen) + mid.length
+          };
+        }
+
+        const inner = mid.length ? mid : "כתוב כאן";
+        const newMid = wrapFragment(tag, attrs, inner);
+        const openLen = (attrs ? (`<${tag} ${attrs}>`).length : (`<${tag}>`).length);
+        return {
+          newMid,
+          cursorStart: absStart + openLen,
+          cursorEnd: absStart + openLen + inner.length
+        };
+      },
+      (firstWord)=> wrapFragment(tag, attrs, firstWord)
+    );
+  }
+
+function wrapSpanStyle(style){
+    wrap("span", `style="${style}"`);
+  }
+
+  function wrapPAlign(align){
+    applyToScope(
+      (mid, absStart)=>{
+        const inner = mid.length ? mid : "כתוב כאן";
+        const open = `<p style="text-align:${align};">`;
+        const close = `</p>`;
+        const newMid = open + inner + close;
+        return {
+          newMid,
+          cursorStart: absStart + open.length,
+          cursorEnd: absStart + open.length + inner.length
+        };
+      },
+      (firstWord)=> `<span style="display:inline-block;text-align:${align};">${firstWord}</span>`
+    );
+  }
+
+  function insertAtCursor(textToInsert){
+    tryApplyPreviewSelectionToRaw();
+    restoreSelection();
+    const t = raw.value;
+    const s = lastSelStart;
+    const e = lastSelEnd;
+
+    raw.value = t.slice(0,s) + textToInsert + t.slice(e);
+    const newPos = s + textToInsert.length;
+
+    raw.focus({preventScroll:true});
+    raw.setSelectionRange(newPos, newPos);
+
+    syncLastSelection();
+
+    pushHistory(raw.value);
+    safeLocalSave(raw.value);
+
+    renderAll();
+  }
+
+  // Focus-safe binding
+  function bindToolButton(el, handler){
+    if(!el) return;
+    el.addEventListener('pointerdown', (ev)=>{
+      ev.preventDefault();
+      try{
+        // Capture current selection in preview (contenteditable) and map it to raw, if relevant.
+        refreshPreviewSelection();
+        tryApplyPreviewSelectionToRaw(true);
+      }catch{}
+      handler(ev);
+    }, {passive:false});
+  }
+
+  // Wrap buttons
+  document.querySelectorAll('[data-wrap]').forEach(btn=>{
+    bindToolButton(btn, () => wrap(btn.getAttribute('data-wrap')));
+  });
+
+  // Align
+  document.querySelectorAll('[data-align]').forEach(btn=>{
+    bindToolButton(btn, () => wrapPAlign(btn.getAttribute('data-align')));
+  });
+
+  // Mark
+  bindToolButton(document.getElementById('btnMark'), ()=> wrap("mark"));
+
+  // Font family
+  bindToolButton(document.getElementById('btnFontApply'), ()=>{
+    const f = document.getElementById('fontFamilySel').value.trim();
+    if(!f){ insertAtCursor(`<span style="font-family: David;">כתוב כאן</span>`); return; }
+    wrapSpanStyle(`font-family:${f};`);
+  });
+
+  // Size
+  bindToolButton(document.getElementById('btnFontPct'), ()=>{
+    const pct = Math.max(10, Math.min(600, Number(document.getElementById('fontPct').value || 150)));
+    wrapSpanStyle(`font-size:${pct}%;`);
+  });
+
+  // Colors
+  bindToolButton(document.getElementById('btnColor'), ()=>{
+    const c = document.getElementById('colorPick').value;
+    wrapSpanStyle(`color:${c};`);
+  });
+
+  bindToolButton(document.getElementById('btnBg'), ()=>{
+    const c = document.getElementById('bgPick').value;
+    wrapSpanStyle(`background-color:${c};`);
+  });
+
+  // Structure
+  bindToolButton(document.getElementById('btnLink'), ()=>{
+    applyToScope(
+      (mid, absStart)=>{
+        const inner = mid.length ? mid : "טקסט קישור";
+        const open = `<a href="https://example.com/">`;
+        const close = `</a>`;
+        const newMid = open + inner + close;
+        return { newMid, cursorStart: absStart + open.length, cursorEnd: absStart + open.length + inner.length };
+      },
+      (firstWord)=> `<a href="https://example.com/">${firstWord}</a>`
+    );
+  });
+
+  bindToolButton(document.getElementById('btnDetails'), ()=>{
+    applyToScope(
+      (mid, absStart)=>{
+        const inner = mid.length ? mid : "זה הטקסט שמופיע לאחר הלחיצה!";
+        const tpl = `<details><summary>הצג טקסט מוסתר</summary>${inner}</details>`;
+        return { newMid: tpl, cursorStart: absStart + `<details><summary>`.length, cursorEnd: absStart + tpl.length };
+      },
+      (firstWord)=> `<details><summary>${firstWord}</summary>…</details>`
+    );
+  });
+
+  bindToolButton(document.getElementById('btnHr'), ()=> insertAtCursor(`<br><hr><br>`));
+
+  function wrapList(kind){
+    applyToScope(
+      (mid, absStart)=>{
+        const lines = (mid || "פריט 1\nפריט 2").split(/\r?\n/).filter(x=>x.trim().length>0);
+        const items = lines.map(x=>`<li>${x}</li>`).join("");
+        const newMid = `<${kind}>${items}</${kind}>`;
+        return { newMid, cursorStart: absStart + 4, cursorEnd: absStart + newMid.length };
+      },
+      (firstWord)=> `<${kind}><li>${firstWord}</li></${kind}>`
+    );
+  }
+  bindToolButton(document.getElementById('btnOl'), ()=> wrapList("ol"));
+  bindToolButton(document.getElementById('btnUl'), ()=> wrapList("ul"));
+
+  // ===== Preview Toggle =====
+  function setPreviewHidden(hidden){
+    if(hidden) appRoot.classList.add("previewHidden");
+    else appRoot.classList.remove("previewHidden");
+
+    const btp = document.getElementById('btnTogglePreview');
+    if(btp){
+      btp.textContent = hidden ? "👁 הצג תצוגה מקדימה" : "👁 הסתר תצוגה מקדימה";
+      btp.classList.toggle('isActive', hidden);
+    }
+  }
+  function togglePreview(){
+    previewHidden = !previewHidden;
+    setPreviewHidden(previewHidden);
+  }
+  document.getElementById('btnTogglePreview').addEventListener('click', togglePreview);
+  const btnTogglePreviewMini = document.getElementById('btnTogglePreviewMini');
+  if(btnTogglePreviewMini) bindToolButton(btnTogglePreviewMini, togglePreview);
+
+  // ===== Plain Preview =====
+  function togglePlain(){
+    plainPreview = !plainPreview;
+    if(btnPlain) btnPlain.classList.toggle("toggled", plainPreview);
+    findInfo.textContent = plainPreview ? "מצב: טקסט בלבד" : "מצב: HTML + <br>";
+    updatePreview();
+  }
+  const btnPlain = document.getElementById('btnPlain');
+  if(btnPlain) bindToolButton(btnPlain, togglePlain);
+
+  // ===== Zoom =====
+  bindToolButton(document.getElementById('btnZoomIn'), ()=>{ zoom = Math.min(2.2, zoom + 0.1); applyZoom(); });
+  bindToolButton(document.getElementById('btnZoomOut'), ()=>{ zoom = Math.max(0.6, zoom - 0.1); applyZoom(); });
+  bindToolButton(document.getElementById('btnZoomReset'), ()=>{ zoom = 1.0; applyZoom(); });
+
+  // ===== Undo/Redo =====
+  bindToolButton(document.getElementById('btnUndo'), undo);
+  bindToolButton(document.getElementById('btnRedo'), redo);
+
+  // ===== Find/Replace =====
+  function escapeRegex(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function buildRegExp(){
+    const q = findText.value ?? "";
+    if(!q) return null;
+
+    let pattern = q;
+    if(!optRegex.checked) pattern = escapeRegex(pattern);
+    if(optWhole.checked) pattern = `\\b(?:${pattern})\\b`;
+
+    const flags = optCase.checked ? "g" : "gi";
+    try{ return new RegExp(pattern, flags); }
+    catch(e){ return null; }
+  }
+
+  function getSearchRange(){
+    if(optInSel.checked && lastSelStart !== lastSelEnd){
+      return { start: lastSelStart, end: lastSelEnd };
+    }
+    return { start: 0, end: raw.value.length };
+  }
+
+  function findNext(direction){
+    const re = buildRegExp();
+    if(!re){
+      findInfo.textContent = findText.value ? "רגקס לא תקין" : "—";
+      return false;
+    }
+
+    restoreSelection();
+    const text = raw.value;
+    const range = getSearchRange();
+    const hay = text.slice(range.start, range.end);
+
+    let from = (direction > 0) ? (lastSelEnd - range.start) : (lastSelStart - range.start);
+    from = Math.max(0, Math.min(hay.length, from));
+
+    if(direction > 0){
+      re.lastIndex = from;
+      let m = re.exec(hay);
+      if(!m){
+        re.lastIndex = 0;
+        m = re.exec(hay);
+      }
+      if(!m){
+        findInfo.textContent = "לא נמצא";
+        return false;
+      }
+      const start = range.start + m.index;
+      const end = start + m[0].length;
+      raw.focus({preventScroll:true});
+      raw.setSelectionRange(start, end);
+      syncLastSelection();
+      findInfo.textContent = `נמצא (${m[0].length})`;
+      raw.scrollTop = raw.scrollHeight * (start / Math.max(1, text.length));
+      return true;
+    } else {
+      let m, last = null;
+      re.lastIndex = 0;
+      while((m = re.exec(hay)) !== null){
+        if(m.index < from) last = m;
+        else break;
+        if(m[0].length === 0) re.lastIndex++;
+      }
+      if(!last){
+        re.lastIndex = 0;
+        while((m = re.exec(hay)) !== null){
+          last = m;
+          if(m[0].length === 0) re.lastIndex++;
+        }
+      }
+      if(!last){
+        findInfo.textContent = "לא נמצא";
+        return false;
+      }
+      const start = range.start + last.index;
+      const end = start + last[0].length;
+      raw.focus({preventScroll:true});
+      raw.setSelectionRange(start, end);
+      syncLastSelection();
+      findInfo.textContent = `נמצא (${last[0].length})`;
+      raw.scrollTop = raw.scrollHeight * (start / Math.max(1, text.length));
+      return true;
+    }
+  }
+
+  function doReplace(){
+    restoreSelection();
+    if(lastSelStart === lastSelEnd) {
+      if(!findNext(+1)) return;
+      restoreSelection();
+    }
+
+    const selText = raw.value.slice(lastSelStart, lastSelEnd);
+    const re = buildRegExp();
+    if(!re) return;
+
+    let newText;
+    if(optRegex.checked){
+      const r1 = new RegExp(re.source, re.flags.replace("g",""));
+      newText = selText.replace(r1, replaceText.value);
+    } else {
+      newText = replaceText.value;
+    }
+
+    const t = raw.value;
+    raw.value = t.slice(0,lastSelStart) + newText + t.slice(lastSelEnd);
+
+    const newPos = lastSelStart + newText.length;
+    raw.focus({preventScroll:true});
+    raw.setSelectionRange(newPos, newPos);
+    syncLastSelection();
+
+    pushHistory(raw.value);
+    safeLocalSave(raw.value);
+
+    renderAll();
+    findNext(+1);
+  }
+
+  function doReplaceAll(){
+    const re = buildRegExp();
+    if(!re){
+      findInfo.textContent = findText.value ? "רגקס לא תקין" : "—";
+      return;
+    }
+
+    restoreSelection();
+    const t = raw.value;
+    const range = getSearchRange();
+
+    const before = t.slice(0, range.start);
+    const mid = t.slice(range.start, range.end);
+    const after = t.slice(range.end);
+
+    const replaced = mid.replace(re, replaceText.value);
+    raw.value = before + replaced + after;
+
+    raw.focus({preventScroll:true});
+    raw.setSelectionRange(range.start, range.start);
+        syncLastSelection();
+
+    pushHistory(raw.value);
+    safeLocalSave(raw.value);
+
+    renderAll();
+    findInfo.textContent = "בוצע החלף הכל";
+  }
+
+  function openDrawer(mode){
+    drawer.classList.add('open');
+    if(mode === "replace") replaceText.focus();
+    else findText.focus();
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    raw.focus();
+    syncLastSelection();
+  }
+
+  // פתיחה/סגירה של חלון חיפוש
+  (document.getElementById('btnFindTop')||{addEventListener:()=>{}}).addEventListener('click', ()=> openDrawer("find"));
+  bindToolButton(document.getElementById('btnFindMini'), ()=> openDrawer("find"));
+  document.getElementById('btnCloseDrawer').addEventListener('click', closeDrawer);
+
+  document.getElementById('btnNext').addEventListener('click', ()=> findNext(+1));
+  document.getElementById('btnPrev').addEventListener('click', ()=> findNext(-1));
+  document.getElementById('btnReplace').addEventListener('click', doReplace);
+  document.getElementById('btnReplaceAll').addEventListener('click', doReplaceAll);
+
+  // ===== File Menu =====
+  function setMenuOpen(open){
+    fileMenu.classList.toggle("open", !!open);
+  }
+
+  fileMenuBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    setMenuOpen(!fileMenu.classList.contains("open"));
+  });
+
+  // סגירת התפריט בלחיצה בחוץ
+  document.addEventListener('pointerdown', (e)=>{
+    const inside = e.target.closest('.menuWrap');
+    if(!inside) setMenuOpen(false);
+  });
+
+  function downloadText(filename, content, mime="text/plain;charset=utf-8"){
+    const blob = new Blob([content], {type:mime});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 250);
+  }
+
+  function downloadHtmlSnapshot(){
+    // מייצר HTML עצמאי עם התוכן הנוכחי בתוך textarea (כדי לא לאבד)
+    const html = document.documentElement.outerHTML;
+    downloadText("otzaria-editor.html", html, "text/html;charset=utf-8");
+  }
+
+  document.getElementById('miNew').addEventListener('click', ()=>{
+    setMenuOpen(false);
+    ignoreHistory = true;
+    raw.value = "";
+    ignoreHistory = false;
+    syncLastSelection();
+    pushHistory(raw.value);
+    safeLocalSave(raw.value);
+    renderAll();
+    findInfo.textContent = "מסמך חדש";
+  });
+
+  document.getElementById('miDownloadTxt').addEventListener('click', ()=>{
+    setMenuOpen(false);
+    downloadText("document.txt", raw.value);
+  });
+
+  document.getElementById('miDownloadHtml').addEventListener('click', ()=>{
+    setMenuOpen(false);
+    downloadHtmlSnapshot();
+  });
+
+  document.getElementById('miImportTxt').addEventListener('click', ()=>{
+    setMenuOpen(false);
+    importFile.value = "";
+    importFile.click();
+  });
+
+  importFile.addEventListener('change', async ()=>{
+    const f = importFile.files && importFile.files[0];
+    if(!f) return;
+    const txt = await f.text();
+
+    ignoreHistory = true;
+    raw.value = txt;
+    ignoreHistory = false;
+
+    syncLastSelection();
+    pushHistory(raw.value);
+    safeLocalSave(raw.value);
+    renderAll();
+    findInfo.textContent = "יובא TXT";
+  });
+
+  document.getElementById('miSaveLocal').addEventListener('click', ()=>{
+    setMenuOpen(false);
+    safeLocalSave(raw.value);
+    findInfo.textContent = "נשמר ל־LocalStorage";
+  });
+
+  document.getElementById('miLoadLocal').addEventListener('click', ()=>{
+    setMenuOpen(false);
+    const v = safeLocalLoad();
+    if(v == null){ findInfo.textContent = "אין שמירה ב־LocalStorage"; return; }
+
+    ignoreHistory = true;
+    raw.value = v;
+    ignoreHistory = false;
+
+    syncLastSelection();
+    pushHistory(raw.value);
+    renderAll();
+    findInfo.textContent = "נטען מ־LocalStorage";
+  });
+
+  document.getElementById('miClearLocal').addEventListener('click', ()=>{
+    setMenuOpen(false);
+    safeLocalClear();
+    findInfo.textContent = "LocalStorage נוקה";
+  });
+
+  // ===== Reset sample =====
+  const SAMPLE =
+`<h1>שם הספר (כותרת רמה 1)</h1>
+<h2>כותרת רמה 2</h2>
+פסקה רגילה עם <b>הדגשה</b> ועם <i>נטוי</i> וגם <u>קו תחתון</u>.
+<br>
+טקסט רגיל <sup>1</sup> טקסט רגיל — ואחר כך הערת שוליים:
+<br>
+<small><sup>1</sup> גוף ההערה</small>
+
+
+<h3>כותרת משנה (h3)</h3>
+טקסט רגיל בשורה אחת.<br>
+ועוד שורה עם <b>מודגש</b> ועם <i>נטוי</i> וגם <u>קו תחתון</u>.
+<br>
+<small><sup>2</sup> הערה נוספת</small>
+
+<h4>כותרת קטנה (h4)</h4>
+<ul>
+  <li>פריט ראשון</li>
+  <li>פריט שני</li>
+</ul>
+
+<h5>כותרת קטנה יותר (h5)</h5>
+<ol>
+  <li>סעיף 1</li>
+  <li>סעיף 2</li>
+</ol>
+
+<h6>כותרת מינימלית (h6)</h6>
+<details><summary>מקטע מוסתר</summary>זהו טקסט בתוך details/summary</details>
+<hr>
+
+<h2>מצב “מילה ראשונה בכל שורה”</h2>
+נסה לבחור "החלה על → מילה ראשונה בכל שורה" ואז ללחוץ B.
+זה יחיל רק על המילה הראשונה בכל שורה.
+
+<h2>טקסט מוסתר</h2>
+לפני <details><summary>הצג טקסט</summary>זה הטקסט שמופיע לאחר הלחיצה!</details> אחרי`;
+
+  document.getElementById('btnReset').addEventListener('click', ()=>{
+    ignoreHistory = true;
+    raw.value = SAMPLE;
+    ignoreHistory = false;
+
+    raw.focus();
+    raw.setSelectionRange(0,0);
+    syncLastSelection();
+
+    pushHistory(raw.value);
+    safeLocalSave(raw.value);
+
+    renderAll();
+    findInfo.textContent = "נטענה דוגמה";
+  });
+
+  // ===== גלילה של הגאטר עם הטקסט =====
+  raw.addEventListener('scroll', ()=>{ gutter.scrollTop = raw.scrollTop; });
+
+  // ===== קיצורים =====
+  document.addEventListener('keydown', (e)=>{
+    const isMac = navigator.platform.toLowerCase().includes("mac");
+    const ctrl = isMac ? e.metaKey : e.ctrlKey;
+
+    // Ctrl+F / Ctrl+H
+    if(ctrl && e.key.toLowerCase() === "f"){
+      e.preventDefault();
+      openDrawer("find");
+      return;
+    }
+    if(ctrl && e.key.toLowerCase() === "h"){
+      e.preventDefault();
+      openDrawer("replace");
+      return;
+    }
+
+    // Ctrl+Z / Ctrl+Y  (native undo in inputs/contenteditable; custom history for RAW)
+    if(ctrl && e.key.toLowerCase() === "z"){
+      const t = e.target;
+      const isEditable = (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)));
+      const inPreview = !!(t && (t === preview || (preview && preview.contains(t))));
+      const inRaw = (t === raw);
+      // If user is editing inside the preview (contenteditable) or other input, let the browser handle undo/redo.
+      if(isEditable && !inRaw && inPreview){
+        return;
+      }
+      // Mac often uses Cmd+Shift+Z for redo; if Shift is held, treat as redo.
+      if(isMac && e.shiftKey){
+        e.preventDefault();
+        redo();
+        return;
+      }
+      // Default: custom undo (for RAW)
+      e.preventDefault();
+      undo();
+      return;
+    }
+    if(ctrl && e.key.toLowerCase() === "y"){
+      const t = e.target;
+      const isEditable = (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)));
+      const inPreview = !!(t && (t === preview || (preview && preview.contains(t))));
+      const inRaw = (t === raw);
+      if(isEditable && !inRaw && inPreview){
+        return;
+      }
+      e.preventDefault();
+      redo();
+      return;
+    }
+    // Cmd+Shift+Z (Mac redo) when focused in raw
+    if(isMac && e.metaKey && e.shiftKey && e.key.toLowerCase() === "z"){
+      const t = e.target;
+      if(t === raw){
+        e.preventDefault();
+        redo();
+        return;
+      }
+    }
+
+    // Ctrl+N
+    if(ctrl && e.key.toLowerCase() === "n"){
+      e.preventDefault();
+      document.getElementById('miNew').click();
+      return;
+    }
+
+    // כשהמגירה פתוחה
+    if(drawer.classList.contains('open')){
+      if(e.key === "Escape"){ e.preventDefault(); closeDrawer(); return; }
+      if(e.key === "Enter"){
+        e.preventDefault();
+        if(e.shiftKey) findNext(-1);
+        else findNext(+1);
+      }
+    }
+  });
+
+  // ===== אירועים: טקסט =====
+  let saveTimer = null;
+  function scheduleAutosave(){
+    if(saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(()=>{
+      safeLocalSave(raw.value);
+    }, 250);
+  }
+
+  raw.addEventListener('input', ()=>{
+    if(scopeSel && scopeSel.value === 'blockpick'){ refreshBlockSelect(); }
+
+    syncLastSelection();
+    pushHistory(raw.value);
+    scheduleAutosave();
+    renderAll();
+  });
+
+  raw.addEventListener('keyup', ()=>{ syncLastSelection(); updateCursorInfo(); });
+  raw.addEventListener('click', ()=>{ syncLastSelection(); updateCursorInfo(); });
+  raw.addEventListener('select', ()=>{ syncLastSelection(); updateCursorInfo(); });
+  if(scopeSel) scopeSel.addEventListener('change', () => { updateScopeUI(); updateCursorInfo(); });
+
+
+  // ===== Advanced menu (⚙) =====
+  function togglePopupMenu(btn, menu){
+    if(!btn || !menu) return;
+    const open = menu.classList.contains('open');
+    document.querySelectorAll('.menu.open').forEach(m=>m.classList.remove('open'));
+    if(!open) menu.classList.add('open');
+  }
+  document.addEventListener('click', (ev)=>{
+    if(moreMenu && moreMenu.classList.contains('open')){
+      const inside = moreMenu.contains(ev.target) || (moreMenuBtn && moreMenuBtn.contains(ev.target));
+      if(!inside) moreMenu.classList.remove('open');
+    }
+  });
+  if(moreMenuBtn && moreMenu){
+    moreMenuBtn.addEventListener('click', (ev)=>{ ev.stopPropagation(); togglePopupMenu(moreMenuBtn, moreMenu); });
+    moreMenu.addEventListener('click', (ev)=>{
+      const item = ev.target.closest('.menuItem');
+      if(!item) return;
+      const action = item.getAttribute('data-extra');
+      moreMenu.classList.remove('open');
+      runAdvancedAction(action);
+    });
+  }
+
+  function applyTextTransform(fn){
+    const t = raw.value || "";
+    const selStart = raw.selectionStart ?? 0;
+    const selEnd = raw.selectionEnd ?? 0;
+    const r = computeRangeByScope(t, selStart, selEnd);
+    const before = t.slice(0, r.start);
+    const mid = t.slice(r.start, r.end);
+    const after = t.slice(r.end);
+    const outMid = fn(mid);
+    setRawValue(before + outMid + after, r.start, r.start + outMid.length);
+  }
+
+  function runAdvancedAction(action){
+    switch(action){
+      case "fixCommon":
+        applyTextTransform(s => s
+          .replace(/\u200f|\u200e/g, "") // bidi marks
+          .replace(/\r\n/g, "\n")
+          .replace(/<br\s*\/?>\s*<br\s*\/?>/gi, "<br>\n<br>")
+        );
+        toast("בוצע: תיקון שגיאות נפוצות");
+        break;
+      case "trimLines":
+        applyTextTransform(s => s.split(/\n/).map(l=>l.replace(/^\s+|\s+$/g,"")).join("\n"));
+        toast("בוצע: ניקוי רווחים");
+        break;
+      case "removeEmpty":
+        applyTextTransform(s => s.replace(/\n{3,}/g, "\n\n"));
+        toast("בוצע: הסרת ריק כפול");
+        break;
+      case "brNormalize":
+        applyTextTransform(s => s.replace(/(<br\s*\/?>\s*){2,}/gi, "<br>\n<br>"));
+        toast("בוצע: איחוד <br>");
+        break;
+      case "unwrapB":
+        applyTextTransform(s => s.replace(/<strong(\s[^>]*)?>/gi,"<b>").replace(/<\/strong>/gi,"</b>"));
+        toast("בוצע: strong→b");
+        break;
+      case "unwrapI":
+        applyTextTransform(s => s.replace(/<em(\s[^>]*)?>/gi,"<i>").replace(/<\/em>/gi,"</i>"));
+        toast("בוצע: em→i");
+        break;
+      case "compactTags":
+        applyTextTransform(s => s.replace(/<span\s+style="\s*">/gi,"<span>").replace(/style="\s*;?\s*"/gi,""));
+        toast("בוצע: ניקוי style");
+        break;
+      case "normalizeQuotes":
+        applyTextTransform(s => s
+          .replace(/[“”]/g, '"')
+          .replace(/[„‟]/g, '"')
+          .replace(/[’]/g, "'")
+          .replace(/[״]/g, '"')
+        );
+        toast("בוצע: נירמול מירכאות");
+        break;
+      case "makeBlocks":
+        refreshBlockSelect();
+        toast(cachedBlocks.length ? `נמצאו ${cachedBlocks.length} מקטעים` : "לא נמצאו כותרות");
+        break;
+      case "exportBlocks":
+        const t = raw.value || "";
+        const r = (scopeSel && scopeSel.value === "blockpick") ? getPickedBlockRange(t) : getCurrentBlockRange(t, raw.selectionStart ?? 0);
+        if(!r){ toast("אין מקטע לייצוא"); break; }
+        const part = t.slice(r.start, r.end);
+        navigator.clipboard?.writeText(part).then(()=>toast("הועתק ללוח")).catch(()=>toast("לא ניתן להעתיק (הרשאות דפדפן)"));
+        break;
+      default:
+        toast("הפעולה עדיין לא הוטמעה");
+    }
+  }
+
+
+
+  // ===== Column splitter (drag) =====
+  (function(){
+    if(!splitter) return;
+    let dragging = false;
+    let startX = 0;
+    let startPct = 50;
+
+    function getMainRect(){
+      const m = document.querySelector('main');
+      return m ? m.getBoundingClientRect() : null;
+    }
+    function setPct(pct){
+      const m = document.querySelector('main');
+      if(!m) return;
+      const p = Math.max(20, Math.min(80, pct)); // limits
+      m.style.setProperty('--rawCol', p.toFixed(2) + '%');
+      m.style.setProperty('--prevCol', `calc(${(100 - p).toFixed(2)}% - 10px)`);
+      localStorage.setItem('otzaria_split_pct', String(p));
+    }
+    const saved = parseFloat(localStorage.getItem('otzaria_split_pct') || "");
+    if(!Number.isNaN(saved)) setPct(saved);
+
+    splitter.addEventListener('pointerdown', (ev)=>{
+      const rect = getMainRect();
+      if(!rect) return;
+      dragging = true;
+      splitter.setPointerCapture(ev.pointerId);
+      startX = ev.clientX;
+      // current pct based on css var if present
+      const cur = localStorage.getItem('otzaria_split_pct');
+      startPct = cur ? parseFloat(cur) : 50;
+      ev.preventDefault();
+    });
+    splitter.addEventListener('pointermove', (ev)=>{
+      if(!dragging) return;
+      const rect = getMainRect();
+      if(!rect) return;
+      const dxFromRight = rect.right - ev.clientX;
+      const pct = (dxFromRight / rect.width) * 100;
+      setPct(pct);
+    });
+    splitter.addEventListener('pointerup', ()=>{ dragging = false; });
+    splitter.addEventListener('pointercancel', ()=>{ dragging = false; });
+  })();
+
+
+
+  // ===== Init =====
+  updateScopeUI();
+
+  const loaded = safeLocalLoad();
+  if(loaded != null && loaded.length){
+    ignoreHistory = true;
+    raw.value = loaded;
+    ignoreHistory = false;
+  }else{
+    ignoreHistory = true;
+    raw.value = SAMPLE;
+    ignoreHistory = false;
+  }
+
+  // init history with current content
+  pushHistory(raw.value);
+
+  // init selection
+  raw.focus();
+  raw.setSelectionRange(0,0);
+  syncLastSelection();
+
+  // init zoom & preview
+  applyZoom();
+  setPreviewHidden(false);
+
+  renderAll();
+  findInfo.textContent = "מוכן";
+
+
+
+  // ===== Hide buttons (text / toolbars) =====
+  function setTextHidden(hidden){
+    document.body.classList.toggle('textHidden', !!hidden);
+    if(hidden && typeof window.setPreviewHidden === 'function'){ window.setPreviewHidden(false); }
+    localStorage.setItem('otzaria_text_hidden', hidden ? '1':'0');
+    if(typeof refreshHideButtonLabels === 'function'){ requestAnimationFrame(refreshHideButtonLabels); }
+  }
+  function setToolbarsHidden(hidden){
+    document.body.classList.toggle('toolbarHidden', !!hidden);
+    localStorage.setItem('otzaria_toolbar_hidden', hidden ? '1':'0');
+    if(typeof refreshHideButtonLabels === 'function'){ requestAnimationFrame(refreshHideButtonLabels); }
+  }
+
+  const btnToggleText = document.getElementById('btnToggleText');
+  const btnToggleToolbar = document.getElementById('btnToggleToolbar');
+
+  function refreshHideButtonLabels(){
+    const th = document.body.classList.contains('textHidden');
+    const tbh = document.body.classList.contains('toolbarHidden');
+    if(btnToggleText){ btnToggleText.textContent = th ? '📝 הצג טקסט גולמי' : '📝 הסתר טקסט גולמי'; btnToggleText.classList.toggle('isActive', th); }
+    if(btnToggleToolbar){ btnToggleToolbar.textContent = tbh ? '🧰 הצג סרגל כלים' : '🧰 הסתר סרגל כלים'; btnToggleToolbar.classList.toggle('isActive', tbh); }
+  }
+
+  (function applySavedLayout(){
+    // Default: toolbars visible
+    document.body.classList.remove('toolbarHidden');
+    const th = localStorage.getItem('otzaria_text_hidden') === '1';
+    const tbhStored = localStorage.getItem('otzaria_toolbar_hidden');
+    const tbh = (tbhStored === null) ? false : (tbhStored === '1');
+    if(th) document.body.classList.add('textHidden');
+    if(tbh) document.body.classList.add('toolbarHidden');
+    refreshHideButtonLabels();
+    // Make preview editable (typing/deleting directly in preview)
+    enableEditablePreview();
+  })();
+
+  if(btnToggleText){
+    bindToolButton(btnToggleText, ()=>{
+      const now = document.body.classList.contains('textHidden');
+      setTextHidden(!now);
+      refreshHideButtonLabels();
+    });
+  }
+  if(btnToggleToolbar){
+    bindToolButton(btnToggleToolbar, ()=>{
+      const now = document.body.classList.contains('toolbarHidden');
+      setToolbarsHidden(!now);
+      refreshHideButtonLabels();
+    });
+  }
+
+})();
+</script>
+
+
+
+<script>
+// ---- Outline toggle (always accessible) ----
+(function(){
+  const KEY = "otzaria_outline_collapsed_v2";
+  const btnA = document.getElementById("btnOutlineToggle");   // inside outline bar
+  const btnB = document.getElementById("btnOutlineToggle2");  // inside raw bar (always visible)
+  const buttons = [btnA, btnB].filter(Boolean);
+
+  function setText(){
+    const collapsed = document.body.classList.contains("outline-collapsed");
+    buttons.forEach(b=>{
+      if(b.id === "btnOutlineToggle2"){
+        b.textContent = collapsed ? "הצג ניווט" : "הסתר ניווט";
+      }else{
+        b.textContent = collapsed ? "הצג" : "הסתר";
+      }
+      b.setAttribute("aria-pressed", collapsed ? "true" : "false");
+    });
+  }
+
+  function apply(){
+    const collapsed = localStorage.getItem(KEY) === "1";
+    document.body.classList.toggle("outline-collapsed", collapsed);
+    setText();
+  }
+
+  function toggle(){
+    const nowCollapsed = !document.body.classList.contains("outline-collapsed");
+    localStorage.setItem(KEY, nowCollapsed ? "1" : "0");
+    document.body.classList.toggle("outline-collapsed", nowCollapsed);
+    setText();
+    window.dispatchEvent(new Event("resize"));
+  }
+
+  buttons.forEach(b=> b.addEventListener("click", toggle));
+
+  // If the user had v1 stored as collapsed, don't auto-hide in v2 (avoid “disappears after load” confusion)
+  // (They can collapse again explicitly.)
+  if(localStorage.getItem("otzaria_outline_collapsed_v1") === "1" && localStorage.getItem(KEY) === null){
+    localStorage.setItem(KEY, "0");
+  }
+
+  apply();
+})();
+
+</script>
+<script>
+/* ===== Splitters FIX (single, clean, working) ===== */
+(() => {
+  const root = document.documentElement;
+  const main = document.querySelector('main');
+  const outlineCol = document.getElementById('outlineCol');
+  const rawPanel = document.getElementById('rawPanel');
+  const previewPanel = document.getElementById('previewPanel');
+
+  const splitOut = document.getElementById('outlineSplitter');
+  const splitMid = document.getElementById('splitter');
+
+  const KEY = "otzaria_cols_vars_v5";
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  const getPx = (name, fallback) => {
+    const v = getComputedStyle(root).getPropertyValue(name).trim();
+    const n = parseFloat(v);
+    return Number.isFinite(n) ? n : fallback;
+  };
+  const setPx = (name, v) => root.style.setProperty(name, Math.round(v) + "px");
+
+  // Ensure defaults exist
+  if (!getComputedStyle(root).getPropertyValue("--outW").trim()) setPx("--outW", 220);
+  if (!getComputedStyle(root).getPropertyValue("--rawW").trim()) setPx("--rawW", 560);
+  if (!getComputedStyle(root).getPropertyValue("--prevW").trim()) setPx("--prevW", 720);
+
+  // Load saved widths
+  try{
+    const saved = JSON.parse(localStorage.getItem(KEY) || "null");
+    if(saved){
+      if(Number.isFinite(saved.outW)) setPx("--outW", saved.outW);
+      if(Number.isFinite(saved.rawW)) setPx("--rawW", saved.rawW);
+      if(Number.isFinite(saved.prevW)) setPx("--prevW", saved.prevW);
+    }
+  }catch{}
+
+  const persist = () => {
+    try{
+      localStorage.setItem(KEY, JSON.stringify({
+        outW: getPx("--outW", 220),
+        rawW: getPx("--rawW", 560),
+        prevW: getPx("--prevW", 720),
+      }));
+    }catch{}
+  };
+
+  function layoutLimits(){
+    // total available width for the grid (inside main)
+    const rect = main.getBoundingClientRect();
+    const total = rect.width;
+
+    // Splitters are 5px each in CSS (grid columns)
+    const splitW = 10; // 2 splitters x ~5px
+    const minOut = 170, maxOut = 360;
+    const minRaw = 420, minPrev = 480;
+
+    // Keep some breathing room for borders/gaps
+    const slack = 40;
+
+    const maxRaw = Math.max(minRaw, total - splitW - minOut - minPrev - slack);
+    const maxPrev = Math.max(minPrev, total - splitW - minOut - minRaw - slack);
+
+    return { total, minOut, maxOut, minRaw, minPrev, maxRaw, maxPrev };
+  }
+
+  function bindSplitter(el, kind){
+    if(!el || !main) return;
+
+    // Make sure it's clickable
+    el.style.pointerEvents = "auto";
+    el.style.touchAction = "none";
+
+    const start = (clientX) => {
+      // don't resize outline if collapsed
+      if(kind === "outline" && document.body.classList.contains("outline-collapsed")) return null;
+
+      const { minOut, maxOut, minRaw, minPrev, maxRaw, maxPrev } = layoutLimits();
+
+      const startX = clientX;
+      const startOut = getPx("--outW", 220);
+      const startRaw = getPx("--rawW", 560);
+      const startPrev = getPx("--prevW", 720);
+
+      return (clientX2) => {
+        const rtl = (getComputedStyle(document.documentElement).direction === 'rtl');
+        const dx = rtl ? (startX - clientX2) : (clientX2 - startX);
+
+        if(kind === "outline"){
+          const w = clamp(startOut + dx, minOut, maxOut);
+          setPx("--outW", w);
+        }else{
+          const rawW = clamp(startRaw + dx, minRaw, maxRaw);
+          const prevW = clamp(startPrev - dx, minPrev, maxPrev);
+          setPx("--rawW", rawW);
+          setPx("--prevW", prevW);
+        }
+      };
+    };
+
+    const end = () => {
+      document.body.classList.remove("dragging");
+      persist();
+      window.dispatchEvent(new Event("resize"));
+    };
+
+    // Pointer Events (best)
+    el.addEventListener("pointerdown", (e) => {
+      // Only primary button for mouse
+      if(e.pointerType === "mouse" && e.button !== 0) return;
+
+      const moveFn = start(e.clientX);
+      if(!moveFn) return;
+
+      document.body.classList.add("dragging");
+      e.preventDefault();
+
+      try{ el.setPointerCapture(e.pointerId); }catch{}
+
+      const onMove = (ev) => {
+        moveFn(ev.clientX);
+        ev.preventDefault();
+      };
+      const onUp = () => {
+        window.removeEventListener("pointermove", onMove, true);
+        window.removeEventListener("pointerup", onUp, true);
+        window.removeEventListener("pointercancel", onUp, true);
+        end();
+      };
+
+      window.addEventListener("pointermove", onMove, true);
+      window.addEventListener("pointerup", onUp, true);
+      window.addEventListener("pointercancel", onUp, true);
+    }, true);
+
+    // Fallback mouse
+    el.addEventListener("mousedown", (e) => {
+      if(e.button !== 0) return;
+      const moveFn = start(e.clientX);
+      if(!moveFn) return;
+
+      document.body.classList.add("dragging");
+      e.preventDefault();
+
+      const onMove = (ev) => moveFn(ev.clientX);
+      const onUp = () => {
+        window.removeEventListener("mousemove", onMove, true);
+        window.removeEventListener("mouseup", onUp, true);
+        end();
+      };
+
+      window.addEventListener("mousemove", onMove, true);
+      window.addEventListener("mouseup", onUp, true);
+    }, true);
+  }
+
+  bindSplitter(splitOut, "outline");
+  bindSplitter(splitMid, "main");
+
+  // --- Sticky offsets: header height is dynamic (wraps on small width) ---
+  function updateStickyVars(){
+    const hEl = document.querySelector('header');
+    const tbEl = document.querySelector('.toolbars');
+    const h = hEl ? Math.round(hEl.getBoundingClientRect().height) : 64;
+    const tb = tbEl ? Math.round(tbEl.getBoundingClientRect().height) : 96;
+    document.documentElement.style.setProperty('--headerH', h + 'px');
+    document.documentElement.style.setProperty('--toolbarsH', tb + 'px');
+  }
+  updateStickyVars();
+  window.addEventListener('resize', updateStickyVars, {passive:true});
+  setTimeout(updateStickyVars, 0);
+  setTimeout(updateStickyVars, 250);
+
+  // --- Safety: make sure sticky layers stay above splitters ---
+  // If there were old CSS with z-index:9999, override it here.
+  const zStyle = document.createElement("style");
+  zStyle.textContent = `
+    header{ z-index: 1000 !important; }
+    .toolbars{
+      z-index: 900 !important;
+      top: var(--headerH, 64px) !important;
+    }
+    main{ position: relative !important; z-index: 1 !important; }
+    .splitter, #outlineSplitter, #splitter{ z-index: 20 !important; }
+
+    /* Keep outline visible while scrolling */
+    #outlineCol{
+      position: sticky !important;
+      top: calc(var(--headerH, 64px) + var(--toolbarsH, 96px) + 10px) !important;
+      align-self: start !important;
+      max-height: calc(100vh - (var(--headerH, 64px) + var(--toolbarsH, 96px) + 22px)) !important;
+      overflow: hidden !important;
+    }
+    #outlineCol .outlineColBody{
+      max-height: calc(100vh - (var(--headerH, 64px) + var(--toolbarsH, 96px) + 80px)) !important;
+      overflow: auto !important;
+    }
+`;
+  document.head.appendChild(zStyle);
+})();
+</script>
+
+<script>
+(function(){
+  const btn = document.getElementById('moreMenuBtn');
+  const menu = document.getElementById('moreMenu');
+  if(!btn || !menu) return;
+
+  // force menu to be fixed so it won't be clipped
+  menu.style.position = 'fixed';
+  menu.style.zIndex = '5000';
+  menu.style.minWidth = '260px';
+  menu.style.maxWidth = '360px';
+  menu.style.width = 'auto';
+
+  function openAbove(){
+    const b = btn.getBoundingClientRect();
+    menu.style.display = 'block';
+    const mh = menu.offsetHeight;
+    const gap = 8;
+
+    let top = b.top - mh - gap;
+    if(top < 8) top = b.bottom + gap; // fallback if no space
+
+    const btnW = Math.max(260, Math.min(360, Math.round(b.width)));
+    menu.style.width = btnW + 'px';
+
+    // Align menu with the button; in RTL it's nicer to align right edges
+    const rtl = getComputedStyle(document.documentElement).direction === 'rtl';
+    if(rtl){
+      const right = (window.innerWidth - b.right);
+      menu.style.right = Math.max(8, right) + 'px';
+      menu.style.left = 'auto';
+    }else{
+      menu.style.left = Math.max(8, Math.min(window.innerWidth - btnW - 8, b.left)) + 'px';
+      menu.style.right = 'auto';
+    }
+
+    menu.style.top = top + 'px';
+  }
+
+  function closeMenu(){
+    menu.style.display = 'none';
+  }
+
+  // remove previous inline display logic by overriding
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    const isOpen = menu.style.display === 'block';
+    if(isOpen){
+      closeMenu();
+    } else {
+      openAbove();
+    }
+  });
+
+  menu.addEventListener('click', function(e){ e.stopPropagation(); });
+
+  document.addEventListener('click', function(e){
+    if(!menu.contains(e.target) && e.target !== btn){
+      closeMenu();
+    }
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  function setPinnedTop(){
+    const h = document.querySelector('header');
+    const t = document.querySelector('.toolbars');
+    const hh = h ? h.getBoundingClientRect().height : 0;
+    const th = t ? t.getBoundingClientRect().height : 0;
+    document.documentElement.style.setProperty('--pinnedTop', (hh + th) + 'px');
+  }
+  window.addEventListener('resize', setPinnedTop);
+  window.addEventListener('load', setPinnedTop);
+  setPinnedTop();
+})();
+</script>
+
+
+<script id="navToggleScript">
+(function(){
+  const btnTop = document.getElementById('btnOutlineToggle2');   // top header button
+  const btnInner = document.getElementById('btnOutlineToggle');  // inside "תפריט ניווט"
+  const outline = document.getElementById('outlineCol');
+  if(!outline) return;
+
+  function applyState(){
+    const hidden = outline.classList.contains('hidden');
+
+    // Top button: icon + dynamic label
+    if(btnTop){
+      if(hidden){
+        btnTop.innerHTML = '📂 הצג תפריט ניווט';
+        btnTop.classList.add('navHidden');
+      }else{
+        btnTop.innerHTML = '📁 הסתר תפריט ניווט';
+        btnTop.classList.remove('navHidden');
+      }
+    }
+
+    // Inner button: simple label (as requested)
+    if(btnInner){
+      btnInner.textContent = hidden ? 'הצג תפריט ניווט' : 'הסתר תפריט ניווט';
+    }
+  }
+
+  function toggle(e){
+    if(e){ e.preventDefault(); }
+    outline.classList.toggle('hidden');
+    applyState();
+  }
+
+  if(btnTop) btnTop.addEventListener('click', toggle);
+  if(btnInner) btnInner.addEventListener('click', toggle);
+
+  applyState();
+})();
+</script>
+
+
+
+</body>
+</html>
