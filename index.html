@@ -1580,6 +1580,9 @@ main{
 .toolbar-scroll-container{ scrollbar-width:none !important; }
 .toolbar-scroll-container::-webkit-scrollbar{ height:0 !important; }
 
+
+.nav-icon{margin-left:6px;font-size:14px;}
+.nav-label{vertical-align:middle;}
 </style>
 
 <style id="navToggleStyle">
@@ -1869,6 +1872,39 @@ main{
 }
 </style>
 
+
+<style id="responsiveMobileFix_v1">
+/* ===== Mobile/narrow screens: prevent preview being clipped ===== */
+#previewPanel, #rawPanel, #outlineCol{ min-width: 0 !important; }
+#previewPanel .previewWrap{ overflow-x: auto !important; overflow-y: auto !important; }
+
+/* Make the page fit the container on small widths */
+#page, .page{
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+@media (max-width: 900px){
+  /* On narrow screens stack panels vertically and let the page scroll inside panels */
+  main{
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: minmax(260px, 1fr);
+    gap: 8px !important;
+    height: calc(100vh - var(--topInset)) !important;
+    overflow-y: auto !important; /* allow vertical scroll of stacked panels */
+    padding-bottom: 10px !important;
+  }
+  /* When stacking, the splitters are irrelevant */
+  #outlineSplitter, #splitter{ display:none !important; }
+  header, .toolbars{ position: sticky !important; } /* avoid fixed stacking issues on mobile */
+  html, body{ overflow: auto !important; height: auto !important; } /* allow mobile natural scrolling */
+  .panel{ height: auto !important; min-height: 260px !important; }
+  #rawPanel textarea#raw{ height: 45vh !important; }
+  #previewPanel .previewWrap{ max-height: 55vh !important; }
+  .page{ padding: 16px 14px !important; }
+}
+</style>
+
 </head>
 
 <body id="appRoot">
@@ -1917,7 +1953,7 @@ main{
 
     <div class="topBtns">
       <button class="btn primary" id="btnReset" title="טען טקסט דוגמא">📄 טען טקסט דוגמא</button>
-<button class="btn" id="btnOutlineToggle2" title="הצג/הסתר תפריט ניווט">הסתר תפריט ניווט</button>
+<button class="btn" id="btnOutlineToggle2" title="הסתר/הצג תפריט ניווט">הסתר תפריט ניווט</button>
 <button class="btn" id="btnToggleToolbar" title="הסתר/הצג סרגל כלים">🧰 הסתר סרגל כלים</button>
       <button class="btn" id="btnToggleText" title="הסתר/הצג טקסט גולמי">📝 הסתר טקסט גולמי</button>
       <button class="btn" id="btnTogglePreview" title="הסתר/הצג תצוגה מקדימה">👁 הסתר תצוגה מקדימה</button>
@@ -3964,17 +4000,21 @@ function saveGrid(){
 (function(){
   const KEY = "otzaria_outline_collapsed_v2";
   const btnA = document.getElementById("btnOutlineToggle");   // inside outline bar
-  const btnB = document.getElementById("btnOutlineToggle2");  // inside raw bar (always visible)
+  const btnB = document.getElementById("btnOutlineToggle2");  // top buttons
   const buttons = [btnA, btnB].filter(Boolean);
 
-  function setText(){
+  // Simple, neutral "menu" icon (inline SVG) – matches UI better than an emoji.
+  function setLabels(){
     const collapsed = document.body.classList.contains("outline-collapsed");
+
+    // Keep the TOP button's visual state (blue) exactly like before
+    if(btnB){ btnB.classList.toggle('navHidden', collapsed); }
+
+    const label = collapsed ? "הצג תפריט ניווט" : "הסתר תפריט ניווט";
+
+    // Use innerHTML to include the icon; keep label text exactly as requested
     buttons.forEach(b=>{
-      if(b.id === "btnOutlineToggle2"){
-        b.textContent = collapsed ? "הצג ניווט" : "הסתר ניווט";
-      }else{
-        b.textContent = collapsed ? "הצג" : "הסתר";
-      }
+      b.textContent = `☰ ${label}`;
       b.setAttribute("aria-pressed", collapsed ? "true" : "false");
     });
   }
@@ -3982,28 +4022,27 @@ function saveGrid(){
   function apply(){
     const collapsed = localStorage.getItem(KEY) === "1";
     document.body.classList.toggle("outline-collapsed", collapsed);
-    setText();
+    setLabels();
   }
 
   function toggle(){
     const nowCollapsed = !document.body.classList.contains("outline-collapsed");
     localStorage.setItem(KEY, nowCollapsed ? "1" : "0");
     document.body.classList.toggle("outline-collapsed", nowCollapsed);
-    setText();
+    setLabels();
+    // Let split sizes & layout recalc
     window.dispatchEvent(new Event("resize"));
   }
 
-  buttons.forEach(b=> b.addEventListener("click", toggle));
+  buttons.forEach(b => b.addEventListener("click", toggle));
 
   // If the user had v1 stored as collapsed, don't auto-hide in v2 (avoid “disappears after load” confusion)
-  // (They can collapse again explicitly.)
   if(localStorage.getItem("otzaria_outline_collapsed_v1") === "1" && localStorage.getItem(KEY) === null){
     localStorage.setItem(KEY, "0");
   }
 
   apply();
 })();
-
 </script>
 
 
@@ -4089,55 +4128,6 @@ function saveGrid(){
 </script>
 
 
-<script id="navToggleScript">
-(function(){
-  const btnTop = document.getElementById('btnOutlineToggle2');   // top header button
-  const btnInner = document.getElementById('btnOutlineToggle');  // inside "תפריט ניווט"
-  const outline = document.getElementById('outlineCol');
-  if(!outline) return;
-
-  function applyState(){
-    const hidden = outline.classList.contains('hidden');
-
-    // Top button: icon + dynamic label
-    if(btnTop){
-      if(hidden){
-        btnTop.innerHTML = '📂 הצג תפריט ניווט';
-        btnTop.classList.add('navHidden');
-      }else{
-        btnTop.innerHTML = '📁 הסתר תפריט ניווט';
-        btnTop.classList.remove('navHidden');
-      }
-    }
-
-    // Inner button: simple label (as requested)
-    if(btnInner){
-      btnInner.textContent = hidden ? 'הצג תפריט ניווט' : 'הסתר תפריט ניווט';
-    }
-  }
-
-  function toggle(e){
-    if(e){ e.preventDefault(); }
-    outline.classList.toggle('hidden');
-    applyState();
-  }
-
-  if(btnTop) btnTop.addEventListener('click', toggle);
-  if(btnInner) btnInner.addEventListener('click', toggle);
-
-  applyState();
-})();
-</script>
-
-
-
-
-
-
-
-
-
-
 <style id="finalGridVarsOverride">
 /* ===== FINAL GRID VARS OVERRIDE: ensure resizing uses CSS vars (RTL-safe) ===== */
 :root{
@@ -4160,9 +4150,9 @@ main{
 /* Outline collapsed => Raw | Preview (keep user widths) */
 body.outline-collapsed main{
   grid-template-columns:
-    clamp(320px, var(--rawW, 560px), 1400px)
+    minmax(320px, 1fr)
     var(--splitW, 6px)
-    clamp(320px, var(--prevW, 720px), 1600px) !important;
+    minmax(320px, 1fr) !important;
 }
 
 /* Raw hidden => Outline | Preview (preview should expand) */
@@ -4474,6 +4464,115 @@ body.outline-collapsed #outlineSplitter{
   snapshot();
 
   console.log("Unified history manager loaded");
+})();
+</script>
+
+
+<script id="gridAutoExpand_v1">
+/* ===== Auto-expand columns when panels are hidden =====
+   Works with body classes:
+   - outline-collapsed (outline hidden)
+   - textHidden (raw hidden)
+   - previewHidden (preview hidden)
+*/
+(function(){
+  const main = document.querySelector('main');
+  const outlineCol = document.getElementById('outlineCol');
+  const rawPanel = document.getElementById('rawPanel');
+  const previewPanel = document.getElementById('previewPanel');
+  const s1 = document.getElementById('outlineSplitter');
+  const s2 = document.getElementById('splitter');
+  if(!main) return;
+
+  function isHidden(el){
+    if(!el) return true;
+    const cs = getComputedStyle(el);
+    return cs.display === 'none' || cs.visibility === 'hidden';
+  }
+
+  function applyTemplate(){
+    // On narrow screens we let CSS media query handle stacking
+    if(window.matchMedia && window.matchMedia('(max-width: 900px)').matches) return;
+
+    const outlineHidden = document.body.classList.contains('outline-collapsed') || isHidden(outlineCol);
+    const rawHidden = document.body.classList.contains('textHidden') || isHidden(rawPanel);
+    const prevHidden = document.body.classList.contains('previewHidden') || isHidden(previewPanel);
+
+    const splitW = getComputedStyle(document.documentElement).getPropertyValue('--splitW')?.trim() || '6px';
+
+    // Choose template based on what's visible
+    if(rawHidden && prevHidden){
+      // Edge-case: nothing visible -> fallback
+      main.style.gridTemplateColumns = '1fr';
+      if(s1) s1.style.display = 'none';
+      if(s2) s2.style.display = 'none';
+      return;
+    }
+
+    if(!outlineHidden && !rawHidden && !prevHidden){
+      // 3 columns: outline | raw | preview
+      main.style.gridTemplateColumns = `clamp(180px, 18vw, 320px) ${splitW} minmax(360px, 1.2fr) ${splitW} minmax(360px, 1fr)`;
+      if(s1) s1.style.display = '';
+      if(s2) s2.style.display = '';
+      return;
+    }
+
+    if(outlineHidden && !rawHidden && !prevHidden){
+      // 2 columns: raw | preview
+      main.style.gridTemplateColumns = `minmax(380px, 1fr) ${splitW} minmax(380px, 1fr)`;
+      if(s1) s1.style.display = 'none';
+      if(s2) s2.style.display = '';
+      return;
+    }
+
+    if(!outlineHidden && rawHidden && !prevHidden){
+      // outline | preview
+      main.style.gridTemplateColumns = `clamp(180px, 20vw, 320px) ${splitW} minmax(420px, 1fr)`;
+      if(s1) s1.style.display = '';
+      if(s2) s2.style.display = 'none';
+      return;
+    }
+
+    if(!outlineHidden && !rawHidden && prevHidden){
+      // outline | raw
+      main.style.gridTemplateColumns = `clamp(180px, 20vw, 320px) ${splitW} minmax(520px, 1fr)`;
+      if(s1) s1.style.display = '';
+      if(s2) s2.style.display = 'none';
+      return;
+    }
+
+    if(outlineHidden && rawHidden && !prevHidden){
+      // preview only
+      main.style.gridTemplateColumns = '1fr';
+      if(s1) s1.style.display = 'none';
+      if(s2) s2.style.display = 'none';
+      return;
+    }
+
+    if(outlineHidden && !rawHidden && prevHidden){
+      // raw only
+      main.style.gridTemplateColumns = '1fr';
+      if(s1) s1.style.display = 'none';
+      if(s2) s2.style.display = 'none';
+      return;
+    }
+
+    // Fallback
+    main.style.gridTemplateColumns = '1fr';
+    if(s1) s1.style.display = outlineHidden ? 'none' : '';
+    if(s2) s2.style.display = (!rawHidden && !prevHidden) ? '' : 'none';
+  }
+
+  // Observe class changes (toggles)
+  const obs = new MutationObserver(()=>applyTemplate());
+  obs.observe(document.body, { attributes:true, attributeFilter:['class'] });
+
+  // Also on resize
+  window.addEventListener('resize', ()=>applyTemplate(), { passive:true });
+
+  // First run after layout settles
+  setTimeout(applyTemplate, 0);
+  setTimeout(applyTemplate, 150);
 })();
 </script>
 
