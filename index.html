@@ -26,7 +26,7 @@
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
       --sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans Hebrew", "Assistant", sans-serif;
 
-      --btnH: 34px;
+      --btnH: 25px;
       --btnR: 10px;
 
       --previewFontSize: 18px;
@@ -164,14 +164,15 @@
     }
 
     .toolbarRow{
-      display:flex;
+      display:inline-flex;
       align-items:center;
       gap:8px;
-      overflow-x:auto;
-      scrollbar-width: thin;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      width: max-content;
       padding-bottom: 2px;
-    
-      justify-content: flex-end;}
+      justify-content: flex-end;
+}
     .toolbarRow::-webkit-scrollbar{ height:8px }
     .toolbarRow::-webkit-scrollbar-thumb{ background: rgba(107,90,74,.22); border-radius: 999px }
 
@@ -251,8 +252,7 @@
     main{
       padding:12px 12px 16px;
       display:grid;
-      grid-template-columns: clamp(170px, var(--outW, 220px), 320px) 5px clamp(420px, var(--rawW, 560px), 1400px) 5px clamp(480px, var(--prevW, 720px), 1600px);
-gap:12px;
+      
       max-width: 1750px;
       margin:0 auto;
     }
@@ -472,7 +472,7 @@ gap:12px;
 
     /* Hide preview */
     .previewHidden #previewPanel{ display:none; }
-    .previewHidden main{ grid-template-columns: clamp(170px, var(--outW, 220px), 320px) 5px 1fr; }
+    .previewHidden main{ grid-template-columns: clamp(170px, var(--outW, 220px), 320px) var(--splitW, 6px) clamp(420px, var(--rawW, 560px), 1400px) var(--splitW, 6px) clamp(480px, var(--prevW, 720px), 1600px);; }
     body.outline-collapsed.previewHidden main{ grid-template-columns: clamp(170px, var(--outW, 220px), 320px) 5px 1fr; }
 
     /* Find/Replace drawer */
@@ -494,7 +494,7 @@ gap:12px;
     .drawerHeader{
       padding:12px 12px;
       border-bottom:1px solid var(--line);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
       background: linear-gradient(180deg, #fff, rgba(243,236,227,.55));
     }
     .drawerHeader .ttl{ font-weight:900; color: var(--brown2); font-size:13px; }
@@ -547,30 +547,49 @@ gap:12px;
     .titleRow{ display:flex; align-items:center; gap:10px; }
 
   
+    
     .splitter{
-      border-radius: 12px;
-      background: rgba(217,203,187,.55);
-      border: 1px solid rgba(217,203,187,.85);
-      cursor: col-resize;
-      align-self: stretch;
-      height: auto;
-      min-height: 120px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      user-select:none;
-      touch-action:none;
-    }
-    .splitter::before{
-      content:"";
-      width: 3px;
-      height: 40px;
-      border-radius: 3px;
-      background: rgba(107,90,74,.55);
-      box-shadow: 6px 0 0 rgba(107,90,74,.35), -6px 0 0 rgba(107,90,74,.35);
-    }
-    .previewHidden #splitter{ display:none; }
-
+  position: relative;
+  width: 6px;               /* visual width */
+  margin: 0;                /* no layout gap */
+  cursor: col-resize;
+  align-self: stretch;
+  user-select:none;
+  touch-action:none;
+  z-index: 2000;            /* above panels */
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events: auto;     /* allow pointer events; grab area still expands hit target */
+}
+.splitter::before{
+  content:"";
+  width: 3px;
+  height: 42px;
+  border-radius: 4px;
+  background: rgba(107,90,74,.40);
+}
+.splitter:hover::before{
+  background: rgba(107,90,74,.70);
+}
+body.dragging .splitter::before{
+  background: rgba(107,90,74,.90);
+}
+.splitter .splitterGrab{
+  position:absolute;
+  inset: 0;
+  left: -10px;
+  right: -10px;           /* big hit-area without creating a gap */
+  cursor: col-resize;
+  touch-action:none;
+  pointer-events: auto;
+  z-index: 1;
+  background: transparent;
+}
+.previewHidden #splitter{ display:none; }
 
 #historyGroup{ order:-20; }
 #searchGroup{ order:-19; }
@@ -675,10 +694,7 @@ body.toolbarHidden .toolbars{ display:none !important; }
 
 /* Hide/show outline column */
 body.outline-collapsed #outlineCol,
-body.outline-collapsed #outlineSplitter{
-  display:none;
-}
-
+body.outline-collapsed 
 /* Splitter for outline column */
 .splitter--outline{ width:10px; }
 
@@ -1109,6 +1125,461 @@ main{
   min-height: 0 !important;
 }
 
+
+/* === RESPONSIVE PACK (v16): better desktop+mobile scaling + fewer hard pixels === */
+:root{
+  --splitW: 0.35rem;          /* visual width */
+  --splitHit: 0.9rem;         /* extra grab area (each side) */
+}
+
+/* Typography scales gently with screen size */
+body{ font-size: clamp(13px, 1.1vw, 15px); }
+.page{ font-size: clamp(16px, 2.2vw, 20px) !important; }
+
+/* Main grid: use flexible columns (vw/fr) while keeping safe minimums */
+main{
+  grid-template-columns:
+    clamp(180px, 18vw, 320px)
+    var(--splitW)
+    clamp(320px, 40vw, 920px)
+    var(--splitW)
+    minmax(320px, 1fr) !important;
+}
+
+/* Splitters: use rem instead of px + larger hit-area without taking layout space */
+.splitter, #outlineSplitter, #splitter{
+  width: var(--splitW) !important;
+  min-width: var(--splitW) !important;
+}
+.splitter::after{
+  left: calc(-1 * var(--splitHit)) !important;
+  right: calc(-1 * var(--splitHit)) !important;
+}
+
+/* Controls: keep tappable on mobile */
+@media (max-width: 640px){
+  :root{ --btnH: 38px; }
+  .toolbtn, .btn, .chip{ min-height: 38px; }
+  .toolbarRow{ gap: 6px; }
+  .toolsel{ min-width: 130px; }
+  .toolinp{ width: 76px; }
+}
+
+/* Stack panels on small screens (keep existing behavior but ensure no horizontal overflow) */
+@media (max-width: 1100px){
+  main{ grid-template-columns: 1fr !important; }
+  html, body{ overflow-x: hidden !important; }
+}
+
+/* ===== Responsive toolbar buttons ===== */
+/* (disabled) .toolbars/.toolbar/.toolbarRow flex-wrap:wrap caused wrapping on narrow screens */
+.toolbtn, .btn, button.btn{
+  max-width: 100%;
+  white-space: nowrap;
+  font-size: clamp(12px, 1.2vw, 14px);
+  padding: clamp(7px, 1.0vw, 10px) clamp(10px, 1.4vw, 14px);
+}
+.chip, .segBtn{
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
+
+/* ===== Mobile: horizontal scroll toolbar ===== */
+@media (max-width: 700px){
+  .toolbars, .toolbar, .bar, .topbar, .toolbarRow{
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+  }
+  .toolbars > *, .toolbar > *, .bar > *, .topbar > *, .toolbarRow > *{
+    flex: 0 0 auto;
+  }
+  /* keep buttons compact in scroll mode */
+  .toolbtn, .btn, button.btn{
+    white-space: nowrap;
+  }
+}
+
+/* ===== Toolbar: horizontal scroll on narrow screens (cleaner than wrap) ===== */
+@media (max-width: 980px){
+  .toolbars, .toolbar, .bar, .topbar, .toolbarRow{
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    padding-bottom: 8px;
+  }
+  .toolbars::-webkit-scrollbar,
+  .toolbar::-webkit-scrollbar,
+  .bar::-webkit-scrollbar,
+  .topbar::-webkit-scrollbar,
+  .toolbarRow::-webkit-scrollbar{ height: 8px; }
+  .toolbars > *, .toolbar > *, .bar > *, .topbar > *, .toolbarRow > *{ flex: 0 0 auto; }
+  .tgroup{ display:flex; align-items:center; gap:8px; flex: 0 0 auto; }
+  .gtitle{ flex:0 0 auto; }
+  .toolbtn, .btn, button.btn{ white-space: nowrap; }
+}
+
+/* ===== Toolbar horizontal scroll (no wrapping) ===== */
+.toolbarRow, .toolRow, .toolbars, .toolbar, .bar, .topbar{
+  align-items: center;
+}
+
+/* Each row becomes a horizontal scroller on narrow screens */
+@media (max-width: 1100px){
+  .toolbarRow, .toolRow, .toolbars, .toolbar, .bar, .topbar{
+    display: flex;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    padding-bottom: 8px;
+  }
+  .toolbarRow > *, .toolRow > *, .toolbars > *, .toolbar > *, .bar > *, .topbar > *{
+    flex: 0 0 auto;
+  }
+  /* prevent groups from forcing wrap internally */
+  .tgroup, .group, .seg, .segGroup, .btnGroup{
+    display: inline-flex;
+    flex-wrap: nowrap !important;
+    flex: 0 0 auto;
+    gap: 8px;
+  }
+  .toolbtn, .btn, button.btn{ white-space: nowrap; }
+}
+
+/* Ultra narrow */
+@media (max-width: 700px){
+  .toolbarRow::-webkit-scrollbar,
+  .toolRow::-webkit-scrollbar,
+  .toolbars::-webkit-scrollbar,
+  .toolbar::-webkit-scrollbar,
+  .bar::-webkit-scrollbar,
+  .topbar::-webkit-scrollbar{ height: 8px; }
+}
+
+/* ===== FIX: Toolbar row must NOT wrap; scroll horizontally instead ===== */
+@media (max-width: 1400px){
+  .toolbars .toolbarRow{
+    display:flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px !important;
+    max-width: 100%;
+    min-width: 0;
+    padding-bottom: 8px;
+  }
+  .toolbars .toolbarRow > *{ flex: 0 0 auto !important; }
+  .toolbars .toolbarRow .tgroup{
+    display: inline-flex !important;
+    flex-wrap: nowrap !important;
+    flex: 0 0 auto !important;
+    gap: 8px !important;
+  }
+  .toolbars .toolbarRow .gtitle{ flex: 0 0 auto !important; }
+  .toolbars .toolbarRow .toolbtn,
+  .toolbars .toolbarRow .toolsel{
+    white-space: nowrap !important;
+  }
+}
+
+/* ===== FIX v25: Toolbar rows must scroll horizontally (never wrap) ===== */
+.toolbarRow{
+  display:flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  gap: 10px !important;
+  max-width: 100%;
+  min-width: 0;
+}
+.toolbarRow > *{ flex: 0 0 auto !important; }
+.toolbarRow .tgroup{
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  flex: 0 0 auto !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+}
+
+
+/* ===== Narrow screens: toolbar becomes a single horizontal scroller (like your screenshot) ===== */
+.toolbarScroller{
+  position: relative;
+  width: 100%;
+}
+.toolbarScroller .toolbarRow{
+  padding-inline: 10px !important;
+  scroll-snap-type: x proximity;
+}
+/* show scroll arrows only when screen is narrow enough that it matters */
+@media (max-width: 980px){
+  .tbScrollBtn{ display:flex; }
+  /* keep the rows strictly one line */
+  .toolbars .toolbarRow{ flex-wrap: nowrap !important; }
+  .toolbars .toolbarRow::-webkit-scrollbar{ height: 8px; }
+}
+
+
+/* === Narrow screens: horizontal scrolling toolbar with arrows (final) === */
+.toolbars{ max-width: 100%; }
+.toolbarScroller{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  max-width:100%;
+}
+.toolbarViewport{
+  flex: 1 1 auto;
+  min-width: 0; /* critical: allow overflow inside */
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable both-edges;
+  cursor: grab;
+}
+.toolbarViewport:active{ cursor: grabbing; }
+.toolbarViewport.is-dragging{ cursor: grabbing; }
+
+
+.toolbarScroller .toolbarRow{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding-inline: 0 !important;
+}
+.toolbarScroller .toolbarRow > *{ flex: 0 0 auto !important; }
+.tbScrollBtn{
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(230,220,207,.9);
+  background: rgba(255,255,255,.75);
+  box-shadow: 0 6px 18px rgba(45,35,25,.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select:none;
+}
+.tbScrollBtn[hidden]{ display:none !important; }
+.tbScrollBtn:active{ transform: translateY(1px); }
+
+
+/* ===== FIXES v4: splitters + toolbar polish ===== */
+:root{ --splitW: 10px; --splitHit: 10px; }
+
+/* Main grid uses real splitter width */
+main{
+  grid-template-columns:
+    clamp(170px, var(--outW, 220px), 320px) var(--splitW)
+    clamp(420px, var(--rawW, 560px), 1400px) var(--splitW)
+    clamp(480px, var(--prevW, 720px), 1600px) !important;
+}
+
+/* Outline splitter should be visible unless outline is collapsed */
+#outlineSplitter{ display:flex !important; }
+
+/* When outline is collapsed, remove outline + its splitter cleanly */
+body.outline-collapsed main{
+  grid-template-columns:
+    clamp(420px, var(--rawW, 560px), 1400px) var(--splitW)
+    clamp(480px, var(--prevW, 720px), 1600px) !important;
+}
+body.outline-collapsed #outlineCol,
+body.outline-collapsed #outlineSplitter{ display:none !important; }
+
+/* Splitter: narrow look, wide hit-area (REAL, not pseudo) */
+.splitter{
+  width: var(--splitW) !important;
+  min-width: var(--splitW) !important;
+  border-radius: 10px !important;
+  position: relative !important;
+  padding-inline: var(--splitHit) !important;  /* hit area */
+  margin-inline: calc(var(--splitHit) * -1) !important; /* keep layout narrow */
+  background: rgba(217,203,187,.45) !important;
+}
+.splitter::before{
+  width: 2px !important;
+  height: 44px !important;
+  opacity: .7 !important;
+}
+
+/* Make sure splitters are above panels */
+.splitter, #outlineSplitter, #splitter{ z-index: 50 !important; }
+
+/* ---- Toolbar polish: smooth horizontal drag, hide scrollbars ---- */
+.toolbars{ gap:8px !important; }
+.toolbarViewport{
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+.toolbarViewport::-webkit-scrollbar{ height:0 !important; }
+
+.toolbarViewport{
+  border-radius: 14px !important;
+  border:1px solid rgba(230,220,207,.95) !important;
+  background: rgba(255,255,255,.75) !important;
+}
+.toolbarRow{ width: max-content !important; gap:6px !important; padding:8px 10px !important; }
+.pill, .btn, .miniBtn, .segBtn, .toolbtn{
+  height: 34px !important;
+  padding: 6px 12px !important;
+  border-radius: 999px !important;
+}
+.groupLabel{ margin-inline:6px !important; opacity:.8 !important; }
+
+
+/* === FIX v5: remove huge spacer + make top toolbar row match second + cleaner splitters === */
+:root{
+  --splitW: 6px;     /* actual layout width */
+  --splitGrip: 10px; /* extra grip area (each side) */
+}
+
+/* Main grid spacing */
+main{ gap: 3px !important; }
+
+/* Keep splitter columns slim + predictable */
+main{
+  grid-template-columns:
+    clamp(180px, 18vw, 320px)
+    var(--splitW)
+    clamp(360px, 38vw, 1020px)
+    var(--splitW)
+    minmax(360px, 1fr) !important;
+}
+
+/* Splitters: slim layout width + clean look + wide grip without adding whitespace */
+.splitter, #outlineSplitter, #splitter{
+  width: var(--splitW) !important;
+  min-width: var(--splitW) !important;
+  margin: 0 !important;            /* prevent fake huge gap */
+  padding: 0 !important;
+  position: relative;
+  z-index: 20;
+}
+.splitter::before{
+  content:"";
+  position:absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 50%;
+  width: 3px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgba(217,203,187,.85);
+}
+/* Real grip area (no visual width increase) */
+.splitter::after{
+  content:"";
+  position:absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--splitGrip));
+  right: calc(-1 * var(--splitGrip));
+}
+
+/* === Toolbar: make first row (topbar) match second row (toolbarRow) === */
+.toolbars{
+  padding: 3px 6px !important;
+  gap: 6px !important;
+}
+
+/* both rows same container style */
+.topbar,
+.toolbars .toolbarRow{
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 3px 6px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,.55) !important;
+  box-shadow: 0 8px 18px rgba(45,35,25,.06) !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+.topbar::-webkit-scrollbar,
+.toolbars .toolbarRow::-webkit-scrollbar{ height: 0 !important; }
+
+/* no giant spacer under row */
+.topbar{ margin-bottom: 0 !important; }
+
+/* keep groups inline */
+.topbar > *,
+.toolbars .toolbarRow > *{ flex: 0 0 auto !important; }
+
+/* unify button sizes in both rows */
+.topbar .btn,
+.topbar .toolbtn,
+.toolbars .toolbarRow .btn,
+.toolbars .toolbarRow .toolbtn{
+  min-height: var(--btnH) !important;
+  height: var(--btnH) !important;
+  padding: 0 10px !important;
+}
+
+/* On very narrow screens keep rows scrollable and reduce padding a bit */
+@media (max-width: 700px){
+  .topbar,
+  .toolbars .toolbarRow{
+    padding: 8px 8px !important;
+    gap: 6px !important;
+  }
+}
+
+/* ===== FIX v6: Splitter thin, no giant gaps, big hit-area, always draggable ===== */
+:root{
+  --splitW: 6px;
+}
+.splitter, #outlineSplitter, #splitter{
+  width: var(--splitW) !important;
+  min-width: var(--splitW) !important;
+  border-radius: 10px !important;
+  background: rgba(217,203,187,.35) !important;
+  border: 1px solid rgba(217,203,187,.75) !important;
+  position: relative !important;
+  z-index: 50 !important; /* above panels */
+  cursor: col-resize !important;
+  user-select: none !important;
+  touch-action: none !important;
+  box-sizing: content-box !important;
+  /* Big hit-area WITHOUT visual bulk */
+  padding-inline: 10px !important;
+  margin-inline: -10px !important;
+  background-clip: content-box !important;
+}
+.splitter::before{
+  opacity:.75 !important;
+}
+
+
+/* ===== FIX v6: Remove toolbar arrows + bottom bar (top row) ===== */
+.toolbar-scroll-btn{ display:none !important; }
+.toolbar-scroll-container{ scrollbar-width:none !important; }
+.toolbar-scroll-container::-webkit-scrollbar{ height:0 !important; }
+
 </style>
 
 <style id="navToggleStyle">
@@ -1119,16 +1590,295 @@ main{
     box-shadow: 0 6px 16px rgba(70, 140, 210, .18) !important;
     font-weight: 800;
   }
+
+    /* ===== FINAL OVERRIDE: toolbar rows must NEVER wrap (use horizontal scroll) ===== */
+    .toolbars .toolbarRow{
+      flex-wrap: nowrap !important;
+      white-space: nowrap !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+      min-width: 0;
+    }
+    .toolbars .toolbarRow > *{ flex: 0 0 auto !important; }
+    .toolbars .toolbarRow .tgroup{
+      display: inline-flex !important;
+      flex-wrap: nowrap !important;
+      flex: 0 0 auto !important;
+      white-space: nowrap !important;
+    }
+
+</style>
+
+
+<style id="responsiveFixV3">
+/* === v3 OVERRIDE: make toolbar scroll container ONLY the viewport (fixes drag-scroll not working) === */
+.toolbarScroller{ max-width:100%; }
+.toolbarViewport{
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+.toolbarScroller .toolbarRow{
+  width: max-content !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  overflow: visible !important;   /* IMPORTANT: avoid nested horizontal scrollers */
+  flex-wrap: nowrap !important;
+}
+.toolbarRow{ overflow: visible !important; }
+
+/* Hide arrow buttons if they exist (user requested drag-scroll only) */
+.tbScrollBtn{ display:none !important; }
+
+/* === Splitter hit area: real clickable zone === */
+#splitter, #outlineSplitter{
+  width: 6px !important;
+  min-width: 6px !important;
+}
+#splitter::after, #outlineSplitter::after{
+  left:-12px !important;
+  right:-12px !important;
+}
+</style>
+
+
+<style>
+.simple-splitter {
+  width: 5px !important;
+  background: #ccc !important;
+  cursor: col-resize !important;
+}
+</style>
+
+
+<style id="splitterFinalOverride">
+/* ===== FINAL: splitters truly draggable + minimal spacing (override everything above) ===== */
+:root{
+  --splitW: 6px;
+  --splitGrip: 10px; /* hit area each side */
+}
+/* minimal gap between columns (like your screenshot) */
+main{ gap: 2px !important; }
+
+/* make splitters thin visually, no fake whitespace */
+#outlineSplitter, #splitter{
+  width: var(--splitW) !important;
+  min-width: var(--splitW) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  cursor: col-resize !important;
+  position: relative !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+  touch-action: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+/* visible grip line */
+#outlineSplitter::before, #splitter::before{
+  content:"" !important;
+  width: 3px !important;
+  height: 44px !important;
+  border-radius: 999px !important;
+  background: rgba(111,98,84,.45) !important;
+}
+/* hover/drag states */
+#outlineSplitter:hover::before, #splitter:hover::before{ background: rgba(70,140,210,.55) !important; }
+body.dragging #outlineSplitter::before,
+body.dragging #splitter::before{ background: rgba(70,140,210,.85) !important; }
+
+/* big hit-area WITHOUT adding layout space */
+#outlineSplitter::after, #splitter::after{
+  content:"" !important;
+  position:absolute !important;
+  top:0 !important; bottom:0 !important;
+  left: calc(-1 * var(--splitGrip)) !important;
+  right: calc(-1 * var(--splitGrip)) !important;
+}
+/* ensure grab div doesn't mess with layout; we use it for events */
+#outlineSplitter .splitterGrab,
+#splitter .splitterGrab{
+  position:absolute !important;
+  inset:0 !important;
+  left: calc(-1 * var(--splitGrip)) !important;
+  right: calc(-1 * var(--splitGrip)) !important;
+  background: transparent !important;
+  pointer-events: auto !important;
+}
+</style>
+
+
+
+<style id="toolbarRightAlignOverride">
+/* ===== Toolbar: right-aligned, DOM order preserved, overflow hidden on LEFT =====
+   Strategy:
+   - Scroll container (.toolbarViewport) uses LTR so scroll math is stable.
+   - On load/resize we jump to the far-right end so extra buttons are hidden on the LEFT (as requested).
+*/
+.toolbars{ direction: rtl !important; }
+
+.toolbarScroller{ direction: rtl !important; }
+
+.toolbarViewport{
+  direction: ltr !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  cursor: grab;
+}
+.toolbarViewport.is-dragging{ cursor: grabbing; }
+
+/* Keep one line; preserve DOM order */
+.toolbarViewport .toolbarRow{
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  width: max-content !important;
+  overflow: visible !important;
+}
+</style>
+
+
+<style id="toolbarApplyScopeAndGapFix">
+/* === Fix: chip/select not clipped when --btnH is small === */
+.chip, .btn, .toolbtn, .menuBtn{
+  height: var(--btnH) !important;
+  min-height: var(--btnH) !important;
+  padding: 0 10px !important;
+  align-items: center !important;
+}
+.chip{
+  gap: 8px !important;
+}
+.chip select{
+  height: calc(var(--btnH) - 6px) !important;
+  padding: 0 10px !important;
+  border-radius: 999px !important;
+  line-height: 1 !important;
+}
+
+/* === Fix: reduce extra space above panels by using real header/toolbars height === */
+:root{
+  /* JS will overwrite these with actual measured heights */
+  --headerH: 56px;
+  --toolH: 64px;
+}
+</style>
+
+
+<style id="toolbarHeightAndSpacingFix_v4">
+/* === v4: keep button heights consistent after compacting === */
+:root{
+  --btnH: 25px; /* keep compact but consistent */
+}
+
+/* unify control heights */
+.chip, .btn, .toolbtn, .menuBtn{
+  height: var(--btnH) !important;
+  min-height: var(--btnH) !important;
+  padding: 0 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  line-height: 1 !important;
+}
+
+/* chip internal select shouldn't overflow */
+.chip select, .chip input{
+  height: calc(var(--btnH) - 8px) !important;
+  min-height: calc(var(--btnH) - 8px) !important;
+  padding: 0 10px !important;
+  border-radius: 999px !important;
+}
+
+/* toolbar rows: tighten vertical padding without shrinking buttons */
+.toolbars{ padding: 3px 6px !important; gap: 6px !important; }
+.topbar, .toolbars .toolbarRow{ padding: 3px 6px !important; }
+
+/* === v4: remove dead space between toolbars and panels === */
+:root{
+  --headerH: 64px;
+  --toolH: 72px; /* will be overridden by JS below */
+  --topInset: calc(var(--headerH) + var(--toolH));
+}
+main{
+  margin-top: var(--topInset) !important;
+  height: calc(100vh - var(--topInset)) !important;
+}
+
+/* keep a tiny breathing room inside main */
+main{ padding-top: 0 !important; }
+</style>
+
+
+<style id="toolbarCompactV5">
+/* ===== Compact header + toolbars (v5) ===== */
+
+/* Header tighter */
+header{
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+}
+
+/* Toolbars container */
+.toolbars{
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+  gap: 5px !important;
+}
+
+/* Each toolbar row */
+.toolbars .toolbarRow,
+.topbar{
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+}
+
+/* Ensure buttons stay same height */
+.chip, .toolbtn, .btn, .menuBtn, select{
+  height: var(--btnH) !important;
+  min-height: var(--btnH) !important;
+  line-height: 1 !important;
+}
+
+/* Remove extra space between toolbars and panels */
+main{
+  margin-top: var(--topInset) !important;
+}
+</style>
+
+
+<style id="toolbarCompactV6">
+/* ===== Compact vertical spacing for toolbars only (v6) ===== */
+.toolbars{
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+}
+
+.toolbars .toolbarRow,
+.topbar{
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+}
 </style>
 
 </head>
 
 <body id="appRoot">
+<script>window.__forcePreviewRefresh = window.__forcePreviewRefresh || false;</script>
+
 <header>
   <div class="title">
     <div class="titleRow"><img class="appIcon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD8AAAA/CAYAAABXXxDfAAAEW0lEQVR4Ae2bWyh8WxzHf9hya+ZwGOXSPMnDCQ8oE6W8uBwniZIXnZzSKbe8ooMHhcKDFylFEcpxa6aQS27p5GHkPsRfyTnHpRDKmGM4s1bNvz+zt9kz89uz59/en1pNs/Zv/eb3tddea+21fhhgIS0tTREZGfnrwcHBz8fHx3FGozHUUu3FZvs9w3z7JSoqyluj0VRqtdpGk8n0o1hBuYuv4hMTE/0tH6NjY2O/iBiPW6HiyR23fPyp1+tzRY7HrVDxKSkpNePj45ISTmDS09N/0Ol0f4gdiBgwERERv1kGt2CxAxEDZnd3N0/sIMSCMRgMP2E79fPzg7CwMPDycn1pcH9/T4sQMGazWcF2YWJiwqauo6MD1tbWuJ0xDLS0tEBxcTH4+vqiBPj29gZzc3NQU1MDNzc3du3Z4iYxbWxs2MbL5SQ/P9+mbmRk5NMfrq6uhpKSErsBOgLpPZmZmdDb2wsFBQV27dni7u/vZ7XlFO8MfIJzltTUVFCr1XB2dobmE1W8UqnEdGcDGUc8VvxHGhoaYGFhwam2CoUCZmZmkCN6j6DiLy8v4eTkxKm2RLzQCCre05HFSxVZvFSRxUsVQcX39PTQ4qmgin96esJ0J7h/VPE6nQ4qKiowXX7l8PAQDAYDqk9U8W1tbaBSqaCwsBB8fHzQ/K6vr9M/Knm3xwRVvMlkou/0dXV1EB4ejrKT8/DwAFdXVwjR2SLIgPf4+EiLpyNPdVIFXTzZxAwKCkL1aTQa4fn5GdUnAV18bm4uTE5OovpsbW2F2tpaVJ8EudtLFVm8VEEXT5ai2dnZqD5PT09R/VlBF399fQ2zs7PYbgVB7vZSBV28t7c32vG0lZeXFzCbzag+CejiyRE115Gws8grPAGQxUsVWTwmJBmBLS/GFY6OjlD9WUEXf35+Tsv3AKd4sk38cfcVcztaCMgukkP2XBdIzltoaOi7uri4OOeichPx8fGs9WT7mw1O8dvb25CRkfGurqysDLq6uuDi4sKFEIWDJEB95PX1FXZ2dljtOcVrtVob8SQVbHl5GcrLy2FxcRH9BMVZYmJioLm5mXWgJfGSN002OMX39fVBfX29TdePjY2F+fl5uqNKCh+6u7vpKQ5fOjs7obS0lJctGYe4MrfIzWlqauJsyyn+7u6O5rsODAywXvf396eFDwEBAbzsvrUPDnY9C56ky66srHBe/3R4HBwcJP+FAZWVlS4H4m729vbo4/kZdueGqqoqOvKTR8DTpzorS0tLUFRURHvvJ/zHa2JsbGyEqakp+vzk5OQ4PJ+6i/39fWhvb6ev1PYG45CQkC+8Vej1esjLyyONQKPRQHR0NO8jaK6phouhoSHY3NzkbX97ewtbW1sOLYOTkpKWHL6F5Iemp6cdbeYQq6urtAiJSqXq98z+KzAJCQna4eHhvyQnPjAw8B+1Wv07WcFKSrxSqfw7Kysrc3R09F/yXSri35KTkycsz3m5RfiltfJ/GrNokBHwRF4AAAAASUVORK5CYII=" alt="אוצריא">
     <h1>עריכת ספרי אוצריא</h1></div>
-    <div class="sub">Ctrl+F חיפוש • Ctrl+H החלפה • Ctrl+Z / Ctrl+Y היסטוריה</div>
+    <div class="sub">Ctrl+F חיפוש • Ctrl+Z / Ctrl+Y היסטוריה</div>
   </div>
 
   <div class="headerRight">
@@ -1178,7 +1928,9 @@ main{
 <!-- 2-row toolbars -->
 <div class="toolbars">
   <!-- Row 1: File/History/View -->
-  <div class="toolbarRow">
+  <div class="toolbarScroller">
+<div class="toolbarViewport">
+    <div class="toolbarRow">
 
     <div class="tgroup">
       <span class="gtitle">היסטורית שינויים</span>
@@ -1229,9 +1981,14 @@ main{
       <button class="toolbtn" id="btnBg" title="עטוף ב-span עם background-color">BG</button>
     </div>
 </div>
+  </div>
+</div>
+
 
   <!-- Row 2: Formatting -->
-  <div class="toolbarRow">
+  <div class="toolbarScroller">
+<div class="toolbarViewport">
+      <div class="toolbarRow">
     <div class="tgroup">
       <span class="gtitle">גודל תצוגה מקדימה</span>
       <button class="toolbtn" id="btnZoomOut" title="הקטן תצוגה">−</button>
@@ -1293,8 +2050,10 @@ main{
       <button class="toolbtn" data-align="center" title="עטוף ב-p עם text-align:center">מרכז</button>
       <button class="toolbtn" data-align="left" title="עטוף ב-p עם text-align:left">שמאל</button>
     </div>
-
     </div>
+      </div>
+    </div>
+</div>
 </div>
 
 <main>
@@ -1319,7 +2078,7 @@ main{
 </div>
   </section>
 
-  <div id="outlineSplitter" class="splitter splitter--outline" title="גרור לשינוי רוחב"></div>
+  <div id="outlineSplitter" class="splitter splitter--outline" title="גרור לשינוי רוחב"><div class="splitterGrab" aria-hidden="true"></div></div>
 
   <!-- RAW -->
   <section class="panel" id="rawPanel">
@@ -1342,7 +2101,7 @@ main{
     </div>
   </section>
 
-  <div id="splitter" class="splitter" title="גרור לשינוי רוחב"></div>
+  <div id="splitter" class="splitter" title="גרור לשינוי רוחב"><div class="splitterGrab" aria-hidden="true"></div></div>
 
   <!-- PREVIEW -->
   <section class="panel" id="previewPanel">
@@ -1395,6 +2154,135 @@ main{
 <script>
 (() => {
   const LS_KEY = "otzaria_editor_content_v1";
+  // === Toolbar narrow-screen: horizontal drag-scroll (no arrows) ===
+  function setupToolbarDragScroll(){
+  const isInteractive = (el) => !!el.closest('button, a, input, select, textarea, label, [role="button"]');
+
+  // Detect RTL scrollLeft behavior once
+  let RTL_TYPE;
+  const getRtlType = () => {
+    if(RTL_TYPE) return RTL_TYPE;
+    const div = document.createElement('div');
+    div.dir = 'rtl';
+    div.style.width = '100px';
+    div.style.height = '20px';
+    div.style.overflow = 'scroll';
+    div.style.position = 'absolute';
+    div.style.top = '-9999px';
+    const inner = document.createElement('div');
+    inner.style.width = '200px';
+    inner.style.height = '20px';
+    div.appendChild(inner);
+    document.body.appendChild(div);
+
+    div.scrollLeft = 0;
+    const a = div.scrollLeft;
+    div.scrollLeft = 1;
+    const b = div.scrollLeft;
+
+    document.body.removeChild(div);
+
+    // a==0 and b==0 => negative
+    // a==0 and b==1 => default
+    // a>0 => reverse
+    RTL_TYPE = (a === 0) ? ((b === 0) ? 'negative' : 'default') : 'reverse';
+    return RTL_TYPE;
+  };
+
+  const isRtl = (el) => getComputedStyle(el).direction === 'rtl';
+
+  const getScroll = (el) => {
+    if(!isRtl(el)) return el.scrollLeft;
+    const t = getRtlType();
+    if(t === 'negative') return -el.scrollLeft;
+    if(t === 'reverse') return (el.scrollWidth - el.clientWidth - el.scrollLeft);
+    return el.scrollLeft; // default
+  };
+
+  const setScroll = (el, val) => {
+    if(!isRtl(el)) { el.scrollLeft = val; return; }
+    const t = getRtlType();
+    if(t === 'negative') { el.scrollLeft = -val; return; }
+    if(t === 'reverse') { el.scrollLeft = (el.scrollWidth - el.clientWidth - val); return; }
+    el.scrollLeft = val; // default
+  };
+
+  document.querySelectorAll('.toolbarScroller').forEach(sc=>{
+    const viewport = sc.querySelector('.toolbarViewport') || sc;
+        if(!viewport) return;
+
+    const scrollToEnd = () => {
+      // Show the RIGHT end of the toolbar so overflow is hidden on the LEFT
+      viewport.scrollLeft = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+    };
+    // Initial: after layout
+    requestAnimationFrame(scrollToEnd);
+    // Keep it when window resizes (fonts / zoom / responsive)
+    window.addEventListener('resize', () => requestAnimationFrame(scrollToEnd), { passive:true });
+
+
+    // Wheel: map vertical wheel to horizontal scroll (nice on mice/trackpads)
+    viewport.addEventListener('wheel', (e)=>{
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if(dx){
+        setScroll(viewport, getScroll(viewport) + dx);
+        e.preventDefault();
+      }
+    }, { passive:false });
+
+    let down = false;
+    let startX = 0;
+    let startScroll = 0;
+    let moved = false;
+
+    const onDown = (clientX, target) => {
+      if(isInteractive(target)) return;
+      down = true;
+      moved = false;
+      startX = clientX;
+      startScroll = getScroll(viewport);
+      viewport.classList.add('is-dragging');
+    };
+
+    const onMove = (clientX) => {
+      if(!down) return;
+      const dx = clientX - startX;
+      if(Math.abs(dx) > 5) moved = true;
+      // Drag right => content moves right (same feel as your screenshot)
+      setScroll(viewport, startScroll - dx);
+    };
+
+    const onUp = () => {
+      if(!down) return;
+      down = false;
+      viewport.classList.remove('is-dragging');
+    };
+
+    // Pointer events (works for mouse + touch)
+    viewport.addEventListener('pointerdown', (e)=>{
+      onDown(e.clientX, e.target);
+      if(down){
+        viewport.setPointerCapture?.(e.pointerId);
+        e.preventDefault();
+      }
+    });
+
+    viewport.addEventListener('pointermove', (e)=> onMove(e.clientX));
+    viewport.addEventListener('pointerup', onUp);
+    viewport.addEventListener('pointercancel', onUp);
+
+    // Prevent "click" after drag on non-interactive area
+    viewport.addEventListener('click', (e)=>{
+      if(moved && !isInteractive(e.target)){
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      moved = false;
+    }, true);
+  });
+}
+
+
 
   const appRoot = document.getElementById('appRoot');
 
@@ -1414,6 +2302,7 @@ main{
   }
 
   updateTopInset();
+  setupToolbarDragScroll();
   window.addEventListener('resize', ()=> requestAnimationFrame(updateTopInset));
 
   // react to header/toolbars height changes (wrap, zoom, fonts)
@@ -1425,7 +2314,30 @@ main{
     }catch{}
   }
 const raw = document.getElementById('raw');
-  const gutter = document.getElementById('gutter');
+  
+  // ===== Track last editor focus (so Ctrl+Z/Y works even after clicking toolbar buttons) =====
+  let lastEditorFocus = "raw"; // "raw" | "preview"
+  document.addEventListener("focusin", (ev)=>{
+    try{
+      const t = ev.target;
+      if(t === raw) lastEditorFocus = "raw";
+      else if(preview && (t === preview || preview.contains(t))) lastEditorFocus = "preview";
+    }catch{}
+  });
+// Ensure native undo/redo won't bypass our history when focus is inside RAW
+try{
+  raw.addEventListener('keydown', (e)=>{
+    const isMac = navigator.platform.toLowerCase().includes("mac");
+    const ctrl = isMac ? e.metaKey : e.ctrlKey;
+    if(!ctrl) return;
+    const k = (e.key || "").toLowerCase();
+    if(k === "z" || k === "y"){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, {capture:true});
+}catch{}
+const gutter = document.getElementById('gutter');
   const page = document.getElementById('page');
 
 const scopeSel = document.getElementById('applyScope'); // "החלה על:"
@@ -1510,7 +2422,10 @@ const scopeSel = document.getElementById('applyScope'); // "החלה על:"
 
     const ps = lastPreviewSelection.plainStart;
     const pe = lastPreviewSelection.plainEnd;
-    if(ps == null || pe == null || pe <= ps) return;
+    if(ps == null || pe == null) return;
+
+    // Allow syncing caret (pe === ps) so scope actions like 'line/paragraph/section' work from preview caret.
+    if(pe < ps) return;
 
     const v = raw.value || "";
     const boundary = buildPlainBoundaryMap(v);
@@ -1706,7 +2621,7 @@ function setRawValue(nextValue, arg2 = {}, arg3){
       ? `<pre>${escapeHtml(v)}</pre>`
       : v.replace(/\r\n/g, "\n").replace(/\n/g, "<br>\n");
 
-    if(editingPreview) return;
+    if (editingPreview && !window.__forcePreviewRefresh) return;
     ignorePreviewInput = true;
     page.innerHTML = html;
     ignorePreviewInput = false;
@@ -1955,37 +2870,47 @@ function escapeHtml(s){
   }
 
 function computeRangeByScope(text, selStart, selEnd){
-    const scope = (scopeSel ? scopeSel.value : 'selection');
+  const scope = (scopeSel ? scopeSel.value : 'selection');
 
-    if(scope === "document"){
-      return { start: 0, end: text.length, mode: "range" };
-    }
+  if(scope === "document"){
+    return { start: 0, end: text.length, mode: "range" };
+  }
 
-    if(scope === "line"){
-      const r = getLineRange(selStart);
-      return { start: r.start, end: r.end, mode: "range" };
-    }
+  if(scope === "line"){
+    const r = getLineRange(selStart);
+    return { start: r.start, end: r.end, mode: "range" };
+  }
 
-    if(scope === "selection"){
-      if(selStart !== selEnd){
-        return { start: selStart, end: selEnd, mode: "range" };
-      }
-      const r = getLineRange(selStart);
-      return { start: r.start, end: r.end, mode: "range" };
-    }
+  if(scope === "block"){
+    const r = getCurrentBlockRange(text, selStart);
+    if(r) return r;
+    return { start: 0, end: text.length, mode: "range" };
+  }
 
-    if(scope === "firstword"){
-      let r;
-      if(selStart !== selEnd){
+  if(scope === "blockpick"){
+    const r = getPickedBlockRange(text);
+    if(r) return r;
+    return { start: 0, end: text.length, mode: "range" };
+  }
+
+  if(scope === "firstword"){
+      // Default: apply to the whole document, unless the user *actively* selected a range very recently.
+      let r = { start: 0, end: text.length };
+      if(selStart !== selEnd && lastPreviewSelectionAt && (Date.now() - lastPreviewSelectionAt) < 2000){
         r = { start: selStart, end: selEnd };
-      } else {
-        r = { start: 0, end: text.length };
       }
       return { start: r.start, end: r.end, mode: "firstword" };
     }
 
+  // selection (default)
+  if(selStart !== selEnd){
     return { start: selStart, end: selEnd, mode: "range" };
   }
+  // No selection: fall back to current line for better UX
+  const r = getLineRange(selStart);
+  return { start: r.start, end: r.end, mode: "range" };
+}
+
 
   function wrapFragment(tag, attrs, inner){
     const open = attrs ? `<${tag} ${attrs}>` : `<${tag}>`;
@@ -1994,26 +2919,31 @@ function computeRangeByScope(text, selStart, selEnd){
   }
 
   function applyToScope(fnRange, fnFirstWord){
-    // If the user selected text inside the preview, map that selection back to the raw editor first
-    if(lastPreviewSelectionAt && (Date.now() - lastPreviewSelectionAt) < 2000){
-      tryApplyPreviewSelectionToRaw(true);
-    }else{
-      tryApplyPreviewSelectionToRaw();
-    }
-    restoreSelection();
+    const activeScope = (scopeSel ? scopeSel.value : 'selection');
 
+    // Always capture latest preview caret/selection before applying scope operations.
+    try{ refreshPreviewSelection(); }catch{}
+
+    // For non-selection scopes, always sync caret from preview -> raw (even if collapsed caret).
+    if(activeScope !== 'selection'){
+      try{ tryApplyPreviewSelectionToRaw(true); }catch{}
+    } else {
+      // For selection scope, only force-sync if preview selection is fresh.
+      if(lastPreviewSelectionAt && (Date.now() - lastPreviewSelectionAt) < 2000){
+        try{ tryApplyPreviewSelectionToRaw(true); }catch{}
+      } else {
+        try{ tryApplyPreviewSelectionToRaw(); }catch{}
+      }
+    }
+
+        // Ensure lastSelStart/End reflect the latest caret/selection after syncing
+    try{ syncLastSelection(); }catch{}
+    if(activeScope === 'selection'){ restoreSelection(); }
     const text = raw.value;
     const selStart = lastSelStart;
     const selEnd = lastSelEnd;
 
     const scope = computeRangeByScope(text, selStart, selEnd);
-
-    // Force operations to apply to exact selection when there is one
-    if(selStart !== selEnd){
-      scope.mode = 'range';
-      scope.start = selStart;
-      scope.end = selEnd;
-    }
 
     if(scope.mode === "firstword"){
       const { start, end } = scope;
@@ -2033,32 +2963,45 @@ function computeRangeByScope(text, selStart, selEnd){
           continue;
         }
 
-        const m = line.match(/^(\s*)(\S+)([\s\S]*)$/);
-        if(!m){
+        // Skip headings (do not apply "first word" formatting on <h1>.. <h6> lines)
+        if(/^\s*<h[1-6]\b/i.test(line)){
           out.push(line);
           continue;
         }
 
-        const lead = m[1];
-        const first = m[2];
-        const rest = m[3];
 
-        const wrapped = fnFirstWord(first);
-        out.push(lead + wrapped + rest);
-        changedCount++;
+        
+// Preserve leading HTML tags (e.g., <p>, <span ...>) and apply formatting
+// only to the first *visible* word after those tags.
+let cur = line;
+let prefix = "";
+while(true){
+  const mt = cur.match(/^(\s*<[^>]+>\s*)/);
+  if(mt){
+    prefix += mt[1];
+    cur = cur.slice(mt[1].length);
+    continue;
+  }
+  break;
+}
+
+const m2 = cur.match(/^(\s*)(\S+)([\s\S]*)$/);
+if(!m2){
+  out.push(line);
+  continue;
+}
+
+const lead = m2[1];
+const first = m2[2];
+const rest = m2[3];
+
+const wrapped = fnFirstWord(first);
+out.push(prefix + lead + wrapped + rest);        changedCount++;
       }
 
       const newMid = out.join("\n");
-      raw.value = before + newMid + after;
+      setRawValue(before + newMid + after, start, (activeScope === 'selection') ? (start + newMid.length) : start);
 
-      raw.focus({preventScroll:true});
-      raw.setSelectionRange(start, start + newMid.length);
-      syncLastSelection();
-
-      pushHistory(raw.value);
-      safeLocalSave(raw.value);
-
-      renderAll();
       findInfo.textContent = `בוצע על ${changedCount} שורות`;
       return;
     }
@@ -2074,20 +3017,24 @@ function computeRangeByScope(text, selStart, selEnd){
     const before2 = bc ? before.slice(0, Math.max(0, before.length - bc)) : before;
     const after2 = ac ? after.slice(Math.min(ac, after.length)) : after;
     const baseStart = start - bc;
-    raw.value = before2 + res.newMid + after2;
+    const nextValue__ = before2 + res.newMid + after2;
+    setRawValue(nextValue__, {keepSelection:false});
 
     const cs = (res.cursorStart != null) ? res.cursorStart : baseStart;
     const ce = (res.cursorEnd != null) ? res.cursorEnd : (baseStart + res.newMid.length);
 
     raw.focus({preventScroll:true});
-    raw.setSelectionRange(cs, ce);
+    // Keep a range selected only when 'selection' scope is chosen; otherwise keep a caret.
+    if(activeScope === 'selection'){
+      raw.setSelectionRange(cs, ce);
+    }else{
+      raw.setSelectionRange(cs, cs);
+    }
 
     syncLastSelection();
 
-    pushHistory(raw.value);
-    safeLocalSave(raw.value);
+    /* history handled by setRawValue */
 
-    renderAll();
   }
 
   function wrap(tag, attrs=""){
@@ -2157,19 +3104,10 @@ function wrapSpanStyle(style){
     const s = lastSelStart;
     const e = lastSelEnd;
 
-    raw.value = t.slice(0,s) + textToInsert + t.slice(e);
+    const next__ = t.slice(0,s) + textToInsert + t.slice(e);
     const newPos = s + textToInsert.length;
-
-    raw.focus({preventScroll:true});
-    raw.setSelectionRange(newPos, newPos);
-
-    syncLastSelection();
-
-    pushHistory(raw.value);
-    safeLocalSave(raw.value);
-
-    renderAll();
-  }
+    setRawValue(next__, newPos, newPos);
+}
 
   // Focus-safe binding
   function bindToolButton(el, handler){
@@ -2181,8 +3119,15 @@ function wrapSpanStyle(style){
         refreshPreviewSelection();
         tryApplyPreviewSelectionToRaw(true);
       }catch{}
+      const beforeVal__ = raw ? raw.value : '';
       handler(ev);
-    }, {passive:false});
+      try{
+        if(raw && raw.value !== beforeVal__){
+          pushHistory(raw.value);
+          safeLocalSave(raw.value);
+        }
+      }catch{}
+      }, {passive:false});
   }
 
   // Wrap buttons
@@ -2577,45 +3522,63 @@ function wrapSpanStyle(style){
 
   // ===== Reset sample =====
   const SAMPLE =
-`<h1>שם הספר (כותרת רמה 1)</h1>
-<h2>כותרת רמה 2</h2>
-פסקה רגילה עם <b>הדגשה</b> ועם <i>נטוי</i> וגם <u>קו תחתון</u>.
-<br>
-טקסט רגיל <sup>1</sup> טקסט רגיל — ואחר כך הערת שוליים:
-<br>
-<small><sup>1</sup> גוף ההערה</small>
+`<h1>כותרת H1
+</h1>
+<h2>כותרת H2
+</h2>
+<h3>כותרת H3
+</h3>
+<h4>כותרת H4
+</h4>
+<h5>כותרת H5
+</h5>
+<h6>כותרת H6
+</h6>
 
+<b>טקסט מודגש B</b>
 
-<h3>כותרת משנה (h3)</h3>
-טקסט רגיל בשורה אחת.<br>
-ועוד שורה עם <b>מודגש</b> ועם <i>נטוי</i> וגם <u>קו תחתון</u>.
-<br>
-<small><sup>2</sup> הערה נוספת</small>
+<i>טקסט נטוי I</i>
 
-<h4>כותרת קטנה (h4)</h4>
-<ul>
-  <li>פריט ראשון</li>
-  <li>פריט שני</li>
-</ul>
+<u>טקסט עם קו תחתון U</u>
 
-<h5>כותרת קטנה יותר (h5)</h5>
-<ol>
-  <li>סעיף 1</li>
-  <li>סעיף 2</li>
-</ol>
+<s>טקסט עם קו חוצה S</s>
 
-<h6>כותרת מינימלית (h6)</h6>
-<details><summary>מקטע מוסתר</summary>זהו טקסט בתוך details/summary</details>
+טקסט עם סימון עליון עבור הערה <sup>2</sup>
+
+טקסט תחתון עבור הערה <sub>2</sub>
+
+<a href="https://example.com/">טקסט עם קישור</a>
+
+<mark>טקסט עם סימון צהוב mark
+</mark>
+
+<p style="text-align:right;">טקסט מיושר לימין</p>
+
+<p style="text-align:center;">טקסט מיושר למרכז</p>
+
+<p style="text-align:left;">טקסט מיושר לשמאל</p>
+
+<ol><li>טקסט עם מספור</li></ol>
+
+<ul><li>טקסט עם תבליטים</li></ul>
+
+<details><summary>הצג טקסט מוסתר</summary>טקסט מוסתר</details>
+
+קו חוצץ
+
 <hr>
 
-<h2>מצב “מילה ראשונה בכל שורה”</h2>
-נסה לבחור "החלה על → מילה ראשונה בכל שורה" ואז ללחוץ B.
-זה יחיל רק על המילה הראשונה בכל שורה.
+<span style="font-size:150%;">טקסט עם שינוי גודל
+</span>
+<span style="color:#db2a0a;">טקסט עם שינוי צבע
+</span>
+<span style="background-color:#fff1a8;">טקסט עם שינוי רקע
+</span>
+<span style="font-family:Noto Sans Hebrew;">טקסט עם שינוי גופן
+</span>`;
 
-<h2>טקסט מוסתר</h2>
-לפני <details><summary>הצג טקסט</summary>זה הטקסט שמופיע לאחר הלחיצה!</details> אחרי`;
 
-  document.getElementById('btnReset').addEventListener('click', ()=>{
+document.getElementById('btnReset').addEventListener('click', ()=>{
     ignoreHistory = true;
     raw.value = SAMPLE;
     ignoreHistory = false;
@@ -2651,68 +3614,132 @@ function wrapSpanStyle(style){
       return;
     }
 
-    // Ctrl+Z / Ctrl+Y  (native undo in inputs/contenteditable; custom history for RAW)
-    if(ctrl && e.key.toLowerCase() === "z"){
-      const t = e.target;
-      const isEditable = (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)));
-      const inPreview = !!(t && (t === preview || (preview && preview.contains(t))));
-      const inRaw = (t === raw);
-      // If user is editing inside the preview (contenteditable) or other input, let the browser handle undo/redo.
-      if(isEditable && !inRaw && inPreview){
-        return;
-      }
-      // Mac often uses Cmd+Shift+Z for redo; if Shift is held, treat as redo.
-      if(isMac && e.shiftKey){
-        e.preventDefault();
-        redo();
-        return;
-      }
-      // Default: custom undo (for RAW)
-      e.preventDefault();
-      undo();
-      return;
-    }
-    if(ctrl && e.key.toLowerCase() === "y"){
-      const t = e.target;
-      const isEditable = (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)));
-      const inPreview = !!(t && (t === preview || (preview && preview.contains(t))));
-      const inRaw = (t === raw);
-      if(isEditable && !inRaw && inPreview){
-        return;
-      }
-      e.preventDefault();
-      redo();
-      return;
-    }
-    // Cmd+Shift+Z (Mac redo) when focused in raw
-    if(isMac && e.metaKey && e.shiftKey && e.key.toLowerCase() === "z"){
-      const t = e.target;
-      if(t === raw){
-        e.preventDefault();
-        redo();
-        return;
-      }
-    }
+    // Ctrl+Z / Ctrl+Y (use our history so it works consistently in RAW + preview)
+// Ctrl+Z / Ctrl+Y (use our history so it works consistently in RAW + preview)
+if(false && ctrl && (e.key.toLowerCase() === "z" || e.key.toLowerCase() === "y")){
+  // If the user is typing in other inputs (e.g., Find/Replace fields), keep browser-native undo there.
+  const ae = document.activeElement;
+  const aeTag = ae ? (ae.tagName || "").toUpperCase() : "";
+  const aeIsTextInput = !!ae && (
+    (aeTag === "INPUT") ||
+    (aeTag === "TEXTAREA") ||
+    (ae && ae.isContentEditable)
+  );
+  const aeIsOurEditors = (ae === raw) || (preview && (ae === preview || preview.contains(ae)));
+  if(aeIsTextInput && !aeIsOurEditors){
+    return; // let native undo/redo happen inside that field
+  }
 
-    // Ctrl+N
-    if(ctrl && e.key.toLowerCase() === "n"){
-      e.preventDefault();
-      document.getElementById('miNew').click();
-      return;
-    }
+  e.preventDefault();
+  e.stopPropagation();
 
-    // כשהמגירה פתוחה
+  // Decide based on current target OR last focused editor (toolbar clicks can steal focus)
+  const t0 = e.target;
+  const t = (t0 && t0.nodeType === 3) ? t0.parentElement : t0;
+  const inPreview = !!(t && (t === preview || (preview && preview.contains(t))));
+  const inRaw = (t === raw);
+
+  const shouldHandle = inPreview || inRaw || (lastEditorFocus === "raw") || (lastEditorFocus === "preview");
+  if(!shouldHandle) return;
+
+  const isRedo = (e.key.toLowerCase() === "y") || (isMac && e.key.toLowerCase() === "z" && e.shiftKey);
+  if(isRedo) redo();
+  else undo();
+  return;
+}
+
+// כשהמגירה פתוחה
     if(drawer.classList.contains('open')){
       if(e.key === "Escape"){ e.preventDefault(); closeDrawer(); return; }
       if(e.key === "Enter"){
+
         e.preventDefault();
         if(e.shiftKey) findNext(-1);
         else findNext(+1);
       }
     }
-  });
+  }, {capture:true});
+// ===== Robust Undo/Redo shortcuts (force our history, incl. toolbar actions) =====
+(function(){
+  function isMac(){
+    return (navigator.platform || "").toLowerCase().includes("mac");
+  }
+  function isOurEditors(el){
+    if(!el) return false;
+    if(el === raw) return true;
+    try{
+      if(preview && (el === preview || preview.contains(el))) return true;
+    }catch{}
+    return false;
+  }
+  function handleUndoRedo(e){
+    const mac = isMac();
+    const ctrl = mac ? e.metaKey : e.ctrlKey;
+    if(!ctrl) return false;
 
-  // ===== אירועים: טקסט =====
+    const k = (e.key || "").toLowerCase();
+    if(k !== "z" && k !== "y") return false;
+
+    // If focus is inside our editors, always handle.
+    // If focus is on a toolbar button, handle based on lastEditorFocus.
+    const ae = document.activeElement;
+    const target = (e.target && e.target.nodeType === 3) ? e.target.parentElement : e.target;
+    const inEditors = isOurEditors(ae) || isOurEditors(target) || (lastEditorFocus === "raw") || (lastEditorFocus === "preview");
+    if(!inEditors) return false;
+
+    // Stop native undo/redo (textarea/contenteditable) and any other handlers
+    e.preventDefault();
+    e.stopPropagation();
+    if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+
+    const redoKey = (k === "y") || (mac && k === "z" && e.shiftKey);
+    const bu = document.getElementById('btnUndo');
+    const br = document.getElementById('btnRedo');
+    if(redoKey){
+      if(br) br.click(); else redo();
+    }else{
+      if(bu) bu.click(); else undo();
+    }
+    return true;
+  }
+
+  // Capture first (beats native textarea undo)
+  window.addEventListener("keydown", handleUndoRedo, true);
+  document.addEventListener("keydown", handleUndoRedo, true);
+
+  // Extra safety: in RAW, block native undo so it can't bypass us
+  try{
+    raw.addEventListener("keydown", handleUndoRedo, true);
+  }catch{}
+})();
+
+
+  // ===== FIX v25: Intercept native historyUndo/historyRedo and route to our history =====
+(function(){
+  function intercept(el){
+    if(!el) return;
+    el.addEventListener("beforeinput", (e)=>{
+      try{
+        const t = (e.inputType || "");
+        if(t === "historyUndo" || t === "historyRedo"){
+          e.preventDefault();
+          e.stopPropagation();
+          if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+          if(t === "historyRedo") redo();
+          else undo();
+        }
+      }catch{}
+    }, {capture:true});
+  }
+  try{ intercept(raw); }catch{}
+  try{
+    const page = document.getElementById("page");
+    intercept(page);
+    intercept(preview);
+  }catch{}
+})();
+
+// ===== אירועים: טקסט =====
   let saveTimer = null;
   function scheduleAutosave(){
     if(saveTimer) clearTimeout(saveTimer);
@@ -2830,53 +3857,18 @@ function wrapSpanStyle(style){
         toast("הפעולה עדיין לא הוטמעה");
     }
   }
+  
+  /* splitter logic removed (unified splitter logic is injected at end of body) */
+;
+
+function saveGrid(){
+  const w = readGridWidths();
+  localStorage.setItem('otzaria_gridW_v1', JSON.stringify(w));
+}
 
 
-
-  // ===== Column splitter (drag) =====
-  (function(){
-    if(!splitter) return;
-    let dragging = false;
-    let startX = 0;
-    let startPct = 50;
-
-    function getMainRect(){
-      const m = document.querySelector('main');
-      return m ? m.getBoundingClientRect() : null;
-    }
-    function setPct(pct){
-      const m = document.querySelector('main');
-      if(!m) return;
-      const p = Math.max(20, Math.min(80, pct)); // limits
-      m.style.setProperty('--rawCol', p.toFixed(2) + '%');
-      m.style.setProperty('--prevCol', `calc(${(100 - p).toFixed(2)}% - 10px)`);
-      localStorage.setItem('otzaria_split_pct', String(p));
-    }
-    const saved = parseFloat(localStorage.getItem('otzaria_split_pct') || "");
-    if(!Number.isNaN(saved)) setPct(saved);
-
-    splitter.addEventListener('pointerdown', (ev)=>{
-      const rect = getMainRect();
-      if(!rect) return;
-      dragging = true;
-      splitter.setPointerCapture(ev.pointerId);
-      startX = ev.clientX;
-      // current pct based on css var if present
-      const cur = localStorage.getItem('otzaria_split_pct');
-      startPct = cur ? parseFloat(cur) : 50;
-      ev.preventDefault();
-    });
-    splitter.addEventListener('pointermove', (ev)=>{
-      if(!dragging) return;
-      const rect = getMainRect();
-      if(!rect) return;
-      const dxFromRight = rect.right - ev.clientX;
-      const pct = (dxFromRight / rect.width) * 100;
-      setPct(pct);
-    });
-    splitter.addEventListener('pointerup', ()=>{ dragging = false; });
-    splitter.addEventListener('pointercancel', ()=>{ dragging = false; });
-  })();
+// splitter logic removed (unified splitter logic is injected at end of body)
+;
 
 
 
@@ -3013,207 +4005,7 @@ function wrapSpanStyle(style){
 })();
 
 </script>
-<script>
-/* ===== Splitters FIX (single, clean, working) ===== */
-(() => {
-  const root = document.documentElement;
-  const main = document.querySelector('main');
-  const outlineCol = document.getElementById('outlineCol');
-  const rawPanel = document.getElementById('rawPanel');
-  const previewPanel = document.getElementById('previewPanel');
 
-  const splitOut = document.getElementById('outlineSplitter');
-  const splitMid = document.getElementById('splitter');
-
-  const KEY = "otzaria_cols_vars_v5";
-  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-
-  const getPx = (name, fallback) => {
-    const v = getComputedStyle(root).getPropertyValue(name).trim();
-    const n = parseFloat(v);
-    return Number.isFinite(n) ? n : fallback;
-  };
-  const setPx = (name, v) => root.style.setProperty(name, Math.round(v) + "px");
-
-  // Ensure defaults exist
-  if (!getComputedStyle(root).getPropertyValue("--outW").trim()) setPx("--outW", 220);
-  if (!getComputedStyle(root).getPropertyValue("--rawW").trim()) setPx("--rawW", 560);
-  if (!getComputedStyle(root).getPropertyValue("--prevW").trim()) setPx("--prevW", 720);
-
-  // Load saved widths
-  try{
-    const saved = JSON.parse(localStorage.getItem(KEY) || "null");
-    if(saved){
-      if(Number.isFinite(saved.outW)) setPx("--outW", saved.outW);
-      if(Number.isFinite(saved.rawW)) setPx("--rawW", saved.rawW);
-      if(Number.isFinite(saved.prevW)) setPx("--prevW", saved.prevW);
-    }
-  }catch{}
-
-  const persist = () => {
-    try{
-      localStorage.setItem(KEY, JSON.stringify({
-        outW: getPx("--outW", 220),
-        rawW: getPx("--rawW", 560),
-        prevW: getPx("--prevW", 720),
-      }));
-    }catch{}
-  };
-
-  function layoutLimits(){
-    // total available width for the grid (inside main)
-    const rect = main.getBoundingClientRect();
-    const total = rect.width;
-
-    // Splitters are 5px each in CSS (grid columns)
-    const splitW = 10; // 2 splitters x ~5px
-    const minOut = 170, maxOut = 360;
-    const minRaw = 420, minPrev = 480;
-
-    // Keep some breathing room for borders/gaps
-    const slack = 40;
-
-    const maxRaw = Math.max(minRaw, total - splitW - minOut - minPrev - slack);
-    const maxPrev = Math.max(minPrev, total - splitW - minOut - minRaw - slack);
-
-    return { total, minOut, maxOut, minRaw, minPrev, maxRaw, maxPrev };
-  }
-
-  function bindSplitter(el, kind){
-    if(!el || !main) return;
-
-    // Make sure it's clickable
-    el.style.pointerEvents = "auto";
-    el.style.touchAction = "none";
-
-    const start = (clientX) => {
-      // don't resize outline if collapsed
-      if(kind === "outline" && document.body.classList.contains("outline-collapsed")) return null;
-
-      const { minOut, maxOut, minRaw, minPrev, maxRaw, maxPrev } = layoutLimits();
-
-      const startX = clientX;
-      const startOut = getPx("--outW", 220);
-      const startRaw = getPx("--rawW", 560);
-      const startPrev = getPx("--prevW", 720);
-
-      return (clientX2) => {
-        const rtl = (getComputedStyle(document.documentElement).direction === 'rtl');
-        const dx = rtl ? (startX - clientX2) : (clientX2 - startX);
-
-        if(kind === "outline"){
-          const w = clamp(startOut + dx, minOut, maxOut);
-          setPx("--outW", w);
-        }else{
-          const rawW = clamp(startRaw + dx, minRaw, maxRaw);
-          const prevW = clamp(startPrev - dx, minPrev, maxPrev);
-          setPx("--rawW", rawW);
-          setPx("--prevW", prevW);
-        }
-      };
-    };
-
-    const end = () => {
-      document.body.classList.remove("dragging");
-      persist();
-      window.dispatchEvent(new Event("resize"));
-    };
-
-    // Pointer Events (best)
-    el.addEventListener("pointerdown", (e) => {
-      // Only primary button for mouse
-      if(e.pointerType === "mouse" && e.button !== 0) return;
-
-      const moveFn = start(e.clientX);
-      if(!moveFn) return;
-
-      document.body.classList.add("dragging");
-      e.preventDefault();
-
-      try{ el.setPointerCapture(e.pointerId); }catch{}
-
-      const onMove = (ev) => {
-        moveFn(ev.clientX);
-        ev.preventDefault();
-      };
-      const onUp = () => {
-        window.removeEventListener("pointermove", onMove, true);
-        window.removeEventListener("pointerup", onUp, true);
-        window.removeEventListener("pointercancel", onUp, true);
-        end();
-      };
-
-      window.addEventListener("pointermove", onMove, true);
-      window.addEventListener("pointerup", onUp, true);
-      window.addEventListener("pointercancel", onUp, true);
-    }, true);
-
-    // Fallback mouse
-    el.addEventListener("mousedown", (e) => {
-      if(e.button !== 0) return;
-      const moveFn = start(e.clientX);
-      if(!moveFn) return;
-
-      document.body.classList.add("dragging");
-      e.preventDefault();
-
-      const onMove = (ev) => moveFn(ev.clientX);
-      const onUp = () => {
-        window.removeEventListener("mousemove", onMove, true);
-        window.removeEventListener("mouseup", onUp, true);
-        end();
-      };
-
-      window.addEventListener("mousemove", onMove, true);
-      window.addEventListener("mouseup", onUp, true);
-    }, true);
-  }
-
-  bindSplitter(splitOut, "outline");
-  bindSplitter(splitMid, "main");
-
-  // --- Sticky offsets: header height is dynamic (wraps on small width) ---
-  function updateStickyVars(){
-    const hEl = document.querySelector('header');
-    const tbEl = document.querySelector('.toolbars');
-    const h = hEl ? Math.round(hEl.getBoundingClientRect().height) : 64;
-    const tb = tbEl ? Math.round(tbEl.getBoundingClientRect().height) : 96;
-    document.documentElement.style.setProperty('--headerH', h + 'px');
-    document.documentElement.style.setProperty('--toolbarsH', tb + 'px');
-  }
-  updateStickyVars();
-  window.addEventListener('resize', updateStickyVars, {passive:true});
-  setTimeout(updateStickyVars, 0);
-  setTimeout(updateStickyVars, 250);
-
-  // --- Safety: make sure sticky layers stay above splitters ---
-  // If there were old CSS with z-index:9999, override it here.
-  const zStyle = document.createElement("style");
-  zStyle.textContent = `
-    header{ z-index: 1000 !important; }
-    .toolbars{
-      z-index: 900 !important;
-      top: var(--headerH, 64px) !important;
-    }
-    main{ position: relative !important; z-index: 1 !important; }
-    .splitter, #outlineSplitter, #splitter{ z-index: 20 !important; }
-
-    /* Keep outline visible while scrolling */
-    #outlineCol{
-      position: sticky !important;
-      top: calc(var(--headerH, 64px) + var(--toolbarsH, 96px) + 10px) !important;
-      align-self: start !important;
-      max-height: calc(100vh - (var(--headerH, 64px) + var(--toolbarsH, 96px) + 22px)) !important;
-      overflow: hidden !important;
-    }
-    #outlineCol .outlineColBody{
-      max-height: calc(100vh - (var(--headerH, 64px) + var(--toolbarsH, 96px) + 80px)) !important;
-      overflow: auto !important;
-    }
-`;
-  document.head.appendChild(zStyle);
-})();
-</script>
 
 <script>
 (function(){
@@ -3339,5 +4131,352 @@ function wrapSpanStyle(style){
 
 
 
+
+
+
+
+
+
+
+<style id="finalGridVarsOverride">
+/* ===== FINAL GRID VARS OVERRIDE: ensure resizing uses CSS vars (RTL-safe) ===== */
+:root{
+  --splitW: 6px;
+  --outW: var(--outW, 220px);
+  --rawW: var(--rawW, 560px);
+  --prevW: var(--prevW, 720px);
+}
+
+/* Base layout: Outline | Raw | Preview */
+main{
+  grid-template-columns:
+    clamp(170px, var(--outW, 220px), 320px)
+    var(--splitW, 6px)
+    clamp(320px, var(--rawW, 560px), 1400px)
+    var(--splitW, 6px)
+    clamp(320px, var(--prevW, 720px), 1600px) !important;
+}
+
+/* Outline collapsed => Raw | Preview (keep user widths) */
+body.outline-collapsed main{
+  grid-template-columns:
+    clamp(320px, var(--rawW, 560px), 1400px)
+    var(--splitW, 6px)
+    clamp(320px, var(--prevW, 720px), 1600px) !important;
+}
+
+/* Raw hidden => Outline | Preview (preview should expand) */
+body.textHidden main{
+  grid-template-columns:
+    clamp(170px, var(--outW, 220px), 320px)
+    var(--splitW, 6px)
+    1fr !important;
+}
+/* Outline collapsed + Raw hidden => only Preview */
+body.outline-collapsed.textHidden main{
+  grid-template-columns: 1fr !important;
+}
+
+/* Preview hidden => Outline | Raw (raw should expand) */
+body.previewHidden main{
+  grid-template-columns:
+    clamp(170px, var(--outW, 220px), 320px)
+    var(--splitW, 6px)
+    1fr !important;
+}
+/* Outline collapsed + Preview hidden => only Raw */
+body.outline-collapsed.previewHidden main{
+  grid-template-columns: 1fr !important;
+}
+
+/* Both editors hidden (edge case) => keep Outline only */
+body.textHidden.previewHidden main{
+  grid-template-columns:
+    clamp(170px, var(--outW, 220px), 320px) !important;
+}
+body.outline-collapsed.textHidden.previewHidden main{
+  grid-template-columns: 1fr !important;
+}
+
+/* Hide the middle splitter when one side is hidden */
+body.textHidden #splitter,
+body.previewHidden #splitter{
+  display:none !important;
+}
+
+/* Hide outline splitter when outline is collapsed */
+body.outline-collapsed #outlineSplitter{
+  display:none !important;
+}
+
+/* Ensure splitters are on top and clickable (guard against earlier CSS) */
+#outlineSplitter, #splitter{
+  display:flex;
+  pointer-events:auto !important;
+  z-index: 9999 !important;
+}
+</style>
+
+<script id="unifiedSplitterScript">
+/* ===== Unified Splitters (Outline + Raw/Preview) =====
+   - Single source of truth (prevents race conditions)
+   - RTL-aware delta (Hebrew)
+   - Pointer capture (prevents losing drag over iframe/textarea)
+   - Updates CSS vars: --outW, --rawW, --prevW (used by CSS grid)
+*/
+(() => {
+  const root = document.documentElement;
+  const main = document.querySelector('main');
+  const outSplit = document.getElementById('outlineSplitter');
+  const midSplit = document.getElementById('splitter');
+
+  const KEY = "otzaria_gridW_unified_v1";
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  // Prefer the actual document direction (RTL in your app)
+  const dir = (root.getAttribute('dir') || document.body.getAttribute('dir') || 'ltr').toLowerCase();
+  // For RTL: moving pointer right should reduce the "left-side" column width => invert dx
+  const SIGN = (dir === 'rtl') ? -1 : 1;
+
+  const getVarPx = (name, fallback) => {
+    const v = getComputedStyle(root).getPropertyValue(name).trim();
+    const n = parseFloat(v);
+    return Number.isFinite(n) ? n : fallback;
+  };
+
+  const setVarPx = (name, v) => {
+    const px = Math.round(v) + 'px';
+    root.style.setProperty(name, px);
+    // some CSS authoring uses vars on main; keep it in sync just in case
+    if (main) main.style.setProperty(name, px);
+  };
+
+  const save = () => {
+    const data = {
+      outW: getVarPx('--outW', 220),
+      rawW: getVarPx('--rawW', 560),
+      prevW: getVarPx('--prevW', 720),
+    };
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch {}
+  };
+
+  const load = () => {
+    try {
+      const j = localStorage.getItem(KEY);
+      if (!j) return;
+      const d = JSON.parse(j);
+      if (d && Number.isFinite(d.outW)) setVarPx('--outW', d.outW);
+      if (d && Number.isFinite(d.rawW)) setVarPx('--rawW', d.rawW);
+      if (d && Number.isFinite(d.prevW)) setVarPx('--prevW', d.prevW);
+    } catch {}
+  };
+  load();
+
+  const isInteractive = (el) =>
+    !!el && !!el.closest && !!el.closest('button,a,input,select,textarea,label,[role="button"],[contenteditable="true"]');
+
+  function bindSplitter(splitEl, mode) {
+    if (!splitEl) return;
+
+    const grab = splitEl.querySelector('.splitterGrab') || splitEl;
+
+    // Ensure hit area is clickable above neighbors
+    splitEl.style.pointerEvents = 'auto';
+
+    grab.addEventListener('pointerdown', (ev) => {
+      // only primary button
+      if (ev.button !== undefined && ev.button !== 0) return;
+      if (isInteractive(ev.target)) return;
+
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      // Capture pointer so drag doesn't break when crossing iframe/textarea boundaries
+      try { grab.setPointerCapture(ev.pointerId); } catch {}
+
+      const startX = ev.clientX;
+      const startOut = getVarPx('--outW', 220);
+      const startRaw = getVarPx('--rawW', 560);
+      const startPrev = getVarPx('--prevW', 720);
+      const totalMid = startRaw + startPrev;
+
+      // bounds (match your CSS clamps roughly)
+      const MIN_OUT = 170, MAX_OUT = 360;
+      const MIN_RAW = 320, MAX_RAW = 1400;
+      const MIN_PREV = 320, MAX_PREV = 1600;
+
+      document.body.classList.add('dragging');
+
+      const onMove = (e) => {
+        const dx = (e.clientX - startX) * SIGN;
+
+        if (mode === 'outline') {
+          const outW = clamp(startOut + dx, MIN_OUT, MAX_OUT);
+          setVarPx('--outW', outW);
+          return;
+        }
+
+        // mode === 'main' (Raw <-> Preview)
+        let raw = clamp(startRaw + dx, MIN_RAW, MAX_RAW);
+        let prev = totalMid - raw;
+
+        // keep preview within bounds too
+        prev = clamp(prev, MIN_PREV, MAX_PREV);
+        raw = clamp(totalMid - prev, MIN_RAW, MAX_RAW);
+
+        setVarPx('--rawW', raw);
+        setVarPx('--prevW', prev);
+      };
+
+      const endDrag = () => {
+        document.body.classList.remove('dragging');
+        window.removeEventListener('pointermove', onMove, true);
+        window.removeEventListener('pointerup', endDrag, true);
+        window.removeEventListener('pointercancel', endDrag, true);
+        save();
+      };
+
+      window.addEventListener('pointermove', onMove, true);
+      window.addEventListener('pointerup', endDrag, true);
+      window.addEventListener('pointercancel', endDrag, true);
+    }, true);
+  }
+
+  bindSplitter(outSplit, 'outline');
+  bindSplitter(midSplit, 'main');
+})();
+</script>
+
+
+<script id="pinHeightsAutoFix">
+(() => {
+  const setVars = () => {
+    const header = document.querySelector('header');
+    const toolbars = document.querySelector('.toolbars');
+    if(!header || !toolbars) return;
+    const h = Math.round(header.getBoundingClientRect().height);
+    const t = Math.round(toolbars.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--headerH', h + 'px');
+    document.documentElement.style.setProperty('--toolH', t + 'px');
+  };
+  window.addEventListener('load', setVars, { once:true });
+  window.addEventListener('resize', () => { clearTimeout(window.__pinFixTO); window.__pinFixTO=setTimeout(setVars, 60); });
+  // In case fonts/layout settle after first paint
+  setTimeout(setVars, 50);
+  setTimeout(setVars, 250);
+})();
+</script>
+
+
+<script id="dynamicHeaderToolbarHeights_v4">
+(function(){
+  function syncInsets(){
+    const header = document.querySelector('header');
+    const tb = document.querySelector('.toolbars');
+    const hh = header ? Math.round(header.getBoundingClientRect().height) : 0;
+    const th = tb ? Math.round(tb.getBoundingClientRect().height) : 0;
+    document.documentElement.style.setProperty('--headerH', hh + 'px');
+    document.documentElement.style.setProperty('--toolH', th + 'px');
+  }
+  window.addEventListener('resize', syncInsets, {passive:true});
+  window.addEventListener('load', syncInsets);
+  requestAnimationFrame(syncInsets);
+  setTimeout(syncInsets, 60);
+  setTimeout(syncInsets, 250);
+})();
+</script>
+
+
+<script>
+/* === Unified History Manager (manual + toolbar/programmatic changes) === */
+(function(){
+  const ta = document.getElementById('raw');
+  if(!ta){ console.warn('History: textarea #raw not found'); return; }
+
+  let history = [];
+  let index = -1;
+  let lock = false;
+
+  function snapshot(){
+    if(lock) return;
+    const state = {
+      v: ta.value,
+      s: ta.selectionStart,
+      e: ta.selectionEnd
+    };
+    const prev = history[index];
+    if(prev && prev.v === state.v) return;
+
+    history = history.slice(0, index+1);
+    history.push(state);
+    index = history.length - 1;
+  }
+
+  function restore(state){
+    lock = true;
+    ta.value = state.v;
+    ta.selectionStart = state.s;
+    ta.selectionEnd = state.e;
+    lock = false;
+    ta.dispatchEvent(new Event('input',{bubbles:true}));
+  
+    // Force preview refresh even if preview is focused
+    try{
+      window.__forcePreviewRefresh = true;
+      if(typeof window.renderAll === 'function') window.renderAll();
+      // clear flag after the render cycle
+      setTimeout(()=>{ window.__forcePreviewRefresh = false; }, 0);
+    }catch(_){ window.__forcePreviewRefresh = false; }
+  }
+
+  function undo(){
+    if(index<=0) return;
+    index--;
+    window.__forcePreviewRefresh = true;
+    restore(history[index]);
+  }
+
+  function redo(){
+    if(index >= history.length-1) return;
+    index++;
+    restore(history[index]);
+  }
+
+  // Capture manual typing
+  ta.addEventListener('input', () => snapshot());
+
+  // Capture programmatic value changes (toolbar, full document ops)
+  const desc = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value');
+  Object.defineProperty(HTMLTextAreaElement.prototype, 'value', {
+    get: desc.get,
+    set: function(v){
+      desc.set.call(this, v);
+      if(this === ta) snapshot();
+    }
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e)=>{
+    if(e.ctrlKey && !e.shiftKey && e.key.toLowerCase()==='z'){
+      e.preventDefault(); undo(); return;
+    }
+    if((e.ctrlKey && e.key.toLowerCase()==='y') || (e.ctrlKey && e.shiftKey && e.key.toLowerCase()==='z')){
+      e.preventDefault(); redo(); return;
+    }
+  });
+
+  // Expose for toolbar buttons if exist
+  window.editorUndo = undo;
+  window.editorRedo = redo;
+
+  // Initial snapshot
+  snapshot();
+
+  console.log("Unified history manager loaded");
+})();
+</script>
+
 </body>
+
 </html>
