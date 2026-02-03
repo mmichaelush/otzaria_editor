@@ -1399,7 +1399,6 @@ function safeLocalSave(key, value){
 }
 </script>
 
-</body>
 <script>
 
 (() => {
@@ -1602,16 +1601,30 @@ const raw = document.getElementById('raw');
     }catch{}
   });
 // Ensure native undo/redo won't bypass our history when focus is inside RAW
+// Also route Ctrl+Z / Ctrl+Y / Ctrl+Shift+Z directly to our history manager
 try{
   raw.addEventListener('keydown', (e)=>{
-    const isMac = navigator.platform.toLowerCase().includes("mac");
-    const ctrl = isMac ? e.metaKey : e.ctrlKey;
+    const isMac = /mac/i.test(navigator.platform || "");
+    const ctrl = e.ctrlKey || (isMac && e.metaKey);
     if(!ctrl) return;
-    const k = (e.key || "").toLowerCase();
-    if(k === "z" || k === "y"){
-      e.preventDefault();
-      e.stopPropagation();
-    }
+
+    const code = (e.code || "");
+    const key  = (e.key || "").toLowerCase();
+    const isZ  = (code === "KeyZ") || (key === "z");
+    const isY  = (code === "KeyY") || (key === "y");
+
+    const undoKey = isZ && !e.shiftKey;
+    const redoKey = isY || (isZ && e.shiftKey);
+    if(!undoKey && !redoKey) return;
+
+    e.preventDefault();
+    // Prefer calling the functions if exposed; fallback to clicking toolbar buttons
+    const fn  = undoKey ? window.__otzUndo : window.__otzRedo;
+    const btn = document.getElementById(undoKey ? "btnUndo" : "btnRedo");
+    if(typeof fn === "function") fn();
+    else if(btn) btn.click();
+    // stop here so native undo/redo doesn't interfere
+    e.stopPropagation();
   }, {capture:true});
 }catch{}
 const gutter = document.getElementById('gutter');
@@ -1792,6 +1805,80 @@ function redo(){
 // Expose undo/redo for early hotkey handler
 window.__otzUndo = undo;
 window.__otzRedo = redo;
+
+
+// ===== OTZ Namespace Export (maintenance-only; no behavior changes) =====
+// Groups internal functions under window.OTZ for easier navigation & future refactors.
+const OTZ = window.OTZ = window.OTZ || {};
+OTZ.version = "v13";
+
+OTZ.History = { pushHistory, undo, redo };
+OTZ.Storage = { safeLocalLoad, safeLocalSave };
+OTZ.Layout  = { updateTopInset };
+
+OTZ.Selection = {
+  syncLastSelection,
+  restoreSelection,
+  updateCursorInfo,
+  updateStats,
+  updateGutter,
+};
+
+OTZ.Preview = {
+  updatePreview,
+  enableEditablePreview,
+  normalizeEditablePreviewHtml,
+  previewHtmlToRaw,
+  refreshPreviewSelection,
+  buildPlainBoundaryMap,
+  tryApplyPreviewSelectionToRaw,
+  decoratePreviewHeadings,
+  applyZoom,
+};
+
+OTZ.Outline = {
+  stripTags,
+  getHeadingMatches,
+  computeBlocks,
+  refreshBlockSelect,
+  scrollRawToIndex,
+  setActiveOutline,
+  gotoHeadingByIndex,
+  updateOutlineNav,
+};
+
+OTZ.Scope = {
+  updateScopeUI,
+  getCurrentBlockRange,
+  getPickedBlockRange,
+  computeRangeByScope,
+  applyToScope,
+};
+
+OTZ.Actions = {
+  wrapFragment,
+  wrap,
+  wrapSpanStyle,
+  wrapPAlign,
+  insertAtCursor,
+  wrapList,
+  getLineRange,
+};
+
+OTZ.UI = {
+  toast,
+  setRawValue,
+  renderAll,
+  setPreviewHidden,
+  setTextHidden,
+  setToolbarsHidden,
+  setupToolbarDragScroll,
+  bindToolButton,
+};
+
+// Convenience aliases kept for backwards compatibility
+OTZ.undo = undo;
+OTZ.redo = redo;
 
 // Capture manual typing / deletion
 raw.addEventListener('input', ()=> pushHistory());
@@ -3060,6 +3147,9 @@ if(ctrl && (e.key.toLowerCase() === "z" || e.key.toLowerCase() === "y") ){
   document.addEventListener("keydown", handleUndoRedo, true);
 
   // Extra safety: in RAW, block native undo so it can't bypass us
+  // One-time marker to avoid duplicate undo/redo key bindings
+  window.__OTZ_UNDOREDO_KEYS_BOUND = true;
+
   try{
     raw.addEventListener("keydown", handleUndoRedo, true);
   }catch{}
@@ -3774,6 +3864,7 @@ window.addEventListener('mousedown', (ev)=> globalDown(ev, false), true);
   });
 
   // Keyboard shortcuts (safe, layout-independent)
+  if(!window.__OTZ_UNDOREDO_KEYS_BOUND){
   document.addEventListener('keydown', (e)=>{
     const isMac = /mac/i.test(navigator.platform || "");
     const ctrl = e.ctrlKey || (isMac && e.metaKey);
@@ -3802,6 +3893,8 @@ window.addEventListener('mousedown', (ev)=> globalDown(ev, false), true);
     }
   });
 
+  }
+
   // Expose for toolbar buttons if exist
   window.editorUndo = undo;
   window.editorRedo = redo;
@@ -3815,4 +3908,5 @@ window.addEventListener('mousedown', (ev)=> globalDown(ev, false), true);
 /* disabled: layout handled by percent-based grid + unified splitter */
 (()=>{})();
 </script>
+</body>
 </html>
