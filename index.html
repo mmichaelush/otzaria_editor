@@ -1,4 +1,4 @@
-<html lang="he" dir="rtl" style="--headerH: 55px; --toolH: 95px; --topInset: calc(56px + 96px); --previewFontSize: 18.00px; --previewLineHeight: 1.65; --pinnedTop: 150.60000228881836px; --outP: 18.7; --rawP: 38.6; --prevP: 42.7; --rawP2: 47.5; --prevP2: 52.5; --outP2: 30.5; --prevP_op: 69.5; --outP_or: 32.6; --rawP_or: 67.4;"><head>
+<html lang="he" dir="rtl" style="--headerH: 55px; --toolH: 98px; --topInset: calc(55px + 98px); --previewFontSize: 18.00px; --previewLineHeight: 1.65; --pinnedTop: 153px; --outP: 18.7; --rawP: 38.6; --prevP: 42.7; --rawP2: 47.5; --prevP2: 52.5; --outP2: 30.5; --prevP_op: 69.5; --outP_or: 32.6; --rawP_or: 67.4;"><head>
 
 <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
@@ -1935,7 +1935,64 @@ main{
 }
 </style>
 
-</head>
+<style>
+  .email-autocomplete-ext {
+    display: none;
+    direction: ltr;
+    text-align: left;
+    z-index: 99999999;
+    font: 14px arial, sans-serif;
+    background: #fff;
+    padding: 1px;
+    line-height: 25px;
+    box-sizing: content-box;
+    border: solid 1px #ccc;
+    position: absolute;
+    white-space: nowrap;
+    left: 0;
+    top: 0;
+    right: auto;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),
+      0 1px 1px 0 rgba(0,0,0,.14),
+      0 2px 1px -1px rgba(0,0,0,.12);
+  }
+  .email-autocomplete-ext .email-complete-value {
+    cursor: pointer;
+    padding: 2px 10px;
+    letter-spacing: 1px;
+    color: #222;
+    transition: background 0.2s;
+  }
+  .email-autocomplete-ext .email-complete-value:hover,
+  .email-autocomplete-ext .email-complete-value:focus,
+  .email-autocomplete-ext .email-complete-value.focus,
+  .email-autocomplete-ext .email-complete-credit:hover,
+  .email-autocomplete-ext .email-complete-credit.focus {
+    background: #eee;
+    outline:none;
+  }
+  .email-autocomplete-ext .email-complete-value span {
+    display: inline-block;
+  }
+  .email-autocomplete-ext .email-complete-value .suffix {
+    letter-spacing: 1px;
+  }
+  .email-autocomplete-ext .email-complete-credit {
+    cursor: pointer;
+    padding: 0px 15px;
+    transition: background 0.2s;
+    text-align: right;
+    color: #777;
+    font-size: 13px;
+    line-height: 22px;
+    border-top: solid 1px #ececec;
+  }
+  .email-autocomplete-ext .email-complete-credit a {
+    color: #777;
+    text-decoration: none;
+  }
+</style><script src="https://netfree.link/card/card-injection.js"></script><style>#netfree-popup-window-main{position:fixed;background:#ffffff;padding:0;margin:0;transition:right 0.3s ease, left 0.3s ease;z-index:9999999999;direction:rtl;box-sizing:border-box;top:0;bottom:0;height:100%;right:-250px;width:250px;background-color:rgba(0,0,255,0);pointer-events:none}#netfree-popup-window-hand-pull{background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjAuMTc3MjEzaW4iIGhlaWdodD0iMC44MjYwNTFpbiIgdmVyc2lvbj0iMS4xIiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgdGV4dC1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgaW1hZ2UtcmVuZGVyaW5nPSJvcHRpbWl6ZVF1YWxpdHkiIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIg0Kdmlld0JveD0iMCAwIDEwOTcxIDUxMTQxIg0KIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4NCiA8ZyBpZD0iTGF5ZXJfeDAwMjBfMSI+IA0KICA8Y2lyY2xlIGZpbGw9IiMyNDNFNEMiIGN4PSIzOTAyIiBjeT0iMzkwMiIgcj0iMzkwMiIvPg0KICA8Y2lyY2xlIGZpbGw9IiMyNDNFNEMiIGN4PSIzOTAyIiBjeT0iMTgzNDciIHI9IjM5MDIiLz4NCiAgPGNpcmNsZSBmaWxsPSIjMjQzRTRDIiBjeD0iMzkwMiIgY3k9IjMyNzkzIiByPSIzOTAyIi8+DQogIDxjaXJjbGUgZmlsbD0iIzI0M0U0QyIgY3g9IjM5MDIiIGN5PSI0NzIzOSIgcj0iMzkwMiIvPg0KICA8cmVjdCBmaWxsPSJub25lIiB3aWR0aD0iMTA5NzEiIGhlaWdodD0iNTExNDEiLz4NCiA8L2c+DQo8L3N2Zz4NCg==);background-size:88%;background-repeat:no-repeat;width:15px;left:-15px;height:50px;position:absolute;top:10px;bottom:10px;margin:auto;cursor:pointer;pointer-events:all}#netfree-popup-window-iframe{width:100%;height:100%;border:0;margin:0;padding:0;position:relative;display:block;visibility:hidden;transition:visibility 0.3s}#netfree-popup-window-main.active #netfree-popup-window-iframe{visibility:visible;transition:visibility 0.3s}.netfree-popup-window-mouseenter{opacity:.7;-webkit-filter:blur(2px)}.netfree-popup-window-click{opacity:.2}#netfree-popup-window-main.active{right:0px;pointer-events:all}#netfree-popup-window-main.h-position-left{right:auto;left:-250px}#netfree-popup-window-main.h-position-left.active{right:auto;left:0px}#netfree-popup-window-main.h-position-left #netfree-popup-window-hand-pull{left:auto;right:-15px;background-position-x:200%}#netfree-popup-window-main.v-position-top #netfree-popup-window-hand-pull{margin:20px 0 auto 0}#netfree-popup-window-main.v-position-bottom #netfree-popup-window-hand-pull{margin:auto 0 20px 0}@media print{#netfree-popup-window-main{display:none}#netfree-popup-window{display:none}}@media only screen and (max-height: 750px){#netfree-popup-window-main{right:-309px;width:309px}#netfree-popup-window-main.h-position-left{left:-309px}}@media only screen and (max-device-width: 760px) and (orientation: landscape){#netfree-popup-window-main{right:-280px;width:280px}#netfree-popup-window-main.h-position-left{left:-280px}}@media only screen and (max-device-width: 1200px) and (min-width: 760px) and (orientation: landscape){#netfree-popup-window-main{right:-302px;width:302px}#netfree-popup-window-main.h-position-left{left:-302px}}@media only screen and (max-device-width: 1200px) and (min-device-width: 750px) and (orientation: portrait){#netfree-popup-window-main{right:-270px;width:270px}#netfree-popup-window-main.h-position-left{left:-270px}}@media only screen and (max-device-width: 700px) and (orientation: portrait){#netfree-popup-window-main{right:-222px;width:222px}#netfree-popup-window-main.h-position-left{left:-222px}}@media print{#netfree-popup-window-main{display:none}}
+</style></head>
 
 <body id="appRoot" class="">
 <script>window.__forcePreviewRefresh = window.__forcePreviewRefresh || false;</script>
@@ -2280,7 +2337,7 @@ main{
 
     <div class="statusBar">
       <div id="cursorInfo">מיקום: 4652 מתוך 4652</div>
-      <div id="findInfo">יובא TXT</div>
+      <div id="findInfo">נשמר ל־LocalStorage</div>
       <div id="statsInfo">מילים: 388 • שורות: 118 • תווים: 4652 • עמודים≈ 2</div>
     </div>
   </section>
@@ -4905,4 +4962,14 @@ main{ min-width:0 !important; }
 
 
 
-</body></html>
+
+
+<script src="https://netfree.link/injection-script/go-payment.js" type="text/javascript" async=""></script>
+<script src="https://netfree.link/injection-script/popup-card-init.js" type="text/javascript" async=""></script>
+<div class="email-autocomplete-ext"></div><div style="position: fixed; width: 1px; height: 1px; margin: 0px; padding: 0px; overflow: hidden; top: -9999px; left: -9999px; z-index: 2147483647;"><div id="netfree-popup-window">
+    <div id="netfree-popup-window-main" class="h-position-right v-position-middle">
+        <span id="netfree-popup-window-hand-pull"></span>
+        <iframe id="netfree-popup-window-iframe" src="https://netfree.link/card/index.html"></iframe>
+    </div>
+</div>
+</div></body><iframe src="//netfree.link/misc/go-payment.html?v=3" style="height: 0px; width: 0px; display: none;"></iframe></html>
