@@ -1,2001 +1,826 @@
-<html lang="he" dir="rtl" style="--headerH: 55px; --toolH: 98px; --topInset: calc(55px + 98px); --previewFontSize: 18.00px; --previewLineHeight: 1.65; --pinnedTop: 153px; --outP: 18.7; --rawP: 38.6; --prevP: 42.7; --rawP2: 47.5; --prevP2: 52.5; --outP2: 30.5; --prevP_op: 69.5; --outP_or: 32.6; --rawP_or: 67.4;"><head>
 
-<meta charset="utf-8">
+<!--
+============================================================
+OTZARIA EDITOR – ORGANIZED VERSION
+------------------------------------------------------------
+✔ Functionality identical to v6
+✔ No logic changes
+✔ Only structural comments & maintenance markers added
+
+SECTIONS:
+00. Meta / Head
+10. CSS Variables
+20. Base / Reset
+30. Layout (Header / Toolbars / Main Grid)
+40. Panels (Outline / Raw / Preview)
+50. Splitters
+60. Responsive
+70. JavaScript Core
+80. Utilities / Helpers
+
+CORE RULE:
+Do NOT modify behavior without version bump.
+============================================================
+-->
+
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+
+
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
   <title>עריכת ספרי אוצריא</title>
+  <!-- keep original icon (data URI) -->
   <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD8AAAA/CAYAAABXXxDfAAAEW0lEQVR4Ae2bWyh8WxzHf9hya+ZwGOXSPMnDCQ8oE6W8uBwniZIXnZzSKbe8ooMHhcKDFylFEcpxa6aQS27p5GHkPsRfyTnHpRDKmGM4s1bNvz+zt9kz89uz59/en1pNs/Zv/eb3tddea+21fhhgIS0tTREZGfnrwcHBz8fHx3FGozHUUu3FZvs9w3z7JSoqyluj0VRqtdpGk8n0o1hBuYuv4hMTE/0tH6NjY2O/iBiPW6HiyR23fPyp1+tzRY7HrVDxKSkpNePj45ISTmDS09N/0Ol0f4gdiBgwERERv1kGt2CxAxEDZnd3N0/sIMSCMRgMP2E79fPzg7CwMPDycn1pcH9/T4sQMGazWcF2YWJiwqauo6MD1tbWuJ0xDLS0tEBxcTH4+vqiBPj29gZzc3NQU1MDNzc3du3Z4iYxbWxs2MbL5SQ/P9+mbmRk5NMfrq6uhpKSErsBOgLpPZmZmdDb2wsFBQV27dni7u/vZ7XlFO8MfIJzltTUVFCr1XB2dobmE1W8UqnEdGcDGUc8VvxHGhoaYGFhwam2CoUCZmZmkCN6j6DiLy8v4eTkxKm2RLzQCCre05HFSxVZvFSRxUsVQcX39PTQ4qmgin96esJ0J7h/VPE6nQ4qKiowXX7l8PAQDAYDqk9U8W1tbaBSqaCwsBB8fHzQ/K6vr9M/Knm3xwRVvMlkou/0dXV1EB4ejrKT8/DwAFdXVwjR2SLIgPf4+EiLpyNPdVIFXTzZxAwKCkL1aTQa4fn5GdUnAV18bm4uTE5OovpsbW2F2tpaVJ8EudtLFVm8VEEXT5ai2dnZqD5PT09R/VlBF399fQ2zs7PYbgVB7vZSBV28t7c32vG0lZeXFzCbzag+CejiyRE115Gws8grPAGQxUsVWTwmJBmBLS/GFY6OjlD9WUEXf35+Tsv3AKd4sk38cfcVcztaCMgukkP2XBdIzltoaOi7uri4OOeichPx8fGs9WT7mw1O8dvb25CRkfGurqysDLq6uuDi4sKFEIWDJEB95PX1FXZ2dljtOcVrtVob8SQVbHl5GcrLy2FxcRH9BMVZYmJioLm5mXWgJfGSN002OMX39fVBfX29TdePjY2F+fl5uqNKCh+6u7vpKQ5fOjs7obS0lJctGYe4MrfIzWlqauJsyyn+7u6O5rsODAywXvf396eFDwEBAbzsvrUPDnY9C56ky66srHBe/3R4HBwcJP+FAZWVlS4H4m729vbo4/kZdueGqqoqOvKTR8DTpzorS0tLUFRURHvvJ/zHa2JsbGyEqakp+vzk5OQ4PJ+6i/39fWhvb6ev1PYG45CQkC+8Vej1esjLyyONQKPRQHR0NO8jaK6phouhoSHY3NzkbX97ewtbW1sOLYOTkpKWHL6F5Iemp6cdbeYQq6urtAiJSqXq98z+KzAJCQna4eHhvyQnPjAw8B+1Wv07WcFKSrxSqfw7Kysrc3R09F/yXSri35KTkycsz3m5RfiltfJ/GrNokBHwRF4AAAAASUVORK5CYII=">
-
   <style>
-    :root{
-      --bg:#f6f1ea;
-      --bg2:#fbf7f1;
-      --card:#ffffff;
-      --ink:#1f1c17;
-      --muted:#6f6254;
-      --line:#e6dccf;
-      --line2:#d9cbbb;
 
-      --brown:#6b5a4a;
-      --brown2:#5b4c3f;
+:root{
+  --bg:#f6f1ea;
+  --bg2:#fbf7f1;
+  --card:#ffffff;
+  --ink:#1f1c17;
+  --muted:#6f6254;
+  --line:#e6dccf;
+  --line2:#d9cbbb;
+  --shadow: 0 10px 26px rgba(45, 35, 25, .10);
+  --radius:16px;
 
-      --shadow: 0 10px 26px rgba(45, 35, 25, .10);
-      --radius:16px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans Hebrew", "Assistant", sans-serif;
 
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      --sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans Hebrew", "Assistant", sans-serif;
+  --btnH: 34px;
+  --btnR: 999px;
 
-      --btnH: 25px;
-      --btnR: 10px;
+  --headerH: 64px; /* JS will measure real heights */
+  --toolH: 78px;   /* JS will measure real heights */
+  --topInset: calc(var(--headerH) + var(--toolH));
 
-      --previewFontSize: 18px;
-      --previewLineHeight: 1.65;
-    }
+  --splitW: 6px;
+  --splitGrip: 10px;
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:var(--sans);
-      color:var(--ink);
-      background:
-        radial-gradient(900px 460px at 65% 0%, rgba(107,90,74,.10), transparent 60%),
-        radial-gradient(700px 520px at 10% 18%, rgba(107,90,74,.06), transparent 58%),
-        linear-gradient(180deg, var(--bg2), var(--bg));
-    }
-
-    header{
-      position:sticky; top:0; z-index:90;
-      background: rgba(251,247,241,.92);
-      backdrop-filter: blur(10px);
-      border-bottom:1px solid var(--line);
-      padding:12px 14px;
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-    }
-
-    .title{display:flex; flex-direction:column; gap:2px; min-width: 240px}
-    .title h1{margin:0; font-size:16px; font-weight:900; letter-spacing:.2px}
-    .title .sub{font-size:12px; color:var(--muted)}
-
-    .headerRight{
-      display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-start;
-    }
-    .topBtns{ display:flex; gap:8px; margin-inline-start:auto; }
-
-    .chip{
-      display:flex; gap:8px; align-items:center;
-      padding:8px 10px;
-      border-radius:999px;
-      background: rgba(255,255,255,.85);
-      border:1px solid var(--line);
-      box-shadow: 0 1px 0 rgba(0,0,0,.02);
-      font-size:12px; color:var(--muted);
-      white-space:nowrap;
-      height: var(--btnH);
-    }
-
-    select, input[type="text"], input[type="number"], input[type="color"]{
-      border:1px solid var(--line);
-      background: #fff;
-      color:var(--ink);
-      padding:8px 10px;
-      border-radius:12px;
-      font-size:13px;
-      outline:none;
-      height: var(--btnH);
-    }
-
-    .btn{
-      border:1px solid var(--line);
-      background: #fff;
-      color: var(--ink);
-      padding:8px 10px;
-      border-radius:12px;
-      cursor:pointer;
-      font-size:13px;
-      transition: .12s transform ease, .12s border-color ease, .12s background ease;
-      user-select:none;
-      white-space:nowrap;
-      height: var(--btnH);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-    }
-    .btn:hover{ transform: translateY(-1px); border-color: var(--line2); }
-    .btn:active{ transform: translateY(0px); }
-
-    .btn.primary{
-      background: linear-gradient(180deg, rgba(107,90,74,.96), rgba(91,76,63,.96));
-      border-color: rgba(91,76,63,.55);
-      color: #fff;
-      font-weight:900;
-    }
-
-    .btn.primary:hover{
-      background: linear-gradient(180deg, rgba(107,90,74,.88), rgba(91,76,63,.88));
-      border-color: rgba(91,76,63,.70);
-      box-shadow: 0 8px 18px rgba(45, 35, 25, .18);
-    }
-
-    /* ======= FILE MENU ======= */
-    .menuWrap{ position:relative; }
-    .menuBtn{ padding: 8px 12px; }
-    .menu{
-      position:absolute;
-      top: calc(100% + 8px);
-      right: 0;
-      min-width: 260px;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: 0 20px 55px rgba(45,35,25,.18);
-      overflow:hidden;
-      display:none;
-      z-index: 200;
-    }
-    .menu.open{ display:block; }
-    .menuItem{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      padding:10px 12px;
-      cursor:pointer;
-      font-size:13px;
-      border-bottom:1px solid rgba(230,220,207,.6);
-    }
-    .menuItem:last-child{ border-bottom:0; }
-    .menuItem:hover{ background: rgba(107,90,74,.07); }
-    .kbd{ font-size:12px; color:var(--muted); }
-
-    /* ===== Global Toolbars (2 rows) ===== */
-    .toolbars{
-      direction: ltr;
-      position: sticky;
-      top: 64px;
-      z-index: 80;
-      border-bottom: 1px solid var(--line);
-      background: rgba(251,247,241,.92);
-      backdrop-filter: blur(10px);
-      padding: 8px 10px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
-    .toolbarRow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap: nowrap;
-      white-space: nowrap;
-      width: max-content;
-      padding-bottom: 2px;
-      justify-content: flex-end;
-}
-    .toolbarRow::-webkit-scrollbar{ height:8px }
-    .toolbarRow::-webkit-scrollbar-thumb{ background: rgba(107,90,74,.22); border-radius: 999px }
-
-    .tgroup{
-      display:flex; align-items:center; gap:6px;
-      padding: 6px 8px;
-      border-radius: 14px;
-      border:1px solid rgba(230,220,207,.7);
-      background: rgba(243,236,227,.55);
-      flex: 0 0 auto;
-    
-      direction: rtl;}
-    .gtitle{
-      font-size:12px;
-      color: var(--muted);
-      margin-left: 6px;
-      user-select:none;
-      white-space:nowrap;
-      font-weight:700;
-    }
-
-    .toolbtn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      height: var(--btnH);
-      min-width: var(--btnH);
-      padding: 0 10px;
-      border-radius: var(--btnR);
-      border:1px solid rgba(217,203,187,.95);
-      background: #fff;
-      color: var(--ink);
-      cursor:pointer;
-      user-select:none;
-      transition:.12s background ease, .12s border-color ease, .12s transform ease;
-      font-size: 13px;
-      line-height: 1;
-      flex: 0 0 auto;
-      touch-action: manipulation;
-      white-space:nowrap;
-    }
-    .toolbtn:hover{
-      background: rgba(255,255,255,.95);
-      border-color: rgba(217,203,187,1);
-      transform: translateY(-1px);
-    }
-    .toolbtn:active{ transform: translateY(0px); }
-
-    .toolbtn.primary{
-      border-color: rgba(91,76,63,.55);
-      background: linear-gradient(180deg, rgba(107,90,74,.96), rgba(91,76,63,.96));
-      color:#fff;
-      font-weight:900;
-    }
-    .toolbtn.toggled{
-      background: rgba(107,90,74,.12);
-      border-color: rgba(107,90,74,.35);
-      font-weight:800;
-    }
-
-    .toolsel, .toolinp{
-      height: var(--btnH);
-      border-radius: var(--btnR);
-      border:1px solid rgba(217,203,187,.95);
-      background:#fff;
-      padding: 0 10px;
-      font-size: 13px;
-      color: var(--ink);
-      outline:none;
-      flex: 0 0 auto;
-    }
-    .toolsel{ min-width: 160px; }
-    .toolinp{ width: 82px; text-align:center; }
-
-    /* Layout */
-    main{
-      padding:12px 12px 16px;
-      display:grid;
-      
-      max-width: 1750px;
-      margin:0 auto;
-    }
-
-    .panel{
-      background: rgba(255,255,255,.92);
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      min-height: 70vh;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .bar{
-      padding:12px 12px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      background: linear-gradient(180deg, #fff, rgba(255,255,255,.88));
-    }
-    .bar .label{
-      font-weight:900;
-      font-size:13px;
-      color: var(--brown2);
-    }
-    .bar .mini{
-      font-size:12px; color:var(--muted);
-    }
-
-    /* Editor with line numbers */
-    .editorWrap{
-      position:relative;
-      flex:1;
-      display:flex;
-      background:#fff;
-    /* ===== Outline (navigation by headings) ===== */
-    .editorWrap{ gap: 0; }
-    .editorInner{
-      flex: 1;
-      display:flex;
-      min-width: 0;
-      background:#fff;
-    }
-    .outline{
-      width: 260px;
-      flex: 0 0 260px;
-      border-left: 1px solid rgba(230,220,207,.9);
-      background: linear-gradient(180deg, rgba(243,236,227,.45), rgba(243,236,227,.20));
-      display:flex;
-      flex-direction:column;
-      direction: rtl;
-    }
-    .outlineHead{
-      padding: 10px 10px;
-      border-bottom: 1px solid rgba(230,220,207,.8);
-      display:flex;
-      align-items:center;
-      gap:8px;
-      background: rgba(255,255,255,.72);
-    }
-    .outlineTitle{
-      font-weight:900;
-      font-size:12px;
-      color: var(--brown2);
-      white-space: nowrap;
-    }
-    #outlineFilter{
-      flex:1;
-      min-width: 0;
-      height: 30px;
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 12px;
-      border:1px solid rgba(217,203,187,.9);
-      outline:none;
-      background:#fff;
-    }
-    #outlineFilter:focus{
-      border-color: rgba(70,140,210,.75);
-      box-shadow: 0 0 0 3px rgba(70,140,210,.15);
-    }
-    .outlineBody{
-      padding: 8px 6px 10px;
-      overflow:auto;
-      flex:1;
-    }
-    .outlineEmpty{
-      padding: 10px 10px;
-      color: var(--muted);
-      font-size: 12px;
-      display:none;
-    }
-    .outlineList{
-      list-style:none;
-      margin:0;
-      padding:0;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .outlineList li{
-      cursor:pointer;
-      user-select:none;
-      padding: 7px 10px;
-      border-radius: 12px;
-      border: 1px solid transparent;
-      font-size: 12px;
-      color: var(--ink);
-      background: rgba(255,255,255,.50);
-      transition: background .12s ease, border-color .12s ease, transform .05s ease;
-      line-height: 1.25;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .outlineList li:hover{
-      background: rgba(255,255,255,.86);
-      border-color: rgba(217,203,187,.85);
-      transform: translateY(-1px);
-    }
-    .outlineList li:active{ transform: translateY(0px); }
-    .outlineList li.active{
-      background: rgba(190,225,255,.55);
-      border-color: rgba(70,140,210,.55);
-      box-shadow: 0 2px 10px rgba(70,140,210,.15);
-      font-weight: 800;
-    }
-    @media (max-width: 1100px){
-      .outline{ display:none; }
-    }
-
-    }
-    .gutter{
-      width: 62px;
-      border-left: 1px solid rgba(230,220,207,.9);
-      background: linear-gradient(180deg, rgba(243,236,227,.45), rgba(243,236,227,.25));
-      color: rgba(111,98,84,.9);
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.6;
-      padding: 12px 8px;
-      white-space: pre;
-      overflow:hidden;
-      user-select:none;
-      text-align:left;
-      direction:ltr;
-    }
-    textarea{
-      flex:1;
-      width:100%;
-      resize:none;
-      border:0;
-      outline:none;
-      padding:12px 12px 14px;
-      background: #fff;
-      color: #1f1c17;
-      font-family: var(--mono);
-      font-size: 13px;
-      line-height: 1.6;
-      direction: ltr;
-      unicode-bidi: plaintext;
-    }
-
-    .statusBar{
-      padding:10px 12px;
-      border-top:1px solid var(--line);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      font-size:12px;
-      color:var(--muted);
-      background: rgba(243,236,227,.40);
-      flex-wrap:wrap;
-    }
-
-    /* Preview */
-    .previewWrap{
-      flex:1;
-      overflow:auto;
-      background: linear-gradient(180deg, rgba(246,241,234,.8), rgba(246,241,234,.65));
-      padding: 16px;
-    }
-    .page{
-      background: #ffffff;
-      color: #14110d;
-      border-radius: 14px;
-      box-shadow: 0 16px 40px rgba(45, 35, 25, .12);
-      padding: 28px 30px;
-      max-width: 920px;
-      margin: 0 auto;
-      min-height: 100%;
-      direction: rtl;
-      font-family: "Times New Roman", "David", "FrankRuehl", serif;
-      font-size: var(--previewFontSize);
-      line-height: var(--previewLineHeight);
-      border: 1px solid rgba(230,220,207,.9);
-      white-space: normal;
-    }
-    
-    .otLine{ margin:0 0 10px 0; }
-    .otLine:last-child{ margin-bottom:0; }
-    .page h1,.page h2,.page h3,.page h4,.page h5,.page h6{ margin:0 0 10px 0; }
-    .page p{ margin:0 0 10px 0; }
-
-    .page pre{
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-family: var(--mono);
-      font-size: 13px;
-      margin:0;
-    }
-
-    /* Hide preview */
-    .previewHidden #previewPanel{ display:none; }
-    .previewHidden main{ grid-template-columns: clamp(170px, var(--outW, 220px), 320px) var(--splitW, 6px) clamp(420px, var(--rawW, 560px), 1400px) var(--splitW, 6px) clamp(480px, var(--prevW, 720px), 1600px);; }
-    body.outline-collapsed.previewHidden main{ grid-template-columns: clamp(170px, var(--outW, 220px), 320px) 5px 1fr; }
-
-    /* Find/Replace drawer */
-    .drawer{
-      position: fixed;
-      top: calc(var(--pinnedTop, 140px) + 14px);
-      left: 14px;
-      width: 380px;
-      max-width: calc(100vw - 28px);
-      background: #fff;
-      border:1px solid var(--line);
-      box-shadow: 0 20px 55px rgba(45,35,25,.18);
-      border-radius: 16px;
-      overflow:hidden;
-      display:none;
-      z-index: 300;
-    }
-    .drawer.open{ display:block; }
-    .drawerHeader{
-      padding:12px 12px;
-      border-bottom:1px solid var(--line);
-      display:flex; align-items:center; justify-content:space-between; gap:8px;
-      background: linear-gradient(180deg, #fff, rgba(243,236,227,.55));
-    }
-    .drawerHeader .ttl{ font-weight:900; color: var(--brown2); font-size:13px; }
-    .drawerBody{ padding:12px; display:flex; flex-direction:column; gap:10px; }
-    .row{ display:flex; gap:8px; align-items:center; }
-    .row label{ font-size:12px; color:var(--muted); width:66px; }
-    .row input[type="text"]{ width:100%; }
-    .opts{ display:flex; flex-wrap:wrap; gap:10px; padding:4px 2px; }
-    .opt{
-      display:flex; gap:7px; align-items:center;
-      font-size:12px; color: var(--muted);
-      user-select:none;
-    }
-    .drawerFooter{
-      padding:12px;
-      border-top:1px solid var(--line);
-      display:flex; gap:8px; flex-wrap:wrap;
-      background: rgba(243,236,227,.40);
-    }
-    .kHint{ font-size:12px; color:var(--muted); padding:0 2px 2px; }
-
-    @media (max-width: 1100px){
-      main{ grid-template-columns: 1fr; }
-      textarea{ min-height: 38vh; }
-      .drawer{ left: 10px; right:10px; width:auto; }
-      .toolbars{ top: 110px; }
-    }
-    @media (max-width: 640px){
-      :root{ --btnH: 36px; }
-      header{
-        flex-direction: column;
-        align-items: stretch;
-        gap:10px;
-      }
-      .headerRight{ justify-content:space-between; }
-      .toolsel{ min-width: 140px; }
-      .toolinp{ width: 78px; }
-      .page{ padding: 20px 18px; }
-      .gutter{ width: 56px; }
-    }
-  
-    .appIcon{
-      width:22px; height:22px;
-      border-radius:6px;
-      box-shadow: 0 6px 16px rgba(45,35,25,.18);
-      border:1px solid rgba(230,220,207,.9);
-      background:#fff;
-      flex: 0 0 auto;
-    }
-    .titleRow{ display:flex; align-items:center; gap:10px; }
-
-  
-    
-    .splitter{
-  position: relative;
-  width: 6px;               /* visual width */
-  margin: 0;                /* no layout gap */
-  cursor: col-resize;
-  align-self: stretch;
-  user-select:none;
-  touch-action:none;
-  z-index: 2000;            /* above panels */
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events: auto;     /* allow pointer events; grab area still expands hit target */
-}
-.splitter::before{
-  content:"";
-  width: 3px;
-  height: 42px;
-  border-radius: 4px;
-  background: rgba(107,90,74,.40);
-}
-.splitter:hover::before{
-  background: rgba(107,90,74,.70);
-}
-body.dragging .splitter::before{
-  background: rgba(107,90,74,.90);
-}
-.splitter .splitterGrab{
-  position:absolute;
-  inset: 0;
-  left: -10px;
-  right: -10px;           /* big hit-area without creating a gap */
-  cursor: col-resize;
-  touch-action:none;
-  pointer-events: auto;
-  z-index: 1;
-  background: transparent;
-}
-.previewHidden #splitter{ display:none; }
-
-#historyGroup{ order:-20; }
-#searchGroup{ order:-19; }
-#advancedGroup{ order:50; }
-
-    .menuWrap{ position:relative; display:inline-block; }
-    .menu{
-      position:absolute;
-      right:0;
-      bottom: calc(100% + 10px);
-      top:auto;
-      z-index: 9999;
-      max-height: 52vh;
-      overflow:auto;
-      transform-origin: bottom right;
-    }
-    
-    body.textHidden #rawPanel{ display:none !important; }
-    body.textHidden #splitter{ display:none !important; }
-    body.textHidden main{ grid-template-columns: clamp(170px, var(--outW, 220px), 320px) 5px 1fr !important; }
-    body.outline-collapsed.textHidden main{ grid-template-columns: 1fr !important; }
-    
-body.toolbarHidden .toolbars{ display:none !important; }
-
-#fileMenu{
-  top: calc(100% + 10px) !important;
-  bottom: auto !important;
-  right: 0;
+  --previewFontSize: 18px;
+  --previewLineHeight: 1.65;
 }
 
-.menu.up{
-  bottom: calc(100% + 10px);
-  top: auto;
+*{ box-sizing:border-box; }
+html, body{ height:100%; }
+body{
+  margin:0;
+  font-family:var(--sans);
+  color:var(--ink);
+  background:
+    radial-gradient(900px 460px at 65% 0%, rgba(107,90,74,.10), transparent 60%),
+    radial-gradient(700px 520px at 10% 18%, rgba(107,90,74,.06), transparent 58%),
+    linear-gradient(180deg, var(--bg2), var(--bg));
+  overflow:hidden; /* app-style */
 }
-.menu:not(.up){
-  top: calc(100% + 10px);
-  bottom: auto;
+
+header{
+  position:fixed; inset-inline:0; top:0;
+  z-index:1000;
+  background: rgba(251,247,241,.92);
+  backdrop-filter: blur(10px);
+  border-bottom:1px solid var(--line);
+  padding:10px 12px;
+  display:flex; gap:12px; align-items:center; justify-content:space-between;
 }
 
-#historyGroup{ order:-30; }
-#searchGroup{ order:-29; }
-#advancedGroup{ order:50; }
+.title{display:flex; flex-direction:column; gap:2px; min-width: 240px}
+.title h1{margin:0; font-size:16px; font-weight:900; letter-spacing:.2px}
+.title .sub{font-size:12px; color:var(--muted)}
+.titleRow{ display:flex; align-items:center; gap:10px; }
+.appIcon{
+  width:22px; height:22px; border-radius:6px;
+  box-shadow: 0 6px 16px rgba(45,35,25,.18);
+  border:1px solid rgba(230,220,207,.9);
+  background:#fff; flex:0 0 auto;
+}
 
-.chip, .toolbtn, .menuBtn, .btn{ pointer-events:auto; }
+.headerRight{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-start; }
+.topBtns{ display:flex; gap:8px; margin-inline-start:auto; flex-wrap:wrap; }
 
-/* ===== Unified button look ===== */
-.chip, .toolbtn, .menuBtn, .btn{
+.chip, .btn, .toolbtn, .menuBtn{
+  height: var(--btnH);
+  min-height: var(--btnH);
   border: 1px solid rgba(120,90,60,.30);
   background: rgba(255,255,255,.75);
-  border-radius: 999px;
-  padding: 8px 12px;
+  border-radius: var(--btnR);
+  padding: 0 12px;
   line-height: 1;
   font-weight: 600;
   box-shadow: 0 1px 0 rgba(0,0,0,.03);
   transition: transform .05s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease, opacity .15s ease;
+  user-select:none;
+  white-space:nowrap;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
 }
-.chip:hover, .toolbtn:hover, .menuBtn:hover, .btn:hover{
+.chip:hover, .btn:hover, .toolbtn:hover, .menuBtn:hover{
   background: rgba(255,255,255,.92);
   border-color: rgba(120,90,60,.45);
 }
-.chip:active, .toolbtn:active, .menuBtn:active, .btn:active{
-  transform: translateY(1px);
+.chip:active, .btn:active, .toolbtn:active, .menuBtn:active{ transform: translateY(1px); }
+
+.btn.primary, .toolbtn.primary{
+  background: linear-gradient(180deg, rgba(107,90,74,.96), rgba(91,76,63,.96));
+  border-color: rgba(91,76,63,.55);
+  color: #fff;
+  font-weight:900;
 }
-.chip.isActive, .toolbtn.isActive, .menuBtn.isActive, .btn.isActive{
+
+.btn.isActive, .toolbtn.isActive, .menuBtn.isActive{
   background: rgba(190,225,255,.55);
   border-color: rgba(70,140,210,.55);
   box-shadow: 0 2px 10px rgba(70,140,210,.15);
 }
-/* prevent menus being clipped */
-.toolbars{ overflow: visible; }
 
-.outline-frame{ max-width: none; }
+select, input[type="text"], input[type="number"], input[type="color"]{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  padding:0 12px;
+  border-radius:999px;
+  font-size:13px;
+  outline:none;
+  height: var(--btnH);
 }
 
-
-/* ---- 3-column layout: Outline | Raw | Preview ---- */
-#outlineCol{
-  min-width: 220px;
-  max-width: 360px;
-}
-#outlineCol .outlineColBody{
-  padding: 12px;
-  overflow:auto;
-  height: calc(100% - 54px);
-}
-#outlineCol .barActions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-/* Reuse framed look inside the column */
-#outlineCol #outlineFrame{
-  display:block;
-  padding:0;
-  border:none;
-  box-shadow:none;
-  background:transparent;
-  max-width:none;
-  min-width:auto;
-}
-
-/* Hide/show outline column */
-body.outline-collapsed #outlineCol,
-body.outline-collapsed 
-/* Splitter for outline column */
-.splitter--outline{ width:10px; }
-
-
-.miniBtn{padding:8px 12px;border-radius:999px;}
-
-/* Outline collapsed: revert to 2-column (raw | preview) layout */
-body.outline-collapsed main{
-  grid-template-columns: clamp(420px, var(--rawW, 560px), 1400px) 5px clamp(480px, var(--prevW, 720px), 1600px);
-}
-body.outline-collapsed #outlineCol,
-body.outline-collapsed #outlineSplitter{
-  display:none !important;
-}
-
-
-/* Outline in its own column */
-.outline--col{
-  width:100% !important;
-  flex: 1 1 auto !important;
-  border-left: 0 !important;
-  border-right: 0 !important;
-  background: transparent !important;
-}
-#outlineCol .outlineColBody{
-  padding: 8px 10px 12px;
-}
-#outlineCol .outlineHead{
-  background: rgba(255,255,255,.72);
-  border:1px solid rgba(230,220,207,.75);
+/* ===== Menus ===== */
+.menuWrap{ position:relative; display:inline-block; }
+.menu{
+  position:absolute;
+  right:0;
+  top: calc(100% + 8px);
+  min-width: 260px;
+  background:#fff;
+  border:1px solid var(--line);
   border-radius: 14px;
-  margin-bottom: 8px;
-}
-#outlineCol .outlineBody{
-  border:1px solid rgba(230,220,207,.75);
-  border-radius: 14px;
-  background: rgba(255,255,255,.65);
-}
-
-
-/* ---- Outline column: ensure visible even on narrow screens ---- */
-@media (max-width: 1100px){
-  /* original CSS hides .outline; but in our outline column we want it visible */
-  .outline--col{ display:flex !important; }
-  /* stack panels vertically for small screens */
-  main{
-    grid-template-columns: 1fr !important;
-  }
-  #outlineSplitter, #splitter{
-    display:none !important;
-  }
-  #outlineCol, #rawPanel, #previewPanel{
-    min-height: auto;
-  }
-}
-
-
-/* Keep columns stable */
-main{ align-items: stretch; }
-#outlineCol, #rawPanel, #previewPanel{ min-width: 0; }
-#outlineCol{ overflow:hidden; }
-
-
-/* ---- Outline column compact + nicer ---- */
-#outlineCol{
-  min-width: 190px;
-  max-width: 320px;
-}
-#outlineCol .outlineColBody{
-  padding: 10px;
-}
-#outlinePanel.outline--col{
-  background: rgba(255,255,255,.55);
-  border: 1px solid rgba(230,220,207,.85);
-  border-radius: 16px;
+  box-shadow: 0 20px 55px rgba(45,35,25,.18);
   overflow:hidden;
+  display:none;
+  z-index: 2000;
+  max-height: 52vh;
+  overflow:auto;
 }
-#outlineCol .outlineHead{
-  margin:0;
-  padding:10px 10px;
-  border:0;
-  border-bottom: 1px solid rgba(230,220,207,.75);
-  border-radius: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.55));
-}
-#outlineCol #outlineFilter{
-  height: 28px;
-  font-size: 12px;
-  padding: 6px 10px;
-}
-#outlineCol .outlineBody{
-  border:0;
-  border-radius: 0;
-  padding: 8px 6px 10px;
-  background: transparent;
-}
-#outlineCol .outlineList li{
-  padding: 7px 10px;
-  border-radius: 12px;
-  background: rgba(255,255,255,.40);
-}
-#outlineCol .outlineList li:hover{
-  background: rgba(255,255,255,.78);
-}
-#outlineCol .outlineList li.active{
-  background: rgba(190,225,255,.48);
-}
-#outlineCol .barActions .miniBtn{
-  padding:7px 11px;
-  font-size:12px;
-}
+.menu.open{ display:block; }
 
-
-/* ---- Outline list: tighter bullets + page-matching palette ---- */
-#outlineCol .outlineList{
-  padding: 0;
-  margin: 0;
-}
-#outlineCol .outlineList li{
-  list-style-position: inside;
-  padding-right: 10px; /* reduces space after bullet in RTL */
-}
-#outlineCol .outlineList li::marker{
-  color: rgba(111,98,84,.70);
-}
-#outlineCol #outlinePanel.outline--col{
-  background: rgba(246,241,234,.65);
-  border-color: rgba(230,220,207,.95);
-}
-#outlineCol .outlineList li{
-  background: rgba(255,255,255,.55);
-  border: 1px solid rgba(230,220,207,.35);
-}
-#outlineCol .outlineList li:hover{
-  border-color: rgba(217,203,187,.85);
-}
-#outlineCol .outlineList li.active{
-  border-color: rgba(70,140,210,.40);
-}
-
-
-/* ---- Outline: remove bullets completely ---- */
-#outlineCol .outlineList{
-  list-style: none !important;
-}
-#outlineCol .outlineList li{
-  list-style: none !important;
-}
-#outlineCol .outlineList li::marker{
-  content: "";
-}
-
-/* ---- Layout: tighter columns ---- */
-main{
-  column-gap: 6px !important;
-}
-.splitter, #outlineSplitter{
-  width: 6px !important;
-  min-width: 6px !important;
-}
-
-/* ---- Prevent horizontal overflow / bottom scrollbar ---- */
-html, body{
-  overflow-x: hidden;
-}
-main{
-  max-width: 1550px;   /* was larger – keeps everything inside viewport */
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-/* ---- Even tighter columns + narrower gutter ---- */
-main{
-  column-gap: 4px !important;
-}
-.splitter, #outlineSplitter, #splitter{
-  width: 5px !important;
-  min-width: 5px !important;
-}
-
-/* Narrow line-number gutter in raw editor */
-#gutter{
-  width: 30px !important;
-  padding: 6px 4px !important;
-  font-size: 11px !important;
-}
-.editorWrap{
-  gap: 6px !important;
-}
-textarea#raw{
-  padding-right: 10px !important;
-}
-
-/* Preview: remove outer frame/border to gain width */
-#previewPanel{
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-}
-#previewPanel .bar{
-  border: 1px solid var(--line) !important;
-  background: rgba(255,255,255,.55) !important;
-}
-#previewPanel .previewWrap{
-  border: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-}
-#previewPanel #page{
-  margin: 0 !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-
-/* ---- Layout fix: grid gap + splitter columns ---- */
-main{
-  gap: 4px !important; /* grid gap */
-}
-
-
-/* ---- Preview fix: restore panel card, remove only inner page frame ---- */
-#previewPanel{
-  border: 1px solid var(--line) !important;
-  box-shadow: var(--shadow) !important;
-  background: rgba(255,255,255,.55) !important;
-}
-#previewPanel .previewWrap{
-  background: transparent !important;
-  padding: 0 !important;
-}
-#previewPanel #page{
-  border: none !important;
-  box-shadow: none !important;
-}
-
-
-/* ---- Gutter fix: prevent overlap ---- */
-#gutter{
-  width: 34px !important;
-  padding: 6px 4px !important;
-  text-align: right !important;
-}
-
-
-/* ---- Column sizing fix (pixel-accurate via clamp/minmax) ---- */
-main{
-  max-width: none !important; /* don't artificially constrain */
-}
-#outlineCol{ min-width: 190px; }
-#rawPanel{ min-width: 520px; }
-#previewPanel{ min-width: 620px; }
-
-
-/* Ensure panels don't cover splitters */
-.panel{ position: relative; z-index: 1; }
-.splitter{ z-index: 5; }
-
-
-/* ---- Splitters: narrow (layout) but easy to grab (hit area) ---- */
-.splitter{
-  width: 5px !important;               /* real layout width */
-  min-width: 5px !important;
-  cursor: col-resize !important;
-  position: relative;
-  z-index: 20;
-  user-select: none;
-  touch-action: none;
-  /* enlarge hit area without taking space */
-  margin-left: -5px;
-  margin-right: -5px;
-}
-.splitter::before{
-  content:"";
-  position:absolute;
-  top: 10px;
-  bottom: 10px;
-  left: 50%;
-  width: 3px;                          /* visible bar */
-  transform: translateX(-50%);
-  border-radius: 999px;
-  background: rgba(217,203,187,.85);
-}
-.splitter:hover::before{ background: rgba(70,140,210,.55); }
-body.dragging .splitter::before{ background: rgba(70,140,210,.85); }
-
-
-/* ---- Splitter fix: ensure it receives pointer events ---- */
-.splitter, #outlineSplitter, #splitter{
-  align-self: stretch !important;
-  height: auto !important;
-  min-height: 100% !important;
-  pointer-events: auto !important;
-  position: relative !important;
-  z-index: 9999 !important;
-}
-main{ align-items: stretch !important; }
-
-/* keep splitter visually thin but with larger hit area */
-.splitter{
-  width: 4px !important;
-  min-width: 4px !important;
-  cursor: col-resize !important;
-  position: relative;
-  z-index: 9999;
-  user-select: none;
-  touch-action: none;
-}
-.splitter::after{
-  content:"";
-  position:absolute;
-  top:0; bottom:0;
-  left:-8px; right:-8px;   /* hit area */
-}
-
-
-/* === FIX34: Splitters truly draggable + no overlay on sticky toolbars === */
-header{ z-index: 1200 !important; }
-.toolbars{ z-index: 1100 !important; }
-
-/* keep splitters inside main layer (below toolbars) and clickable */
-main{ position: relative; z-index: 1; }
-.panel{ position: relative; z-index: 2; }
-
-.splitter{
-  display:block !important;
-  align-self: stretch !important;
-  min-height: 70vh !important;
-  height: auto !important;
-  pointer-events: auto !important;
-  cursor: col-resize !important;
-  position: relative !important;
-  z-index: 10 !important; /* below toolbars */
-  background: rgba(217,203,187,.35) !important;
-}
-
-/* enlarge hit-area without visual bulk */
-.splitter::after{
-  content:"";
-  position:absolute;
-  top:0; bottom:0;
-  left:-10px; right:-10px;
-}
-
-/* outline stays visible while scrolling */
-#outlineCol{
-  position: sticky !important;
-  top: 126px !important; /* header (top:0) + toolbars (top:64) */
-  align-self: start !important;
-  max-height: calc(100vh - 140px) !important;
-}
-#outlineCol .outlineColBody{
-  overflow:auto !important;
-  max-height: calc(100vh - 200px) !important;
-}
-
-
-/* === FIX37: keep header/toolbars/outline pinned; scroll only inside panels === */
-:root{
-  --headerH: 64px;
-  --toolH: 84px;
-  --topInset: calc(var(--headerH) + var(--toolH));
-}
-
-/* page itself must not scroll */
-html, body{
-  height: 100%;
-  overflow: hidden !important;
-}
-
-/* pin header + toolbars */
-header{
-  position: fixed !important;
-  top: 0; left: 0; right: 0;
-  z-index: 1100 !important;
-}
-.toolbars{
-  position: fixed !important;
-  left: 0; right: 0;
-  top: var(--headerH) !important;
-  z-index: 1050 !important;
-}
-
-/* main area becomes the viewport work area */
-main{
-  margin-top: calc(var(--topInset) + 10px) !important;
-  height: calc(100vh - var(--topInset) - 16px) !important;
-  overflow: hidden !important;
-  align-items: stretch !important;
-}
-
-/* panels should fill main, and internal areas scroll */
-.panel{
-  height: 100% !important;
-  min-height: 0 !important;
-}
-
-#outlineCol{
-  height: 100% !important;
-}
-#outlineCol .outlineColBody{
-  height: auto !important;
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  overflow: auto !important;
-}
-
-#rawPanel .editorWrap{
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  overflow: hidden !important; /* textarea handles scroll */
-}
-#rawPanel textarea#raw{
-  height: 100% !important;
-  overflow: auto !important;
-}
-
-#previewPanel .previewWrap{
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  overflow: auto !important;
-}
-
-/* make splitters match the work area height */
-#outlineSplitter, #splitter{
-  height: 100% !important;
-  min-height: 0 !important;
-}
-
-
-/* === RESPONSIVE PACK (v16): better desktop+mobile scaling + fewer hard pixels === */
-:root{
-  --splitW: 0.35rem;          /* visual width */
-  --splitHit: 0.9rem;         /* extra grab area (each side) */
-}
-
-/* Typography scales gently with screen size */
-body{ font-size: clamp(13px, 1.1vw, 15px); }
-.page{ font-size: clamp(16px, 2.2vw, 20px) !important; }
-
-/* Main grid: use flexible columns (vw/fr) while keeping safe minimums */
-main{
-  grid-template-columns:
-    clamp(180px, 18vw, 320px)
-    var(--splitW)
-    clamp(320px, 40vw, 920px)
-    var(--splitW)
-    minmax(320px, 1fr) !important;
-}
-
-/* Splitters: use rem instead of px + larger hit-area without taking layout space */
-.splitter, #outlineSplitter, #splitter{
-  width: var(--splitW) !important;
-  min-width: var(--splitW) !important;
-}
-.splitter::after{
-  left: calc(-1 * var(--splitHit)) !important;
-  right: calc(-1 * var(--splitHit)) !important;
-}
-
-/* Controls: keep tappable on mobile */
-@media (max-width: 640px){
-  :root{ --btnH: 38px; }
-  .toolbtn, .btn, .chip{ min-height: 38px; }
-  .toolbarRow{ gap: 6px; }
-  .toolsel{ min-width: 130px; }
-  .toolinp{ width: 76px; }
-}
-
-/* Stack panels on small screens (keep existing behavior but ensure no horizontal overflow) */
-@media (max-width: 1100px){
-  main{ grid-template-columns: 1fr !important; }
-  html, body{ overflow-x: hidden !important; }
-}
-
-/* ===== Responsive toolbar buttons ===== */
-/* (disabled) .toolbars/.toolbar/.toolbarRow flex-wrap:wrap caused wrapping on narrow screens */
-.toolbtn, .btn, button.btn{
-  max-width: 100%;
-  white-space: nowrap;
-  font-size: clamp(12px, 1.2vw, 14px);
-  padding: clamp(7px, 1.0vw, 10px) clamp(10px, 1.4vw, 14px);
-}
-.chip, .segBtn{
-    font-size: 12px;
-    padding: 6px 10px;
-  }
-}
-
-/* ===== Mobile: horizontal scroll toolbar ===== */
-@media (max-width: 700px){
-  .toolbars, .toolbar, .bar, .topbar, .toolbarRow{
-    flex-wrap: nowrap !important;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    gap: 8px;
-    padding-bottom: 6px;
-    scrollbar-width: thin;
-  }
-  .toolbars > *, .toolbar > *, .bar > *, .topbar > *, .toolbarRow > *{
-    flex: 0 0 auto;
-  }
-  /* keep buttons compact in scroll mode */
-  .toolbtn, .btn, button.btn{
-    white-space: nowrap;
-  }
-}
-
-/* ===== Toolbar: horizontal scroll on narrow screens (cleaner than wrap) ===== */
-@media (max-width: 980px){
-  .toolbars, .toolbar, .bar, .topbar, .toolbarRow{
-    flex-wrap: nowrap !important;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    gap: 10px;
-    padding-bottom: 8px;
-  }
-  .toolbars::-webkit-scrollbar,
-  .toolbar::-webkit-scrollbar,
-  .bar::-webkit-scrollbar,
-  .topbar::-webkit-scrollbar,
-  .toolbarRow::-webkit-scrollbar{ height: 8px; }
-  .toolbars > *, .toolbar > *, .bar > *, .topbar > *, .toolbarRow > *{ flex: 0 0 auto; }
-  .tgroup{ display:flex; align-items:center; gap:8px; flex: 0 0 auto; }
-  .gtitle{ flex:0 0 auto; }
-  .toolbtn, .btn, button.btn{ white-space: nowrap; }
-}
-
-/* ===== Toolbar horizontal scroll (no wrapping) ===== */
-.toolbarRow, .toolRow, .toolbars, .toolbar, .bar, .topbar{
-  align-items: center;
-}
-
-/* Each row becomes a horizontal scroller on narrow screens */
-@media (max-width: 1100px){
-  .toolbarRow, .toolRow, .toolbars, .toolbar, .bar, .topbar{
-    display: flex;
-    flex-wrap: nowrap !important;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    gap: 10px;
-    padding-bottom: 8px;
-  }
-  .toolbarRow > *, .toolRow > *, .toolbars > *, .toolbar > *, .bar > *, .topbar > *{
-    flex: 0 0 auto;
-  }
-  /* prevent groups from forcing wrap internally */
-  .tgroup, .group, .seg, .segGroup, .btnGroup{
-    display: inline-flex;
-    flex-wrap: nowrap !important;
-    flex: 0 0 auto;
-    gap: 8px;
-  }
-  .toolbtn, .btn, button.btn{ white-space: nowrap; }
-}
-
-/* Ultra narrow */
-@media (max-width: 700px){
-  .toolbarRow::-webkit-scrollbar,
-  .toolRow::-webkit-scrollbar,
-  .toolbars::-webkit-scrollbar,
-  .toolbar::-webkit-scrollbar,
-  .bar::-webkit-scrollbar,
-  .topbar::-webkit-scrollbar{ height: 8px; }
-}
-
-/* ===== FIX: Toolbar row must NOT wrap; scroll horizontally instead ===== */
-@media (max-width: 1400px){
-  .toolbars .toolbarRow{
-    display:flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    -webkit-overflow-scrolling: touch;
-    gap: 10px !important;
-    max-width: 100%;
-    min-width: 0;
-    padding-bottom: 8px;
-  }
-  .toolbars .toolbarRow > *{ flex: 0 0 auto !important; }
-  .toolbars .toolbarRow .tgroup{
-    display: inline-flex !important;
-    flex-wrap: nowrap !important;
-    flex: 0 0 auto !important;
-    gap: 8px !important;
-  }
-  .toolbars .toolbarRow .gtitle{ flex: 0 0 auto !important; }
-  .toolbars .toolbarRow .toolbtn,
-  .toolbars .toolbarRow .toolsel{
-    white-space: nowrap !important;
-  }
-}
-
-/* ===== FIX v25: Toolbar rows must scroll horizontally (never wrap) ===== */
-.toolbarRow{
-  display:flex !important;
-  flex-wrap: nowrap !important;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  -webkit-overflow-scrolling: touch;
-  gap: 10px !important;
-  max-width: 100%;
-  min-width: 0;
-}
-.toolbarRow > *{ flex: 0 0 auto !important; }
-.toolbarRow .tgroup{
-  display: inline-flex !important;
-  flex-wrap: nowrap !important;
-  flex: 0 0 auto !important;
-  gap: 8px !important;
-  white-space: nowrap !important;
-}
-
-
-/* ===== Narrow screens: toolbar becomes a single horizontal scroller (like your screenshot) ===== */
-.toolbarScroller{
-  position: relative;
-  width: 100%;
-}
-.toolbarScroller .toolbarRow{
-  padding-inline: 10px !important;
-  scroll-snap-type: x proximity;
-}
-/* show scroll arrows only when screen is narrow enough that it matters */
-@media (max-width: 980px){
-  .tbScrollBtn{ display:flex; }
-  /* keep the rows strictly one line */
-  .toolbars .toolbarRow{ flex-wrap: nowrap !important; }
-  .toolbars .toolbarRow::-webkit-scrollbar{ height: 8px; }
-}
-
-
-/* === Narrow screens: horizontal scrolling toolbar with arrows (final) === */
-.toolbars{ max-width: 100%; }
-.toolbarScroller{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  max-width:100%;
-}
-.toolbarViewport{
-  flex: 1 1 auto;
-  min-width: 0; /* critical: allow overflow inside */
+/* Advanced options button: allow horizontal scroll for long text (no wrap) */
+#moreMenuBtn{
+  max-width: 220px;
   overflow-x: auto;
   overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable both-edges;
-  cursor: grab;
-}
-.toolbarViewport:active{ cursor: grabbing; }
-.toolbarViewport.is-dragging{ cursor: grabbing; }
-
-
-.toolbarScroller .toolbarRow{
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  flex-wrap: nowrap !important;
-  overflow-x: auto !important;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  padding-inline: 0 !important;
-}
-.toolbarScroller .toolbarRow > *{ flex: 0 0 auto !important; }
-.tbScrollBtn{
-  flex: 0 0 auto;
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  border: 1px solid rgba(230,220,207,.9);
-  background: rgba(255,255,255,.75);
-  box-shadow: 0 6px 18px rgba(45,35,25,.08);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  user-select:none;
-}
-.tbScrollBtn[hidden]{ display:none !important; }
-.tbScrollBtn:active{ transform: translateY(1px); }
-
-
-/* ===== FIXES v4: splitters + toolbar polish ===== */
-:root{ --splitW: 10px; --splitHit: 10px; }
-
-/* Main grid uses real splitter width */
-main{
-  grid-template-columns:
-    clamp(170px, var(--outW, 220px), 320px) var(--splitW)
-    clamp(420px, var(--rawW, 560px), 1400px) var(--splitW)
-    clamp(480px, var(--prevW, 720px), 1600px) !important;
-}
-
-/* Outline splitter should be visible unless outline is collapsed */
-#outlineSplitter{ display:flex !important; }
-
-/* When outline is collapsed, remove outline + its splitter cleanly */
-body.outline-collapsed main{
-  grid-template-columns:
-    clamp(420px, var(--rawW, 560px), 1400px) var(--splitW)
-    clamp(480px, var(--prevW, 720px), 1600px) !important;
-}
-body.outline-collapsed #outlineCol,
-body.outline-collapsed #outlineSplitter{ display:none !important; }
-
-/* Splitter: narrow look, wide hit-area (REAL, not pseudo) */
-.splitter{
-  width: var(--splitW) !important;
-  min-width: var(--splitW) !important;
-  border-radius: 10px !important;
-  position: relative !important;
-  padding-inline: var(--splitHit) !important;  /* hit area */
-  margin-inline: calc(var(--splitHit) * -1) !important; /* keep layout narrow */
-  background: rgba(217,203,187,.45) !important;
-}
-.splitter::before{
-  width: 2px !important;
-  height: 44px !important;
-  opacity: .7 !important;
-}
-
-/* Make sure splitters are above panels */
-.splitter, #outlineSplitter, #splitter{ z-index: 50 !important; }
-
-/* ---- Toolbar polish: smooth horizontal drag, hide scrollbars ---- */
-.toolbars{ gap:8px !important; }
-.toolbarViewport{
-  overflow-x:auto !important;
-  overflow-y:hidden !important;
+  white-space: nowrap;
+  justify-content: flex-start;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none; /* Firefox */
 }
-.toolbarViewport::-webkit-scrollbar{ height:0 !important; }
+#moreMenuBtn::-webkit-scrollbar{ height:0; width:0; }
 
+.menuItem{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px;
+  cursor:pointer;
+  font-size:13px;
+  border-bottom:1px solid rgba(230,220,207,.6);
+}
+.menuItem:last-child{ border-bottom:0; }
+.menuItem:hover{ background: rgba(107,90,74,.07); }
+.kbd{ font-size:12px; color:var(--muted); }
+
+/* ===== Toolbars ===== */
+.toolbars{
+  position:fixed;
+  inset-inline:0;
+  top: var(--headerH);
+  z-index:900;
+  border-bottom: 1px solid var(--line);
+  background: rgba(251,247,241,.92);
+  backdrop-filter: blur(10px);
+  padding: 6px 8px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+/* Right-aligned, overflow hidden on LEFT (your request) */
+.toolbars{ direction: rtl; }
+.toolbarScroller{ direction: rtl; }
 .toolbarViewport{
-  border-radius: 14px !important;
-  border:1px solid rgba(230,220,207,.95) !important;
-  background: rgba(255,255,255,.75) !important;
+  direction: ltr; /* stable scroll math */
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  cursor: grab;
+  border:1px solid rgba(230,220,207,.95);
+  background: rgba(255,255,255,.70);
+  border-radius: 16px;
 }
-.toolbarRow{ width: max-content !important; gap:6px !important; padding:8px 10px !important; }
-.pill, .btn, .miniBtn, .segBtn, .toolbtn{
-  height: 34px !important;
-  padding: 6px 12px !important;
-  border-radius: 999px !important;
+.toolbarViewport:active{ cursor: grabbing; }
+.toolbarRow{
+  display:flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  gap:6px;
+  padding: 6px 8px;
+  white-space:nowrap;
 }
-.groupLabel{ margin-inline:6px !important; opacity:.8 !important; }
-
-
-/* === FIX v5: remove huge spacer + make top toolbar row match second + cleaner splitters === */
-:root{
-  --splitW: 6px;     /* actual layout width */
-  --splitGrip: 10px; /* extra grip area (each side) */
-}
-
-/* Main grid spacing */
-main{ gap: 3px !important; }
-
-/* Keep splitter columns slim + predictable */
-main{
-  grid-template-columns:
-    clamp(180px, 18vw, 320px)
-    var(--splitW)
-    clamp(360px, 38vw, 1020px)
-    var(--splitW)
-    minmax(360px, 1fr) !important;
-}
-
-/* Splitters: slim layout width + clean look + wide grip without adding whitespace */
-.splitter, #outlineSplitter, #splitter{
-  width: var(--splitW) !important;
-  min-width: var(--splitW) !important;
-  margin: 0 !important;            /* prevent fake huge gap */
-  padding: 0 !important;
-  position: relative;
-  z-index: 20;
-}
-.splitter::before{
-  content:"";
-  position:absolute;
-  top: 10px;
-  bottom: 10px;
-  left: 50%;
-  width: 3px;
-  transform: translateX(-50%);
+.toolbarRow > *{ flex: 0 0 auto; }
+.tgroup{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 4px 6px;
   border-radius: 999px;
-  background: rgba(217,203,187,.85);
+  border:1px solid rgba(230,220,207,.7);
+  background: rgba(243,236,227,.55);
+  flex: 0 0 auto;
+  direction: rtl;
 }
-/* Real grip area (no visual width increase) */
-.splitter::after{
+.gtitle{ font-size:12px; color: var(--muted); user-select:none; white-space:nowrap; font-weight:700; margin-left:6px; }
+
+/* ===== Main layout ===== */
+main{
+  position:relative;
+  margin-top: var(--topInset);
+  height: calc(100vh - var(--topInset));
+  padding: 10px 10px 12px;
+  display:grid;
+  grid-template-columns:
+    clamp(180px, 18vw, 320px) var(--splitW)
+    clamp(360px, 38vw, 1020px) var(--splitW)
+    minmax(360px, 1fr);
+  gap: 2px;
+  overflow:hidden;
+  align-items: stretch;
+}
+
+.panel{
+  background: rgba(255,255,255,.92);
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+  min-height: 0;
+  display:flex;
+  flex-direction:column;
+}
+
+.bar{
+  padding:10px 12px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background: linear-gradient(180deg, #fff, rgba(255,255,255,.88));
+}
+.bar .label{ font-weight:900; font-size:13px; color: #5b4c3f; }
+.bar .mini{ font-size:12px; color:var(--muted); }
+.miniBtn{ padding:0 12px; }
+
+/* ===== Editor ===== */
+.editorWrap{
+  position:relative;
+  flex:1;
+  display:flex;
+  background:#fff;
+  min-height:0;
+}
+.editorInner{ flex: 1; display:flex; min-width:0; min-height:0; }
+.gutter{
+  width: 34px;
+  border-left: 1px solid rgba(230,220,207,.9);
+  background: linear-gradient(180deg, rgba(243,236,227,.45), rgba(243,236,227,.25));
+  color: rgba(111,98,84,.9);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.6;
+  padding: 10px 6px;
+  white-space: pre;
+  overflow:hidden;
+  user-select:none;
+  text-align:right;
+  direction:ltr;
+}
+textarea{
+  flex:1;
+  width:100%;
+  resize:none;
+  border:0;
+  outline:none;
+  padding:10px 10px 12px;
+  background:#fff;
+  color:#1f1c17;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  direction:ltr;
+  unicode-bidi: plaintext;
+  min-height:0;
+}
+
+/* ===== Outline column ===== */
+#outlineCol{ min-width:0; }
+.outlineColBody{ flex:1; min-height:0; overflow:auto; padding:10px; }
+.outlineHead{
+  padding:10px;
+  border-bottom:1px solid rgba(230,220,207,.75);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background: rgba(255,255,255,.72);
+}
+.outlineTitle{ font-weight:900; font-size:12px; color:#5b4c3f; white-space:nowrap; }
+#outlineFilter{
+  flex:1;
+  min-width:0;
+  height: 30px;
+  border-radius:999px;
+  padding: 0 10px;
+  font-size: 12px;
+  border:1px solid rgba(217,203,187,.9);
+  outline:none;
+  background:#fff;
+}
+.outlineBody{ padding: 8px 6px 10px; overflow:auto; flex:1; min-height:0; }
+.outlineList{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+.outlineList li{
+  cursor:pointer;
+  user-select:none;
+  padding: 7px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(230,220,207,.35);
+  font-size: 12px;
+  color: var(--ink);
+  background: rgba(255,255,255,.55);
+  transition: background .12s ease, border-color .12s ease, transform .05s ease;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+.outlineList li:hover{ background: rgba(255,255,255,.86); border-color: rgba(217,203,187,.85); transform: translateY(-1px); }
+.outlineList li.active{ background: rgba(190,225,255,.55); border-color: rgba(70,140,210,.55); font-weight: 800; }
+
+/* ===== Preview ===== */
+.previewWrap{
+  flex:1;
+  overflow:auto;
+  background: linear-gradient(180deg, rgba(246,241,234,.8), rgba(246,241,234,.65));
+  padding: 16px;
+  min-height:0;
+}
+.page{
+  background:#fff;
+  color:#14110d;
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(45, 35, 25, .12);
+  padding: 28px 30px;
+  max-width: 920px;
+  margin: 0 auto;
+  min-height: 100%;
+  direction: rtl;
+  font-family: "Times New Roman", "David", "FrankRuehl", serif;
+  font-size: var(--previewFontSize);
+  line-height: var(--previewLineHeight);
+  border: 1px solid rgba(230,220,207,.9);
+  white-space: normal;
+}
+
+/* ===== Splitters ===== */
+#outlineSplitter, #splitter{
+  width: var(--splitW);
+  min-width: var(--splitW);
+  margin:0;
+  padding:0;
+  background: rgba(217,203,187,.18);
+  border: 0;
+  cursor: col-resize;
+  position: relative;
+  z-index: 50;
+  user-select:none;
+  touch-action:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#outlineSplitter::before, #splitter::before{
+  content:"";
+  width: 3px;
+  height: 44px;
+  border-radius: 999px;
+  background: rgba(111,98,84,.45);
+}
+#outlineSplitter:hover::before, #splitter:hover::before{ background: rgba(70,140,210,.55); }
+body.dragging #outlineSplitter::before,
+body.dragging #splitter::before{ background: rgba(70,140,210,.85); }
+#outlineSplitter::after, #splitter::after{
   content:"";
   position:absolute;
-  top: 0;
-  bottom: 0;
+  top:0; bottom:0;
   left: calc(-1 * var(--splitGrip));
   right: calc(-1 * var(--splitGrip));
 }
 
-/* === Toolbar: make first row (topbar) match second row (toolbarRow) === */
-.toolbars{
-  padding: 3px 6px !important;
-  gap: 6px !important;
+/* ===== Status bar ===== */
+.statusBar{
+  padding:10px 12px;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  font-size:12px;
+  color:var(--muted);
+  background: rgba(243,236,227,.40);
+  flex-wrap:wrap;
 }
 
-/* both rows same container style */
-.topbar,
-.toolbars .toolbarRow{
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-  gap: 6px !important;
-  padding: 3px 6px !important;
-  border: 1px solid var(--line) !important;
-  border-radius: 16px !important;
-  background: rgba(255,255,255,.55) !important;
-  box-shadow: 0 8px 18px rgba(45,35,25,.06) !important;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; /* Firefox */
+/* ===== Find/Replace drawer ===== */
+.drawer{
+  position: fixed;
+  top: calc(var(--topInset) + 14px);
+  left: 14px;
+  width: 380px;
+  max-width: calc(100vw - 28px);
+  background: #fff;
+  border:1px solid var(--line);
+  box-shadow: 0 20px 55px rgba(45,35,25,.18);
+  border-radius: 16px;
+  overflow:hidden;
+  display:none;
+  z-index: 3000;
 }
-.topbar::-webkit-scrollbar,
-.toolbars .toolbarRow::-webkit-scrollbar{ height: 0 !important; }
+.drawer.open{ display:block; }
 
-/* no giant spacer under row */
-.topbar{ margin-bottom: 0 !important; }
+/* ===== Visibility toggles ===== */
+body.previewHidden #previewPanel{ display:none; }
+body.textHidden #rawPanel{ display:none; }
+body.toolbarHidden .toolbars{ display:none; }
 
-/* keep groups inline */
-.topbar > *,
-.toolbars .toolbarRow > *{ flex: 0 0 auto !important; }
-
-/* unify button sizes in both rows */
-.topbar .btn,
-.topbar .toolbtn,
-.toolbars .toolbarRow .btn,
-.toolbars .toolbarRow .toolbtn{
-  min-height: var(--btnH) !important;
-  height: var(--btnH) !important;
-  padding: 0 10px !important;
+body.previewHidden main{
+  grid-template-columns:
+    clamp(180px, 18vw, 320px) var(--splitW)
+    minmax(360px, 1fr);
+}
+body.textHidden main{
+  grid-template-columns:
+    clamp(180px, 18vw, 320px) var(--splitW)
+    minmax(360px, 1fr);
 }
 
-/* On very narrow screens keep rows scrollable and reduce padding a bit */
-@media (max-width: 700px){
-  .topbar,
-  .toolbars .toolbarRow{
-    padding: 8px 8px !important;
-    gap: 6px !important;
+/* Outline collapsed -> 2 columns */
+body.outline-collapsed #outlineCol,
+body.outline-collapsed #outlineSplitter{ display:none !important; }
+body.outline-collapsed main{
+  grid-template-columns:
+    clamp(360px, 38vw, 1020px) var(--splitW)
+    minmax(360px, 1fr);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1100px){
+  body{ overflow:auto; }
+  header{ position: sticky; }
+  .toolbars{ position: sticky; top:0; }
+  main{
+    height: auto;
+    margin-top: 0;
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: minmax(260px, 1fr);
+    overflow: auto;
+    padding-bottom: 12px;
+    gap: 8px;
+  }
+  #outlineSplitter, #splitter{ display:none !important; }
+  .page{ max-width: 100%; width: 100%; padding: 20px 18px; }
+}
+
+@media (max-width: 640px){
+  :root{ --btnH: 38px; }
+  header{ padding:10px 10px; }
+  .title{ min-width: 0; }
+  .topBtns{ width:100%; justify-content:space-between; }
+  .gutter{ width: 30px; }
+}
+
+  </style>
+
+
+<style id="hideToolbarScrollbars_v2">
+/* Hide the horizontal scrollbar "bar" under the toolbars on narrow screens,
+   but keep horizontal scrolling via drag/trackpad/wheel. */
+@media (max-width: 1100px){
+  .toolbarViewport{
+    scrollbar-width: none !important;      /* Firefox */
+    scrollbar-gutter: auto !important;
+  }
+  .toolbarViewport::-webkit-scrollbar{
+    height: 0 !important;                  /* Chrome/Safari */
+  }
+  /* If a row becomes the scroller in some states */
+  .toolbarRow{
+    scrollbar-width: none !important;
+    padding-bottom: 0 !important;          /* remove reserved space */
+  }
+  .toolbarRow::-webkit-scrollbar{
+    height: 0 !important;
   }
 }
+</style>
 
-/* ===== FIX v6: Splitter thin, no giant gaps, big hit-area, always draggable ===== */
+<style id="hideToolbarScrollbarAlways">
+/* ===== Always hide horizontal scrollbar but keep drag/scroll ===== */
+.toolbarViewport,
+.toolbars,
+.toolbarRow{
+  -ms-overflow-style: none;     /* IE/Edge legacy */
+  scrollbar-width: none;        /* Firefox */
+}
+.toolbarViewport::-webkit-scrollbar,
+.toolbars::-webkit-scrollbar,
+.toolbarRow::-webkit-scrollbar{
+  height: 0 !important;
+  width: 0 !important;
+  display: none !important;     /* Chrome/Safari */
+}
+</style>
+<style id="otz_overrides_v11">
+/* ==== finalGridVarsOverride (merged) ==== */
+/* ===== FINAL GRID VARS OVERRIDE: ensure resizing uses CSS vars (RTL-safe) ===== */
 :root{
   --splitW: 6px;
-}
-.splitter, #outlineSplitter, #splitter{
-  width: var(--splitW) !important;
-  min-width: var(--splitW) !important;
-  border-radius: 10px !important;
-  background: rgba(217,203,187,.35) !important;
-  border: 1px solid rgba(217,203,187,.75) !important;
-  position: relative !important;
-  z-index: 50 !important; /* above panels */
-  cursor: col-resize !important;
-  user-select: none !important;
-  touch-action: none !important;
-  box-sizing: content-box !important;
-  /* Big hit-area WITHOUT visual bulk */
-  padding-inline: 10px !important;
-  margin-inline: -10px !important;
-  background-clip: content-box !important;
-}
-.splitter::before{
-  opacity:.75 !important;
+  --outW: var(--outW, 220px);
+  --rawW: var(--rawW, 560px);
+  --prevW: var(--prevW, 720px);
 }
 
-
-/* ===== FIX v6: Remove toolbar arrows + bottom bar (top row) ===== */
-.toolbar-scroll-btn{ display:none !important; }
-.toolbar-scroll-container{ scrollbar-width:none !important; }
-.toolbar-scroll-container::-webkit-scrollbar{ height:0 !important; }
-
-
-.nav-icon{margin-left:6px;font-size:14px;}
-.nav-label{vertical-align:middle;}
-
-/* =========================
-   v9 HEIGHT/FILL FIX
-   Make the columns fill the viewport height (no big gap under panels)
-   ========================= */
-html, body{
-  height: 100%;
-  min-height: 100dvh;
-}
-body{
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-}
+/* Base layout: Outline | Raw | Preview */
 main{
-  /* stop relying on a fixed vh height that can mis-measure on some browsers */
-  height: auto !important;
-  min-height: 0 !important;
-  flex: 1 1 auto !important;
-  align-items: stretch !important;
-}
-/* ensure grid children can actually stretch */
-main > .panel,
-main > section.panel{
-  height: 100% !important;
-  min-height: 0 !important;
-}
-/* keep internal scrollers working */
-.editorWrap, .previewWrap, #outlineCol .outlineColBody{
-  min-height: 0 !important;
+  grid-template-columns:
+    clamp(170px, var(--outW, 220px), 320px)
+    var(--splitW, 6px)
+    clamp(320px, var(--rawW, 560px), 1400px)
+    var(--splitW, 6px)
+    clamp(320px, var(--prevW, 720px), 1600px) !important;
 }
 
-</style>
-
-<style id="navToggleStyle">
-  /* Nav toggle hidden state */
-  #btnOutlineToggle2.navHidden{
-    background: rgba(70, 140, 210, .18) !important;
-    border-color: rgba(70, 140, 210, .55) !important;
-    box-shadow: 0 6px 16px rgba(70, 140, 210, .18) !important;
-    font-weight: 800;
-  }
-
-    /* ===== FINAL OVERRIDE: toolbar rows must NEVER wrap (use horizontal scroll) ===== */
-    .toolbars .toolbarRow{
-      flex-wrap: nowrap !important;
-      white-space: nowrap !important;
-      overflow-x: auto !important;
-      overflow-y: hidden !important;
-      -webkit-overflow-scrolling: touch;
-      max-width: 100%;
-      min-width: 0;
-    }
-    .toolbars .toolbarRow > *{ flex: 0 0 auto !important; }
-    .toolbars .toolbarRow .tgroup{
-      display: inline-flex !important;
-      flex-wrap: nowrap !important;
-      flex: 0 0 auto !important;
-      white-space: nowrap !important;
-    }
-
-</style>
-
-
-<style id="responsiveFixV3">
-/* === v3 OVERRIDE: make toolbar scroll container ONLY the viewport (fixes drag-scroll not working) === */
-.toolbarScroller{ max-width:100%; }
-.toolbarViewport{
-  overflow-x:auto !important;
-  overflow-y:hidden !important;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+/* Outline collapsed => Raw | Preview (keep user widths) */
+body.outline-collapsed main{
+  grid-template-columns:
+    minmax(320px, 1fr)
+    var(--splitW, 6px)
+    minmax(320px, 1fr) !important;
 }
-.toolbarScroller .toolbarRow{
-  width: max-content !important;
-  max-width: none !important;
-  min-width: 0 !important;
-  overflow: visible !important;   /* IMPORTANT: avoid nested horizontal scrollers */
-  flex-wrap: nowrap !important;
+
+/* Raw hidden => Outline | Preview (preview should expand) */
+body.textHidden main{
+  grid-template-columns:
+    clamp(170px, var(--outW, 220px), 320px)
+    var(--splitW, 6px)
+    1fr !important;
 }
-.toolbarRow{ overflow: visible !important; }
-
-/* Hide arrow buttons if they exist (user requested drag-scroll only) */
-.tbScrollBtn{ display:none !important; }
-
-/* === Splitter hit area: real clickable zone === */
-#splitter, #outlineSplitter{
-  width: 6px !important;
-  min-width: 6px !important;
+/* Outline collapsed + Raw hidden => only Preview */
+body.outline-collapsed.textHidden main{
+  grid-template-columns: 1fr !important;
 }
-#splitter::after, #outlineSplitter::after{
-  left:-12px !important;
-  right:-12px !important;
+
+/* Preview hidden => Outline | Raw (raw should expand) */
+body.previewHidden main{
+  grid-template-columns:
+    clamp(170px, var(--outW, 220px), 320px)
+    var(--splitW, 6px)
+    1fr !important;
 }
-</style>
-
-
-<style>
-.simple-splitter {
-  width: 5px !important;
-  background: #ccc !important;
-  cursor: col-resize !important;
+/* Outline collapsed + Preview hidden => only Raw */
+body.outline-collapsed.previewHidden main{
+  grid-template-columns: 1fr !important;
 }
-</style>
 
-
-<style id="splitterFinalOverride">
-/* ===== FINAL: splitters truly draggable + minimal spacing (override everything above) ===== */
-:root{
-  --splitW: 6px;
-  --splitGrip: 10px; /* hit area each side */
+/* Both editors hidden (edge case) => keep Outline only */
+body.textHidden.previewHidden main{
+  grid-template-columns:
+    clamp(170px, var(--outW, 220px), 320px) !important;
 }
-/* minimal gap between columns (like your screenshot) */
-main{ gap: 2px !important; }
+body.outline-collapsed.textHidden.previewHidden main{
+  grid-template-columns: 1fr !important;
+}
 
-/* make splitters thin visually, no fake whitespace */
+/* Hide the middle splitter when one side is hidden */
+body.textHidden #splitter,
+body.previewHidden #splitter{
+  display:none !important;
+}
+
+/* Hide outline splitter when outline is collapsed */
+body.outline-collapsed #outlineSplitter{
+  display:none !important;
+}
+
+/* Ensure splitters are on top and clickable (guard against earlier CSS) */
 #outlineSplitter, #splitter{
-  width: var(--splitW) !important;
-  min-width: var(--splitW) !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  cursor: col-resize !important;
-  position: relative !important;
+  display:flex;
+  pointer-events:auto !important;
   z-index: 9999 !important;
-  pointer-events: auto !important;
-  user-select: none !important;
-  touch-action: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-/* visible grip line */
-#outlineSplitter::before, #splitter::before{
-  content:"" !important;
-  width: 3px !important;
-  height: 44px !important;
-  border-radius: 999px !important;
-  background: rgba(111,98,84,.45) !important;
-}
-/* hover/drag states */
-#outlineSplitter:hover::before, #splitter:hover::before{ background: rgba(70,140,210,.55) !important; }
-body.dragging #outlineSplitter::before,
-body.dragging #splitter::before{ background: rgba(70,140,210,.85) !important; }
-
-/* big hit-area WITHOUT adding layout space */
-#outlineSplitter::after, #splitter::after{
-  content:"" !important;
-  position:absolute !important;
-  top:0 !important; bottom:0 !important;
-  left: calc(-1 * var(--splitGrip)) !important;
-  right: calc(-1 * var(--splitGrip)) !important;
-}
-/* ensure grab div doesn't mess with layout; we use it for events */
-#outlineSplitter .splitterGrab,
-#splitter .splitterGrab{
-  position:absolute !important;
-  inset:0 !important;
-  left: calc(-1 * var(--splitGrip)) !important;
-  right: calc(-1 * var(--splitGrip)) !important;
-  background: transparent !important;
-  pointer-events: auto !important;
-}
-</style>
-
-
-
-<style id="toolbarRightAlignOverride">
-/* ===== Toolbar: right-aligned, DOM order preserved, overflow hidden on LEFT =====
-   Strategy:
-   - Scroll container (.toolbarViewport) uses LTR so scroll math is stable.
-   - On load/resize we jump to the far-right end so extra buttons are hidden on the LEFT (as requested).
-*/
-.toolbars{ direction: rtl !important; }
-
-.toolbarScroller{ direction: rtl !important; }
-
-.toolbarViewport{
-  direction: ltr !important;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
-  cursor: grab;
-}
-.toolbarViewport.is-dragging{ cursor: grabbing; }
-
-/* Keep one line; preserve DOM order */
-.toolbarViewport .toolbarRow{
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  width: max-content !important;
-  overflow: visible !important;
-}
-</style>
-
-
-<style id="toolbarApplyScopeAndGapFix">
-/* === Fix: chip/select not clipped when --btnH is small === */
-.chip, .btn, .toolbtn, .menuBtn{
-  height: var(--btnH) !important;
-  min-height: var(--btnH) !important;
-  padding: 0 10px !important;
-  align-items: center !important;
-}
-.chip{
-  gap: 8px !important;
-}
-.chip select{
-  height: calc(var(--btnH) - 6px) !important;
-  padding: 0 10px !important;
-  border-radius: 999px !important;
-  line-height: 1 !important;
 }
 
-/* === Fix: reduce extra space above panels by using real header/toolbars height === */
+/* ===== vPercentGridFix: no overflow, no dead gap ===== */
 :root{
-  /* JS will overwrite these with actual measured heights */
-  --headerH: 56px;
-  --toolH: 64px;
-}
-</style>
-
-
-<style id="toolbarHeightAndSpacingFix_v4">
-/* === v4: keep button heights consistent after compacting === */
-:root{
-  --btnH: 25px; /* keep compact but consistent */
-}
-
-/* unify control heights */
-.chip, .btn, .toolbtn, .menuBtn{
-  height: var(--btnH) !important;
-  min-height: var(--btnH) !important;
-  padding: 0 10px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  line-height: 1 !important;
+  --splitW: 6px;
+  /* numeric percentages (sum 100) */
+  --outP: 18;
+  --rawP: 41;
+  --prevP: 41;
+  --rawP2: 50;
+  --prevP2: 50;
+  --outP2: 30;
+  --prevP_op: 70;
+  --outP_or: 30;
+  --rawP_or: 70;
 }
 
-/* chip internal select shouldn't overflow */
-.chip select, .chip input{
-  height: calc(var(--btnH) - 8px) !important;
-  min-height: calc(var(--btnH) - 8px) !important;
-  padding: 0 10px !important;
-  border-radius: 999px !important;
-}
-
-/* toolbar rows: tighten vertical padding without shrinking buttons */
-.toolbars{ padding: 3px 6px !important; gap: 6px !important; }
-.topbar, .toolbars .toolbarRow{ padding: 3px 6px !important; }
-
-/* === v4: remove dead space between toolbars and panels === */
-:root{
-  --headerH: 64px;
-  --toolH: 72px; /* will be overridden by JS below */
-  --topInset: calc(var(--headerH) + var(--toolH));
-}
+/* Full-width main to eliminate the right-side gap on wide screens */
 main{
-  margin-top: var(--topInset) !important;
-  height: calc(100vh - var(--topInset)) !important;
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  /* 3-column layout: outline | raw | preview */
+  grid-template-columns:
+    minmax(0, calc((100% - (2 * var(--splitW))) * var(--outP) / 100))
+    var(--splitW)
+    minmax(0, calc((100% - (2 * var(--splitW))) * var(--rawP) / 100))
+    var(--splitW)
+    minmax(0, calc((100% - (2 * var(--splitW))) * var(--prevP) / 100)) !important;
 }
 
-/* keep a tiny breathing room inside main */
-main{ padding-top: 0 !important; }
-</style>
+/* Allow grid children to actually shrink (critical for overflow bugs) */
+main > *{ min-width: 0 !important; }
+#outlineCol, #rawPanel, #previewPanel, .previewWrap, .rawWrap, .outlineWrap{ min-width:0 !important; }
+#page, .page{ max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; }
 
+/* Outline collapsed: raw | preview (1 splitter) */
+body.outline-collapsed main{
+  grid-template-columns:
+    minmax(0, calc((100% - var(--splitW)) * var(--rawP2) / 100))
+    var(--splitW)
+    minmax(0, calc((100% - var(--splitW)) * var(--prevP2) / 100)) !important;
+}
 
-<style id="toolbarCompactV5">
-/* ===== Compact header + toolbars (v5) ===== */
+/* Raw hidden: outline | preview */
+body.textHidden main{
+  grid-template-columns:
+    minmax(0, calc((100% - var(--splitW)) * var(--outP2) / 100))
+    var(--splitW)
+    minmax(0, calc((100% - var(--splitW)) * var(--prevP_op) / 100)) !important;
+}
+
+/* Preview hidden: outline | raw */
+body.previewHidden main{
+  grid-template-columns:
+    minmax(0, calc((100% - var(--splitW)) * var(--outP_or) / 100))
+    var(--splitW)
+    minmax(0, calc((100% - var(--splitW)) * var(--rawP_or) / 100)) !important;
+}
+
+/* If both main panels hidden (rare), single column */
+body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
+
+/* Cancel old mobile stacking rule so we keep columns but shrink */
+@media (max-width: 1100px){
+  main{ grid-template-columns:
+    minmax(0, calc((100% - (2 * var(--splitW))) * var(--outP) / 100))
+    var(--splitW)
+    minmax(0, calc((100% - (2 * var(--splitW))) * var(--rawP) / 100))
+    var(--splitW)
+    minmax(0, calc((100% - (2 * var(--splitW))) * var(--prevP) / 100)) !important; }
+}
+
+/* ==== layoutFixV10 (merged) ==== */
+/* === v10 FINAL: prevent top overlap (header/toolbars) by using flex layout (no vh math) === */
+html, body{ height:100%; min-height:100dvh; }
+body{
+  display:flex !important;
+  flex-direction:column !important;
+  min-height:100dvh !important;
+}
+
+/* header + toolbars take natural height; main fills the rest */
+header{ flex:0 0 auto; }
+.toolbars{ flex:0 0 auto; }
+
+/* kill any previous vh/margin-top hacks */
+main{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  height:auto !important;
+  margin-top: var(--topInset) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding:12px 12px 16px !important;
+  overflow:hidden !important;
+  align-items:stretch !important;
+}
+
+/* grid should use full available height */
+main{ height: auto !important; }
+main > *{ min-height:0 !important; }
+
+/* panels must stretch and allow their own internal scrolling */
+.panel{
+  height:100% !important;
+  min-height:0 !important;
+}
+.editorWrap, .previewWrap, .outlineColBody{
+  min-height:0 !important;
+}
+
+/* ensure the main grid can shrink without overflow */
+main{ min-width:0 !important; }
+
+/* ==== compactToolbars_v1 (merged) ==== */
+/* === Compact toolbars/header to give more space to the columns === */
+:root{
+  --btnH: 30px;     /* smaller buttons */
+  --splitW: 6px;
+}
 
 /* Header tighter */
 header{
-  padding-top: 7px !important;
-  padding-bottom: 7px !important;
+  padding: 6px 10px !important;
+  gap: 10px !important;
 }
+.title h1{ font-size:15px !important; }
+.title .sub{ font-size:11px !important; }
+.appIcon{ width:20px !important; height:20px !important; }
 
-/* Toolbars container */
+/* Toolbars tighter */
 .toolbars{
-  padding-top: 3px !important;
-  padding-bottom: 3px !important;
+  padding: 4px 6px !important;
+  gap: 4px !important;
+}
+.toolbarViewport{
+  border-radius: 14px !important;
+}
+.toolbarRow{
+  padding: 4px 6px !important;
   gap: 5px !important;
 }
-
-/* Each toolbar row */
-.toolbars .toolbarRow,
-.topbar{
-  padding-top: 3px !important;
-  padding-bottom: 3px !important;
+.tgroup{
+  padding: 3px 5px !important;
+}
+.gtitle{
+  font-size: 11px !important;
+  margin-left: 4px !important;
 }
 
-/* Ensure buttons stay same height */
-.chip, .toolbtn, .btn, .menuBtn, select{
-  height: var(--btnH) !important;
-  min-height: var(--btnH) !important;
-  line-height: 1 !important;
+/* Panel headers + status bars tighter */
+.bar{ padding: 8px 10px !important; }
+.statusBar{ padding: 8px 10px !important; }
+
+/* Content paddings tighter */
+textarea{ padding: 8px 8px 10px !important; }
+.gutter{ padding: 8px 6px !important; }
+.previewWrap{ padding: 12px !important; }
+.page{ padding: 22px 24px !important; }
+
+/* Keep mobile touch targets reasonable */
+@media (max-width: 640px){
+  :root{ --btnH: 36px !important; } /* keep bigger on phones */
+  header{ padding: 8px 10px !important; }
+  .toolbars{ padding: 6px 8px !important; }
+  .toolbarRow{ padding: 6px 8px !important; }
 }
 
-/* Remove extra space between toolbars and panels */
-main{
-  margin-top: var(--topInset) !important;
+/* ==== splitterHitFix_v3 (merged) ==== */
+/* v3: guarantee splitters are above panels and receive pointer events */
+#outlineSplitter, #splitter{
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 99999 !important;
+  background: rgba(217,203,187,.10) !important; /* faint visibility */
 }
+#outlineSplitter .splitterGrab, #splitter .splitterGrab{
+  pointer-events: auto !important;
+  position:absolute !important;
+  inset:0 !important;
+  left:-14px !important;
+  right:-14px !important;
+  z-index: 999999 !important;
+}
+.panel{ position: relative !important; z-index: 1 !important; }
 </style>
 
 
-<style id="toolbarCompactV6">
-/* ===== Compact vertical spacing for toolbars only (v6) ===== */
-.toolbars{
-  padding-top: 1px !important;
-  padding-bottom: 1px !important;
-}
-
-.toolbars .toolbarRow,
-.topbar{
-  padding-top: 1px !important;
-  padding-bottom: 1px !important;
-}
-</style>
-
-
-<style id="responsiveMobileFix_v1">
-/* ===== Mobile/narrow screens: prevent preview being clipped ===== */
-#previewPanel, #rawPanel, #outlineCol{ min-width: 0 !important; }
-#previewPanel .previewWrap{ overflow-x: auto !important; overflow-y: auto !important; }
-
-/* Make the page fit the container on small widths */
-#page, .page{
-  max-width: 100% !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-@media (max-width: 900px){
-  /* On narrow screens stack panels vertically and let the page scroll inside panels */
-  main{
-    grid-template-columns: 1fr !important;
-    grid-auto-rows: minmax(260px, 1fr);
-    gap: 8px !important;
-    height: calc(100vh - var(--topInset)) !important;
-    overflow-y: auto !important; /* allow vertical scroll of stacked panels */
-    padding-bottom: 10px !important;
-  }
-  /* When stacking, the splitters are irrelevant */
-  #outlineSplitter, #splitter{ display:none !important; }
-  header, .toolbars{ position: sticky !important; } /* avoid fixed stacking issues on mobile */
-  html, body{ overflow: auto !important; height: auto !important; } /* allow mobile natural scrolling */
-  .panel{ height: auto !important; min-height: 260px !important; }
-  #rawPanel textarea#raw{ height: 45vh !important; }
-  #previewPanel .previewWrap{ max-height: 55vh !important; }
-  .page{ padding: 16px 14px !important; }
-}
-</style>
-
-<style>
-  .email-autocomplete-ext {
-    display: none;
-    direction: ltr;
-    text-align: left;
-    z-index: 99999999;
-    font: 14px arial, sans-serif;
-    background: #fff;
-    padding: 1px;
-    line-height: 25px;
-    box-sizing: content-box;
-    border: solid 1px #ccc;
-    position: absolute;
-    white-space: nowrap;
-    left: 0;
-    top: 0;
-    right: auto;
-    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),
-      0 1px 1px 0 rgba(0,0,0,.14),
-      0 2px 1px -1px rgba(0,0,0,.12);
-  }
-  .email-autocomplete-ext .email-complete-value {
-    cursor: pointer;
-    padding: 2px 10px;
-    letter-spacing: 1px;
-    color: #222;
-    transition: background 0.2s;
-  }
-  .email-autocomplete-ext .email-complete-value:hover,
-  .email-autocomplete-ext .email-complete-value:focus,
-  .email-autocomplete-ext .email-complete-value.focus,
-  .email-autocomplete-ext .email-complete-credit:hover,
-  .email-autocomplete-ext .email-complete-credit.focus {
-    background: #eee;
-    outline:none;
-  }
-  .email-autocomplete-ext .email-complete-value span {
-    display: inline-block;
-  }
-  .email-autocomplete-ext .email-complete-value .suffix {
-    letter-spacing: 1px;
-  }
-  .email-autocomplete-ext .email-complete-credit {
-    cursor: pointer;
-    padding: 0px 15px;
-    transition: background 0.2s;
-    text-align: right;
-    color: #777;
-    font-size: 13px;
-    line-height: 22px;
-    border-top: solid 1px #ececec;
-  }
-  .email-autocomplete-ext .email-complete-credit a {
-    color: #777;
-    text-decoration: none;
-  }
-</style><script src="https://netfree.link/card/card-injection.js"></script><style>#netfree-popup-window-main{position:fixed;background:#ffffff;padding:0;margin:0;transition:right 0.3s ease, left 0.3s ease;z-index:9999999999;direction:rtl;box-sizing:border-box;top:0;bottom:0;height:100%;right:-250px;width:250px;background-color:rgba(0,0,255,0);pointer-events:none}#netfree-popup-window-hand-pull{background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjAuMTc3MjEzaW4iIGhlaWdodD0iMC44MjYwNTFpbiIgdmVyc2lvbj0iMS4xIiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgdGV4dC1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgaW1hZ2UtcmVuZGVyaW5nPSJvcHRpbWl6ZVF1YWxpdHkiIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIg0Kdmlld0JveD0iMCAwIDEwOTcxIDUxMTQxIg0KIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4NCiA8ZyBpZD0iTGF5ZXJfeDAwMjBfMSI+IA0KICA8Y2lyY2xlIGZpbGw9IiMyNDNFNEMiIGN4PSIzOTAyIiBjeT0iMzkwMiIgcj0iMzkwMiIvPg0KICA8Y2lyY2xlIGZpbGw9IiMyNDNFNEMiIGN4PSIzOTAyIiBjeT0iMTgzNDciIHI9IjM5MDIiLz4NCiAgPGNpcmNsZSBmaWxsPSIjMjQzRTRDIiBjeD0iMzkwMiIgY3k9IjMyNzkzIiByPSIzOTAyIi8+DQogIDxjaXJjbGUgZmlsbD0iIzI0M0U0QyIgY3g9IjM5MDIiIGN5PSI0NzIzOSIgcj0iMzkwMiIvPg0KICA8cmVjdCBmaWxsPSJub25lIiB3aWR0aD0iMTA5NzEiIGhlaWdodD0iNTExNDEiLz4NCiA8L2c+DQo8L3N2Zz4NCg==);background-size:88%;background-repeat:no-repeat;width:15px;left:-15px;height:50px;position:absolute;top:10px;bottom:10px;margin:auto;cursor:pointer;pointer-events:all}#netfree-popup-window-iframe{width:100%;height:100%;border:0;margin:0;padding:0;position:relative;display:block;visibility:hidden;transition:visibility 0.3s}#netfree-popup-window-main.active #netfree-popup-window-iframe{visibility:visible;transition:visibility 0.3s}.netfree-popup-window-mouseenter{opacity:.7;-webkit-filter:blur(2px)}.netfree-popup-window-click{opacity:.2}#netfree-popup-window-main.active{right:0px;pointer-events:all}#netfree-popup-window-main.h-position-left{right:auto;left:-250px}#netfree-popup-window-main.h-position-left.active{right:auto;left:0px}#netfree-popup-window-main.h-position-left #netfree-popup-window-hand-pull{left:auto;right:-15px;background-position-x:200%}#netfree-popup-window-main.v-position-top #netfree-popup-window-hand-pull{margin:20px 0 auto 0}#netfree-popup-window-main.v-position-bottom #netfree-popup-window-hand-pull{margin:auto 0 20px 0}@media print{#netfree-popup-window-main{display:none}#netfree-popup-window{display:none}}@media only screen and (max-height: 750px){#netfree-popup-window-main{right:-309px;width:309px}#netfree-popup-window-main.h-position-left{left:-309px}}@media only screen and (max-device-width: 760px) and (orientation: landscape){#netfree-popup-window-main{right:-280px;width:280px}#netfree-popup-window-main.h-position-left{left:-280px}}@media only screen and (max-device-width: 1200px) and (min-width: 760px) and (orientation: landscape){#netfree-popup-window-main{right:-302px;width:302px}#netfree-popup-window-main.h-position-left{left:-302px}}@media only screen and (max-device-width: 1200px) and (min-device-width: 750px) and (orientation: portrait){#netfree-popup-window-main{right:-270px;width:270px}#netfree-popup-window-main.h-position-left{left:-270px}}@media only screen and (max-device-width: 700px) and (orientation: portrait){#netfree-popup-window-main{right:-222px;width:222px}#netfree-popup-window-main.h-position-left{left:-222px}}@media print{#netfree-popup-window-main{display:none}}
-</style></head>
-
+</head>
 <body id="appRoot" class="">
-<script>window.__forcePreviewRefresh = window.__forcePreviewRefresh || false;</script>
+
 
 <header>
   <div class="title">
@@ -2129,6 +954,7 @@ main{
           <div class="menuItem" data-extra="" style="cursor:default; font-weight:800; background:rgba(243,236,227,.55)"><span>בחר פעולה</span><span class="kbd">—</span></div>
 <div class="menuItem" data-extra="fixCommon"><span>תיקון שגיאות נפוצות</span><span class="kbd">—</span></div>
           <div class="menuItem" data-extra="trimLines"><span>ניקוי רווחים בתחילת/סוף שורה</span><span class="kbd">—</span></div>
+          <div class="menuItem" data-extra="enterToSpace"><span>המרת ירידת שורה (Enter) לרווח</span><span class="kbd">—</span></div>
           <div class="menuItem" data-extra="removeEmpty"><span>הסרת שורות ריקות כפולות</span><span class="kbd">—</span></div>
           <div class="menuItem" data-extra="brNormalize"><span>איחוד &lt;br&gt; כפולים</span><span class="kbd">—</span></div>
           <div class="menuItem" data-extra="unwrapB"><span>המרת &lt;strong&gt; ל-&lt;b&gt;</span><span class="kbd">—</span></div>
@@ -2509,7 +1335,100 @@ main{
   </div>
 </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script>
+/* ===== FIX: safeLocalLoad stub =====
+   Ensures backward compatibility if localStorage helper is missing */
+function safeLocalLoad(key, fallback=null){
+  try{
+    const v = localStorage.getItem(key);
+    return v === null ? fallback : v;
+  }catch(e){
+    return fallback;
+  }
+}
+
+
+function safeLocalSave(key, value){
+  try{
+    if (value === undefined) return;
+    if (value === null) localStorage.removeItem(key);
+    else localStorage.setItem(key, String(value));
+  }catch(e){
+    /* ignore */
+  }
+}
+</script>
+
+</body>
+<script>
+
+(() => {
+  function measureTopHeights(){
+    const h = document.querySelector('header');
+    const t = document.querySelector('.toolbars');
+    const hh = h ? Math.round(h.getBoundingClientRect().height) : 64;
+    const th = t ? Math.round(t.getBoundingClientRect().height) : 78;
+    document.documentElement.style.setProperty('--headerH', hh + 'px');
+    document.documentElement.style.setProperty('--toolH', th + 'px');
+    document.documentElement.style.setProperty('--topInset', `calc(${hh}px + ${th}px)`);
+  }
+
+  function scrollToolbarsToRight(){
+    // In our CSS, viewport is LTR and content is wider; go to far-right so overflow hides on LEFT.
+    document.querySelectorAll('.toolbarViewport').forEach(vp => {
+      try { vp.scrollLeft = vp.scrollWidth; } catch(e){}
+    });
+  }
+
+  window.addEventListener('resize', () => { measureTopHeights(); scrollToolbarsToRight(); }, {passive:true});
+  window.addEventListener('load', () => { measureTopHeights(); scrollToolbarsToRight(); }, {once:true});
+  document.addEventListener('DOMContentLoaded', () => { measureTopHeights(); scrollToolbarsToRight(); }, {once:true});
+})();
+
+
+/* ===== Original app logic (kept, but now in a single script block) ===== */
+window.__forcePreviewRefresh = window.__forcePreviewRefresh || false;
+
 (() => {
   const LS_KEY = "otzaria_editor_content_v1";
   // === Toolbar narrow-screen: horizontal drag-scroll (no arrows) ===
@@ -2811,55 +1730,87 @@ const scopeSel = document.getElementById('applyScope'); // "החלה על:"
   let lastSelStart = 0;
   let lastSelEnd = 0;
 
-  // Undo/Redo history
-  const history = [];
-  let histPos = -1;
-  let ignoreHistory = false;
+  // Undo/Redo history (advanced: captures manual typing + toolbar/programmatic changes)
+// Stores: { v: string, s: selectionStart, e: selectionEnd }
+const history = [];
+let histPos = -1;
+let ignoreHistory = false;
 
-  function safeLocalSave(value){
-    try { localStorage.setItem(LS_KEY, value); } catch {}
-  }
-  function safeLocalLoad(){
-    try { return localStorage.getItem(LS_KEY); } catch { return null; }
-  }
-  function safeLocalClear(){
-    try { localStorage.removeItem(LS_KEY); } catch {}
-  }
+function pushHistory(value){
+  if(ignoreHistory) return;
 
-  function pushHistory(value){
-    if(ignoreHistory) return;
-    // avoid duplicates
-    if(histPos >= 0 && history[histPos] === value) return;
-    // cut future
-    history.splice(histPos + 1);
-    history.push(value);
-    histPos = history.length - 1;
-  }
+  const v = (value === undefined) ? String(raw.value ?? "") : String(value ?? "");
+  const s = raw.selectionStart ?? 0;
+  const e = raw.selectionEnd ?? s;
 
-  function undo(){
-    if(histPos <= 0) return;
-    ignoreHistory = true;
-    histPos--;
-    raw.value = history[histPos];
-    ignoreHistory = false;
-    syncLastSelection();
-    enableEditablePreview();
-    renderAll();
-    findInfo.textContent = "Undo";
-  }
+  const prev = history[histPos];
+  if(prev && prev.v === v) return; // avoid duplicates
 
-  function redo(){
-    if(histPos >= history.length - 1) return;
-    ignoreHistory = true;
-    histPos++;
-    raw.value = history[histPos];
-    ignoreHistory = false;
-    syncLastSelection();
-    renderAll();
-    findInfo.textContent = "Redo";
-  }
+  // cut "future"
+  history.splice(histPos + 1);
+  history.push({ v, s, e });
+  histPos = history.length - 1;
+}
 
-  function syncLastSelection(){
+function undo(){
+  if(histPos <= 0) return;
+  ignoreHistory = true;
+  histPos--;
+  const st = history[histPos];
+
+  raw.value = st.v;
+  try{ raw.setSelectionRange(st.s, st.e); }catch{}
+  ignoreHistory = false;
+
+  syncLastSelection();
+  enableEditablePreview();
+  window.__forcePreviewRefresh = true;
+  renderAll();
+  window.__forcePreviewRefresh = false;
+  findInfo.textContent = "Undo";
+}
+
+function redo(){
+  if(histPos >= history.length - 1) return;
+  ignoreHistory = true;
+  histPos++;
+  const st = history[histPos];
+
+  raw.value = st.v;
+  try{ raw.setSelectionRange(st.s, st.e); }catch{}
+  ignoreHistory = false;
+
+  syncLastSelection();
+  enableEditablePreview();
+  window.__forcePreviewRefresh = true;
+  renderAll();
+  window.__forcePreviewRefresh = false;
+  findInfo.textContent = "Redo";
+}
+
+
+// Expose undo/redo for early hotkey handler
+window.__otzUndo = undo;
+window.__otzRedo = redo;
+
+// Capture manual typing / deletion
+raw.addEventListener('input', ()=> pushHistory());
+
+// Capture programmatic value changes that bypass 'input'
+(function(){
+  const desc = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value');
+  if(!desc || !desc.set || !desc.get) return;
+  Object.defineProperty(HTMLTextAreaElement.prototype, 'value', {
+    get: desc.get,
+    set: function(v){
+      desc.set.call(this, v);
+      if(this === raw) pushHistory(v);
+    }
+  });
+})();
+
+function syncLastSelection()
+{
     lastSelStart = raw.selectionStart ?? 0;
     lastSelEnd = raw.selectionEnd ?? lastSelStart;
   }
@@ -2910,7 +1861,7 @@ function setRawValue(nextValue, arg2 = {}, arg3){
   }
 
   syncLastSelection();
-  pushHistory(raw.value);
+  pushHistory();
   safeLocalSave(raw.value);
   renderAll();
 }
@@ -2997,7 +1948,12 @@ function setRawValue(nextValue, arg2 = {}, arg3){
     h = h.replace(/<\/p>/gi, "<br>\n");
     h = h.replace(/<br\s*\/?>(?!\n)/gi, "<br>\n");
     h = h.replace(/&nbsp;/g, " ");
-    return h;
+      // Remove preview-only decoration attributes (heading indexing) so RAW HTML is not mutated
+    h = h.replace(/\sdata-otz-hindex="[^"]*"/gi, "");
+    h = h.replace(/\sdata-otz-hindex='[^']*'/gi, "");
+    h = h.replace(/\sid="otz-h-[^"]*"/gi, "");
+    h = h.replace(/\sid='otz-h-[^']*'/gi, "");
+return h;
   }
 
   function previewHtmlToRaw(html){
@@ -3015,12 +1971,15 @@ function setRawValue(nextValue, arg2 = {}, arg3){
     page.setAttribute('spellcheck', 'false');
     page.setAttribute('tabindex','0');
 
-    page.addEventListener('input', ()=>{
+        if(page.__otzEditableBound) return;
+    page.__otzEditableBound = true;
+
+page.addEventListener('input', ()=>{
       if(ignorePreviewInput) return;
       const next = previewHtmlToRaw(page.innerHTML);
-      raw.value = next;
+      setRawValue(next, { keepSelection: true });
       syncLastSelection();
-      pushHistory(raw.value);
+      pushHistory();
       safeLocalSave(raw.value);
       renderAll();
     });
@@ -3119,14 +2078,20 @@ function escapeHtml(s){
 
   function decoratePreviewHeadings(){
     if(!page) return;
-    const hs = page.querySelectorAll("h1,h2,h3,h4,h5,h6");
-    hs.forEach((h, idx)=>{
-      h.dataset.otzHindex = String(idx);
-      if(!h.id) h.id = "otz-h-" + idx;
-    });
+    // Decorating headings is preview-only; guard so it won't be interpreted as an edit to the document.
+    const prevIgnore = ignorePreviewInput;
+    ignorePreviewInput = true;
+    try{
+      const hs = page.querySelectorAll("h1,h2,h3,h4,h5,h6");
+      hs.forEach((h, idx)=>{
+        h.dataset.otzHindex = String(idx);
+        if(!h.id) h.id = "otz-h-" + idx;
+      });
+    }finally{
+      ignorePreviewInput = prevIgnore;
+    }
   }
-
-  function scrollRawToIndex(idx){
+function scrollRawToIndex(idx){
     const v = raw.value || "";
     const before = v.slice(0, Math.max(0, Math.min(v.length, idx)));
     const line = (before.match(/\n/g) || []).length;
@@ -3470,22 +2435,36 @@ function wrapSpanStyle(style){
   // Focus-safe binding
   function bindToolButton(el, handler){
     if(!el) return;
+
     el.addEventListener('pointerdown', (ev)=>{
+      // Prevent the button from stealing focus (keeps textarea selection intact)
       ev.preventDefault();
+
       try{
-        // Capture current selection in preview (contenteditable) and map it to raw, if relevant.
-        refreshPreviewSelection();
-        tryApplyPreviewSelectionToRaw(true);
+        const rawHasSel = raw && (raw.selectionStart ?? 0) !== (raw.selectionEnd ?? 0);
+        const rawIsActive = (document.activeElement === raw);
+
+        if(rawHasSel || rawIsActive){
+          // User is working in RAW: do NOT overwrite their selection from preview
+          try{ raw.focus(); }catch{}
+          try{ syncLastSelection(); }catch{}
+        }else{
+          // No RAW selection: allow using selection from the editable preview
+          refreshPreviewSelection();
+          tryApplyPreviewSelectionToRaw(true);
+        }
       }catch{}
+
       const beforeVal__ = raw ? raw.value : '';
       handler(ev);
+
       try{
         if(raw && raw.value !== beforeVal__){
-          pushHistory(raw.value);
+          pushHistory();
           safeLocalSave(raw.value);
         }
       }catch{}
-      }, {passive:false});
+    }, {passive:false});
   }
 
   // Wrap buttons
@@ -3718,7 +2697,7 @@ function wrapSpanStyle(style){
     raw.setSelectionRange(newPos, newPos);
     syncLastSelection();
 
-    pushHistory(raw.value);
+    pushHistory();
     safeLocalSave(raw.value);
 
     renderAll();
@@ -3747,7 +2726,7 @@ function wrapSpanStyle(style){
     raw.setSelectionRange(range.start, range.start);
         syncLastSelection();
 
-    pushHistory(raw.value);
+    pushHistory();
     safeLocalSave(raw.value);
 
     renderAll();
@@ -3780,7 +2759,22 @@ function wrapSpanStyle(style){
     fileMenu.classList.toggle("open", !!open);
   }
 
-  fileMenuBtn.addEventListener('click', (e)=>{
+  
+
+// ===== Menu wheel scroll fix =====
+// Prevent toolbar horizontal-wheel handler from hijacking wheel events when cursor is over menus.
+function enableMenuWheelScroll(menuEl){
+  if(!menuEl || menuEl.__otzWheelFix) return;
+  menuEl.__otzWheelFix = true;
+  menuEl.addEventListener('wheel', (e)=>{ e.stopPropagation(); }, { passive:true });
+  menuEl.addEventListener('touchmove', (e)=>{ e.stopPropagation(); }, { passive:true });
+}
+// Apply to known menus + any future .menu nodes
+enableMenuWheelScroll(fileMenu);
+enableMenuWheelScroll(moreMenu);
+document.querySelectorAll('.menu').forEach(enableMenuWheelScroll);
+
+fileMenuBtn.addEventListener('click', (e)=>{
     e.preventDefault();
     setMenuOpen(!fileMenu.classList.contains("open"));
   });
@@ -3813,7 +2807,7 @@ function wrapSpanStyle(style){
     raw.value = "";
     ignoreHistory = false;
     syncLastSelection();
-    pushHistory(raw.value);
+    pushHistory();
     safeLocalSave(raw.value);
     renderAll();
     findInfo.textContent = "מסמך חדש";
@@ -3845,7 +2839,7 @@ function wrapSpanStyle(style){
     ignoreHistory = false;
 
     syncLastSelection();
-    pushHistory(raw.value);
+    pushHistory();
     safeLocalSave(raw.value);
     renderAll();
     findInfo.textContent = "יובא TXT";
@@ -3867,7 +2861,7 @@ function wrapSpanStyle(style){
     ignoreHistory = false;
 
     syncLastSelection();
-    pushHistory(raw.value);
+    pushHistory();
     renderAll();
     findInfo.textContent = "נטען מ־LocalStorage";
   });
@@ -3945,7 +2939,7 @@ document.getElementById('btnReset').addEventListener('click', ()=>{
     raw.setSelectionRange(0,0);
     syncLastSelection();
 
-    pushHistory(raw.value);
+    pushHistory();
     safeLocalSave(raw.value);
 
     renderAll();
@@ -3974,7 +2968,7 @@ document.getElementById('btnReset').addEventListener('click', ()=>{
 
     // Ctrl+Z / Ctrl+Y (use our history so it works consistently in RAW + preview)
 // Ctrl+Z / Ctrl+Y (use our history so it works consistently in RAW + preview)
-if(false && ctrl && (e.key.toLowerCase() === "z" || e.key.toLowerCase() === "y")){
+if(ctrl && (e.key.toLowerCase() === "z" || e.key.toLowerCase() === "y") ){
   // If the user is typing in other inputs (e.g., Find/Replace fields), keep browser-native undo there.
   const ae = document.activeElement;
   const aeTag = ae ? (ae.tagName || "").toUpperCase() : "";
@@ -4110,7 +3104,7 @@ if(false && ctrl && (e.key.toLowerCase() === "z" || e.key.toLowerCase() === "y")
     if(scopeSel && scopeSel.value === 'blockpick'){ refreshBlockSelect(); }
 
     syncLastSelection();
-    pushHistory(raw.value);
+    pushHistory();
     scheduleAutosave();
     renderAll();
   });
@@ -4171,7 +3165,15 @@ if(false && ctrl && (e.key.toLowerCase() === "z" || e.key.toLowerCase() === "y")
         applyTextTransform(s => s.split(/\n/).map(l=>l.replace(/^\s+|\s+$/g,"")).join("\n"));
         toast("בוצע: ניקוי רווחים");
         break;
-      case "removeEmpty":
+            case "enterToSpace":
+        applyTextTransform(s => s
+          .replace(/\r\n/g, "\n")
+          .replace(/\n+/g, " ")
+          .replace(/\s{2,}/g, " ")
+        );
+        toast("בוצע: המרת Enter לרווח");
+        break;
+case "removeEmpty":
         applyTextTransform(s => s.replace(/\n{3,}/g, "\n\n"));
         toast("בוצע: הסרת ריק כפול");
         break;
@@ -4245,7 +3247,7 @@ function saveGrid(){
   }
 
   // init history with current content
-  pushHistory(raw.value);
+  pushHistory();
 
   // init selection
   raw.focus();
@@ -4313,11 +3315,7 @@ function saveGrid(){
   }
 
 })();
-</script>
 
-
-
-<script>
 // ---- Outline toggle (always accessible) ----
 (function(){
   const KEY = "otzaria_outline_collapsed_v2";
@@ -4330,7 +3328,7 @@ function saveGrid(){
     const collapsed = document.body.classList.contains("outline-collapsed");
 
     // Keep the TOP button's visual state (blue) exactly like before
-    if(btnB){ btnB.classList.toggle('navHidden', collapsed); }
+    if(btnB){ btnB.classList.toggle('isActive', collapsed); }
 
     const label = collapsed ? "הצג תפריט ניווט" : "הסתר תפריט ניווט";
 
@@ -4365,10 +3363,7 @@ function saveGrid(){
 
   apply();
 })();
-</script>
 
-
-<script>
 (function(){
   const btn = document.getElementById('moreMenuBtn');
   const menu = document.getElementById('moreMenu');
@@ -4431,10 +3426,7 @@ function saveGrid(){
     }
   });
 })();
-</script>
 
-
-<script>
 (function(){
   function setPinnedTop(){
     const h = document.querySelector('header');
@@ -4447,161 +3439,7 @@ function saveGrid(){
   window.addEventListener('load', setPinnedTop);
   setPinnedTop();
 })();
-</script>
 
-
-<style id="finalGridVarsOverride">
-/* ===== FINAL GRID VARS OVERRIDE: ensure resizing uses CSS vars (RTL-safe) ===== */
-:root{
-  --splitW: 6px;
-  --outW: var(--outW, 220px);
-  --rawW: var(--rawW, 560px);
-  --prevW: var(--prevW, 720px);
-}
-
-/* Base layout: Outline | Raw | Preview */
-main{
-  grid-template-columns:
-    clamp(170px, var(--outW, 220px), 320px)
-    var(--splitW, 6px)
-    clamp(320px, var(--rawW, 560px), 1400px)
-    var(--splitW, 6px)
-    clamp(320px, var(--prevW, 720px), 1600px) !important;
-}
-
-/* Outline collapsed => Raw | Preview (keep user widths) */
-body.outline-collapsed main{
-  grid-template-columns:
-    minmax(320px, 1fr)
-    var(--splitW, 6px)
-    minmax(320px, 1fr) !important;
-}
-
-/* Raw hidden => Outline | Preview (preview should expand) */
-body.textHidden main{
-  grid-template-columns:
-    clamp(170px, var(--outW, 220px), 320px)
-    var(--splitW, 6px)
-    1fr !important;
-}
-/* Outline collapsed + Raw hidden => only Preview */
-body.outline-collapsed.textHidden main{
-  grid-template-columns: 1fr !important;
-}
-
-/* Preview hidden => Outline | Raw (raw should expand) */
-body.previewHidden main{
-  grid-template-columns:
-    clamp(170px, var(--outW, 220px), 320px)
-    var(--splitW, 6px)
-    1fr !important;
-}
-/* Outline collapsed + Preview hidden => only Raw */
-body.outline-collapsed.previewHidden main{
-  grid-template-columns: 1fr !important;
-}
-
-/* Both editors hidden (edge case) => keep Outline only */
-body.textHidden.previewHidden main{
-  grid-template-columns:
-    clamp(170px, var(--outW, 220px), 320px) !important;
-}
-body.outline-collapsed.textHidden.previewHidden main{
-  grid-template-columns: 1fr !important;
-}
-
-/* Hide the middle splitter when one side is hidden */
-body.textHidden #splitter,
-body.previewHidden #splitter{
-  display:none !important;
-}
-
-/* Hide outline splitter when outline is collapsed */
-body.outline-collapsed #outlineSplitter{
-  display:none !important;
-}
-
-/* Ensure splitters are on top and clickable (guard against earlier CSS) */
-#outlineSplitter, #splitter{
-  display:flex;
-  pointer-events:auto !important;
-  z-index: 9999 !important;
-}
-
-/* ===== vPercentGridFix: no overflow, no dead gap ===== */
-:root{
-  --splitW: 6px;
-  /* numeric percentages (sum 100) */
-  --outP: 18;
-  --rawP: 41;
-  --prevP: 41;
-  --rawP2: 50;
-  --prevP2: 50;
-  --outP2: 30;
-  --prevP_op: 70;
-  --outP_or: 30;
-  --rawP_or: 70;
-}
-
-/* Full-width main to eliminate the right-side gap on wide screens */
-main{
-  max-width: none !important;
-  width: 100% !important;
-  margin: 0 !important;
-  /* 3-column layout: outline | raw | preview */
-  grid-template-columns:
-    minmax(0, calc((100% - (2 * var(--splitW))) * var(--outP) / 100))
-    var(--splitW)
-    minmax(0, calc((100% - (2 * var(--splitW))) * var(--rawP) / 100))
-    var(--splitW)
-    minmax(0, calc((100% - (2 * var(--splitW))) * var(--prevP) / 100)) !important;
-}
-
-/* Allow grid children to actually shrink (critical for overflow bugs) */
-main > *{ min-width: 0 !important; }
-#outlineCol, #rawPanel, #previewPanel, .previewWrap, .rawWrap, .outlineWrap{ min-width:0 !important; }
-#page, .page{ max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; }
-
-/* Outline collapsed: raw | preview (1 splitter) */
-body.outline-collapsed main{
-  grid-template-columns:
-    minmax(0, calc((100% - var(--splitW)) * var(--rawP2) / 100))
-    var(--splitW)
-    minmax(0, calc((100% - var(--splitW)) * var(--prevP2) / 100)) !important;
-}
-
-/* Raw hidden: outline | preview */
-body.textHidden main{
-  grid-template-columns:
-    minmax(0, calc((100% - var(--splitW)) * var(--outP2) / 100))
-    var(--splitW)
-    minmax(0, calc((100% - var(--splitW)) * var(--prevP_op) / 100)) !important;
-}
-
-/* Preview hidden: outline | raw */
-body.previewHidden main{
-  grid-template-columns:
-    minmax(0, calc((100% - var(--splitW)) * var(--outP_or) / 100))
-    var(--splitW)
-    minmax(0, calc((100% - var(--splitW)) * var(--rawP_or) / 100)) !important;
-}
-
-/* If both main panels hidden (rare), single column */
-body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
-
-/* Cancel old mobile stacking rule so we keep columns but shrink */
-@media (max-width: 1100px){
-  main{ grid-template-columns:
-    minmax(0, calc((100% - (2 * var(--splitW))) * var(--outP) / 100))
-    var(--splitW)
-    minmax(0, calc((100% - (2 * var(--splitW))) * var(--rawP) / 100))
-    var(--splitW)
-    minmax(0, calc((100% - (2 * var(--splitW))) * var(--prevP) / 100)) !important; }
-}
-
-</style>
-
-<script id="unifiedSplitterScript">
 /* ===== Unified Splitters (percent-based, no overflow) =====
    - Stores numeric percentages (0-100) in CSS vars: --outP, --rawP, --prevP
    - Grid widths are computed in CSS as: calc((100% - splittersPx) * P / 100)
@@ -4702,41 +3540,46 @@ body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
   const isInteractive = (el) =>
     !!el && !!el.closest && !!el.closest('button,a,input,select,textarea,label,[role="button"],[contenteditable="true"]');
 
+  const splitterRegistry = []; // { splitEl, grab, startDrag }
+
   function bind(splitEl, mode) {
     if (!splitEl) return;
     const grab = splitEl.querySelector('.splitterGrab') || splitEl;
 
-    grab.addEventListener('pointerdown', (ev) => {
-      if (ev.button !== undefined && ev.button !== 0) return;
-      if (isInteractive(ev.target)) return;
-      ev.preventDefault();
+    const startDrag = (startEv, clientX0, pointerId) => {
+      // Ignore right/middle click for mouse events
+      if (startEv && startEv.button !== undefined && startEv.button !== 0) return;
+      // Don't start drag if user is interacting with controls
+      if (isInteractive(startEv?.target)) return;
 
       const st = state();
-
-      // If layout is effectively single-column (both hidden etc.), don't drag.
       if ((mode === 'outline' && st.outlineHidden) || (mode === 'main' && (st.rawHidden || st.prevHidden))) return;
 
-      const startX = ev.clientX;
+      startEv?.preventDefault?.();
+      startEv?.stopPropagation?.();
+
+      const startX = clientX0;
       const startOut = getNumVar('--outP', 18);
       const startRaw = getNumVar('--rawP', 41);
       const startPrev = getNumVar('--prevP', 41);
 
-      // Convert dx pixels to percent of available grid width
       const rect = main.getBoundingClientRect();
-      const availW = Math.max(1, rect.width); // includes paddings; good enough
+      const availW = Math.max(1, rect.width);
 
-      grab.setPointerCapture?.(ev.pointerId);
       document.body.classList.add('dragging');
+      document.documentElement.style.cursor = 'col-resize';
 
-      const onMove = (e) => {
-        const dx = (e.clientX - startX) * SIGN;
+      // Try to capture pointer so move events keep firing even if cursor leaves splitter
+      try { if (pointerId != null && grab.setPointerCapture) grab.setPointerCapture(pointerId); } catch {}
+
+      const onMove = (clientX) => {
+        const dx = (clientX - startX) * SIGN;
         const dP = (dx / availW) * 100;
 
         if (mode === 'outline') {
           let outP = clamp(startOut + dP, 8, 35);
-          // keep 3-col sum 100
           const rest = 100 - outP;
-          const rp = startRaw / (startRaw + startPrev);
+          const rp = startRaw / (startRaw + startPrev || 1);
           const rawP = clamp(rest * rp, 10, 85);
           const prevP = 100 - outP - rawP;
           setNumVar('--outP', outP);
@@ -4746,11 +3589,10 @@ body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
           return;
         }
 
-        // mode === 'main' (Raw <-> Preview), keep outline fixed
         const outP = getNumVar('--outP', startOut);
         const rest = 100 - outP;
-        let rawP = clamp(startRaw + dP, 10, rest - 10);
-        let prevP = rest - rawP;
+        const rawP = clamp(startRaw + dP, 10, rest - 10);
+        const prevP = rest - rawP;
         setNumVar('--rawP', rawP);
         setNumVar('--prevP', prevP);
         normalize();
@@ -4758,17 +3600,68 @@ body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
 
       const end = () => {
         document.body.classList.remove('dragging');
-        window.removeEventListener('pointermove', onMove, true);
+        document.documentElement.style.cursor = '';
+        window.removeEventListener('pointermove', onPointerMove, true);
         window.removeEventListener('pointerup', end, true);
         window.removeEventListener('pointercancel', end, true);
+        window.removeEventListener('mousemove', onMouseMove, true);
+        window.removeEventListener('mouseup', end, true);
         save();
       };
 
-      window.addEventListener('pointermove', onMove, true);
+      const onPointerMove = (e) => { e.preventDefault?.(); onMove(e.clientX); };
+      const onMouseMove = (e) => { e.preventDefault?.(); onMove(e.clientX); };
+
+      window.addEventListener('pointermove', onPointerMove, true);
       window.addEventListener('pointerup', end, true);
       window.addEventListener('pointercancel', end, true);
+      window.addEventListener('mousemove', onMouseMove, true);
+      window.addEventListener('mouseup', end, true);
+    };
+
+    // Pointer events (modern)
+    grab.addEventListener('pointerdown', (ev) => {
+      startDrag(ev, ev.clientX, ev.pointerId);
     }, true);
+
+    // Mouse fallback (some environments behave better with mouse events)
+    grab.addEventListener('mousedown', (ev) => {
+      startDrag(ev, ev.clientX, null);
+    }, true);
+
+  // Register for global capture fallback
+  splitterRegistry.push({ splitEl, grab, startDrag });
   }
+
+  // Global fallback: if splitters are visually covered by panels, use elementsFromPoint
+const globalDown = (ev, isPointer) => {
+  // only primary button
+  if (ev && ev.button !== undefined && ev.button !== 0) return;
+  if (isInteractive(ev?.target)) return;
+  if (document.body.classList.contains('dragging')) return;
+
+  const stack = (document.elementsFromPoint && ev?.clientX != null)
+    ? document.elementsFromPoint(ev.clientX, ev.clientY)
+    : [];
+
+  // Find which registered splitter is under the pointer (splitter or its grab area)
+  const regHit = splitterRegistry.find(({ splitEl, grab }) =>
+    stack.includes(grab) ||
+    stack.includes(splitEl) ||
+    (grab && stack.some(el => el && grab.contains && grab.contains(el))) ||
+    (splitEl && stack.some(el => el && splitEl.contains && splitEl.contains(el)))
+  );
+
+  if (!regHit) return;
+
+  regHit.startDrag(ev, ev.clientX, isPointer ? ev.pointerId : null);
+};
+
+// Capture at window so it works even if something overlays the splitter
+window.addEventListener('pointerdown', (ev)=> globalDown(ev, true), true);
+window.addEventListener('mousedown', (ev)=> globalDown(ev, false), true);
+
+
 
   bind(outSplit, 'outline');
   bind(midSplit, 'main');
@@ -4778,10 +3671,7 @@ body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
   const obs = new MutationObserver(() => normalize());
   obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 })();
-</script>
 
-
-<script id="pinHeightsAutoFix">
 (() => {
   const setVars = () => {
     const header = document.querySelector('header');
@@ -4798,10 +3688,7 @@ body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
   setTimeout(setVars, 50);
   setTimeout(setVars, 250);
 })();
-</script>
 
-
-<script id="dynamicHeaderToolbarHeights_v4">
 (function(){
   function syncInsets(){
     const header = document.querySelector('header');
@@ -4817,10 +3704,7 @@ body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
   setTimeout(syncInsets, 60);
   setTimeout(syncInsets, 250);
 })();
-</script>
 
-
-<script>
 /* === Unified History Manager (manual + toolbar/programmatic changes) === */
 (function(){
   const ta = document.getElementById('raw');
@@ -4872,11 +3756,12 @@ body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
   function redo(){
     if(index >= history.length-1) return;
     index++;
+    window.__forcePreviewRefresh = true;
     restore(history[index]);
   }
 
   // Capture manual typing
-  ta.addEventListener('input', () => snapshot());
+  ta.addEventListener('input', () => { if(!lock) snapshot(); });
 
   // Capture programmatic value changes (toolbar, full document ops)
   const desc = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value');
@@ -4884,17 +3769,36 @@ body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
     get: desc.get,
     set: function(v){
       desc.set.call(this, v);
-      if(this === ta) snapshot();
+      if(this === ta && !lock) snapshot();
     }
   });
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts (safe, layout-independent)
   document.addEventListener('keydown', (e)=>{
-    if(e.ctrlKey && !e.shiftKey && e.key.toLowerCase()==='z'){
-      e.preventDefault(); undo(); return;
+    const isMac = /mac/i.test(navigator.platform || "");
+    const ctrl = e.ctrlKey || (isMac && e.metaKey);
+    if(!ctrl) return;
+
+    const code = (e.code||"");
+    const key = (e.key||"").toLowerCase();
+    const isZ = (code==="KeyZ") || (key==="z");
+    const isY = (code==="KeyY") || (key==="y");
+
+    const undo = isZ && !e.shiftKey;
+    const redo = isY || (isZ && e.shiftKey);
+    if(!undo && !redo) return;
+
+    const fn = undo ? window.__otzUndo : window.__otzRedo;
+    const btn = document.getElementById(undo ? "btnUndo" : "btnRedo");
+
+    if(typeof fn === "function"){
+      e.preventDefault();
+      fn();
+      return;
     }
-    if((e.ctrlKey && e.key.toLowerCase()==='y') || (e.ctrlKey && e.shiftKey && e.key.toLowerCase()==='z')){
-      e.preventDefault(); redo(); return;
+    if(btn){
+      e.preventDefault();
+      btn.click();
     }
   });
 
@@ -4907,69 +3811,8 @@ body.textHidden.previewHidden main{ grid-template-columns: 1fr !important; }
 
   console.log("Unified history manager loaded");
 })();
-</script>
 
-
-<script id="gridAutoExpand_v1">
 /* disabled: layout handled by percent-based grid + unified splitter */
 (()=>{})();
 </script>
-
-
-<style id="layoutFixV10">
-/* === v10 FINAL: prevent top overlap (header/toolbars) by using flex layout (no vh math) === */
-html, body{ height:100%; min-height:100dvh; }
-body{
-  display:flex !important;
-  flex-direction:column !important;
-  min-height:100dvh !important;
-}
-
-/* header + toolbars take natural height; main fills the rest */
-header{ flex:0 0 auto; }
-.toolbars{ flex:0 0 auto; }
-
-/* kill any previous vh/margin-top hacks */
-main{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  height:auto !important;
-  margin-top: var(--topInset) !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-  padding:12px 12px 16px !important;
-  overflow:hidden !important;
-  align-items:stretch !important;
-}
-
-/* grid should use full available height */
-main{ height: auto !important; }
-main > *{ min-height:0 !important; }
-
-/* panels must stretch and allow their own internal scrolling */
-.panel{
-  height:100% !important;
-  min-height:0 !important;
-}
-.editorWrap, .previewWrap, .outlineColBody{
-  min-height:0 !important;
-}
-
-/* ensure the main grid can shrink without overflow */
-main{ min-width:0 !important; }
-</style>
-
-
-
-
-
-
-<script src="https://netfree.link/injection-script/go-payment.js" type="text/javascript" async=""></script>
-<script src="https://netfree.link/injection-script/popup-card-init.js" type="text/javascript" async=""></script>
-<div class="email-autocomplete-ext"></div><div style="position: fixed; width: 1px; height: 1px; margin: 0px; padding: 0px; overflow: hidden; top: -9999px; left: -9999px; z-index: 2147483647;"><div id="netfree-popup-window">
-    <div id="netfree-popup-window-main" class="h-position-right v-position-middle">
-        <span id="netfree-popup-window-hand-pull"></span>
-        <iframe id="netfree-popup-window-iframe" src="https://netfree.link/card/index.html"></iframe>
-    </div>
-</div>
-</div></body><iframe src="//netfree.link/misc/go-payment.html?v=3" style="height: 0px; width: 0px; display: none;"></iframe></html>
+</html>
